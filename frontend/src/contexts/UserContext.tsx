@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode, useEffect } from 'react';
 import {
   MaybeAuthenticatedUser,
   UserContextType,
@@ -8,8 +8,10 @@ import {
 
 import {
   clearAuthenticatedUser,
+  getAuthenticatedUser,
   storeAuthenticatedUser,
 } from '../utils/session';
+import { useNavigate } from 'react-router-dom';
 
 const defaultUserContext: UserContextType = {
   authenticatedUser: undefined,
@@ -21,10 +23,47 @@ const defaultUserContext: UserContextType = {
 const UserContext = createContext<UserContextType>(defaultUserContext);
 
 const UserContextProvider = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate();
   const [authenticatedUser, setAuthenticatedUser] =
     useState<MaybeAuthenticatedUser>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const authenticatedUserFromStorage = getAuthenticatedUser();
+
+    if (authenticatedUserFromStorage) {
+      const fetchUserData = async () => {
+        try {
+          const response = await fetch('/api/auths/me', {
+            method: 'GET',
+            headers: {
+              Authorization: `${authenticatedUserFromStorage.token}`,
+            },
+          });
+
+          if (!response.ok) {
+            clearAuthenticatedUser();
+            navigate('/login');
+          }
+
+          const refreshedUser: AuthenticatedUser = await response.json();
+
+          setAuthenticatedUser(refreshedUser);
+        } catch (err) {
+          clearAuthenticatedUser();
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchUserData();
+    } else {
+      setLoading(false);
+    }
+  }, [navigate]);
 
   const registerUser = async (newUser: User) => {
+    console.log(newUser);
     try {
       const options = {
         method: 'POST',
@@ -40,19 +79,15 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
         throw new Error(
           `fetch error : ${response.status} : ${response.statusText}`,
         );
-
-      const createdUser: AuthenticatedUser = await response.json();
-
-      setAuthenticatedUser(createdUser);
-      storeAuthenticatedUser(createdUser);
-      console.log('createdUser: ', createdUser);
     } catch (err) {
       console.error('registerUser::error: ', err);
       throw err;
     }
   };
 
-  const loginUser = async (user: User) => {
+  const loginUser = async (user: User, rememberMe: boolean) => {
+    console.log('login');
+    console.log('User: ' + user.email);
     try {
       const options = {
         method: 'POST',
@@ -73,7 +108,7 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
       console.log('authenticatedUser: ', authenticatedUser);
 
       setAuthenticatedUser(authenticatedUser);
-      storeAuthenticatedUser(authenticatedUser);
+      storeAuthenticatedUser(authenticatedUser, rememberMe);
     } catch (err) {
       console.error('loginUser::error: ', err);
       throw err;
@@ -91,6 +126,10 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
     loginUser,
     clearUser,
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <UserContext.Provider value={myContext}>{children}</UserContext.Provider>

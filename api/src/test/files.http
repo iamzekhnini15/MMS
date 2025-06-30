@@ -1,0 +1,6 @@
+### Read all files
+@baseUrl = http://localhost:3000
+GET {{baseUrl}}/file/getAll
+
+### Read files by subject Id
+GET {{baseUrl}}/file/subject/3

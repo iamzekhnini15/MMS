@@ -1,0 +1,6 @@
+### Read all students
+@baseUrl = http://localhost:3000
+GET {{baseUrl}}/subject/getAll
+
+### Read subject id 2
+GET {{baseUrl}}/subject/2

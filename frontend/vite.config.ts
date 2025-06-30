@@ -1,9 +1,12 @@
+/// <reference types="node" />
 // eslint-disable-next-line spaced-comment
 /// <reference types="vitest/config" />
 
+import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import checker from 'vite-plugin-checker';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,7 +21,13 @@ export default defineConfig({
     checker({
       typescript: true,
     }),
+    tailwindcss(),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   server: {
     proxy: {
       '/api': {

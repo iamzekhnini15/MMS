@@ -1,0 +1,36 @@
+### Read all students
+@baseUrl = http://localhost:3000
+GET {{baseUrl}}/students/getAll
+
+
+### Read all students from class with id = 1
+GET {{baseUrl}}/students/class/1
+
+
+### Create a new student
+POST http://localhost:3000/students/create
+Content-Type: application/json
+
+{
+  "user": {
+    "email": "student1@example.com",
+    "password": "azerty123",
+    "lastname": "Doe",
+    "firstname": "John",
+    "phone": "0123456789",
+    "role": "STUDENT",
+    "civility": "M",
+    "address": {
+      "street": "Rue de Bruxelles",
+      "number": "123",
+      "box": "1A",
+      "postalCode": "1000",
+      "commune": "Bruxelles",
+      "country": "Belgique"
+    },
+    "idUser": 0
+  },
+  "dateOfBirth": "2002-05-12",
+  "classId": 1
+}
+

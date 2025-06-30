@@ -1,0 +1,3 @@
+### Read all courses with File variable
+@baseUrl = http://localhost:3000
+GET {{baseUrl}}/courses/getAll

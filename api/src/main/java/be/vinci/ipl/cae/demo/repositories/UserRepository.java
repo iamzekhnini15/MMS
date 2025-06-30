@@ -16,5 +16,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
    * @param username the username
    * @return the user
    */
-  User findByUsername(String username);
+  User findByEmail(String username);
+
 }
