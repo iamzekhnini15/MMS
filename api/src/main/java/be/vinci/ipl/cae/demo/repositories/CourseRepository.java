@@ -1,15 +1,21 @@
 package be.vinci.ipl.cae.demo.repositories;
 
 import be.vinci.ipl.cae.demo.models.entities.Course;
-import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Course repository.
+ * Repository for Course entities.
+ * Provides CRUD operations and a method to find a course by its ID.
  */
 @Repository
 public interface CourseRepository extends CrudRepository<Course, Long> {
 
+  /**
+   * Finds a course by its ID.
+   *
+   * @param id The ID of the course.
+   * @return The found Course entity.
+   */
   Course findById(long id);
 }

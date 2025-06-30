@@ -1,6 +1,5 @@
 package be.vinci.ipl.cae.demo.models.dtos;
 
-import be.vinci.ipl.cae.demo.models.entities.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TeacherRequest {
 
-  private UserDTO user;
+  private UserDto user;
   private String contractType;
   private boolean isFullTime;
   private String availability;

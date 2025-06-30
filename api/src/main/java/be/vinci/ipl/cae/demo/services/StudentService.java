@@ -11,6 +11,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing student-related operations.
+ */
 @Service
 @RequiredArgsConstructor
 public class StudentService {
@@ -20,35 +23,33 @@ public class StudentService {
   private final UserService userService;
   private final StudentRepository studentRepository;
 
+  /**
+   * Retrieves all students belonging to the class with the given ID.
+   *
+   * @param idClass the ID of the class.
+   * @return a list of students in the specified class.
+   */
   public List<Student> getStudentsByClassId(Long idClass) {
-    return studentRepository.findByClassEntity_IdClass(idClass);
+    return studentRepository.findByClassEntityIdClass(idClass);
   }
 
-
+  /**
+   * Adds a new student to the system.
+   * The method saves the student's address, creates a user, associates the user to the student,
+   * and saves the student in the database.
+   *
+   * @param student the student entity to add.
+   */
   @Transactional
   public void addStudent(Student student) {
 
     Address savedAddress = addressRepository.save(student.getUser().getAddress());
 
-    User user = student.getUser();
-
-    User newUser = userService.createOneUserForTeacher(user.getEmail(), user.getPassword());
-
-    newUser.setAddress(savedAddress);
-    newUser.setFirstname(user.getFirstname());
-    newUser.setLastname(user.getLastname());
-    newUser.setPhone(user.getPhone());
-    newUser.setCivility(user.getCivility());
-    newUser.setRole(user.getRole());
-    newUser.setRegistrationDate(user.getRegistrationDate());
-
-    User savedUser = userRepository.save(newUser);
+    User savedUser = userService.createUserWithAddress(student.getUser(), savedAddress);
 
     student.setUser(savedUser);
     studentRepository.save(student);
-
   }
 
-
-
 }
+

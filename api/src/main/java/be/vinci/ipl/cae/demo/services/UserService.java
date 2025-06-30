@@ -10,7 +10,6 @@ import be.vinci.ipl.cae.demo.repositories.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Date;
-import java.util.Objects;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +36,7 @@ public class UserService {
    * @param userRepository  the user repository
    */
   public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository,
-    AddressRepository addressRepository) {
+      AddressRepository addressRepository) {
     this.passwordEncoder = passwordEncoder;
     this.userRepository = userRepository;
     this.addressRepository = addressRepository;
@@ -52,11 +51,11 @@ public class UserService {
   public AuthenticatedUser createJwtToken(User user) {
     String email = user.getEmail();
     String token = JWT.create()
-      .withIssuer("auth0")
-      .withClaim("email", email)
-      .withIssuedAt(new Date())
-      .withExpiresAt(new Date(System.currentTimeMillis() + LIFETIME_JWT))
-      .sign(ALGORITHM);
+        .withIssuer("auth0")
+        .withClaim("email", email)
+        .withIssuedAt(new Date())
+        .withExpiresAt(new Date(System.currentTimeMillis() + LIFETIME_JWT))
+        .sign(ALGORITHM);
 
     AuthenticatedUser authenticatedUser = new AuthenticatedUser();
     authenticatedUser.setToken(token);
@@ -184,23 +183,6 @@ public class UserService {
    * @param email the username
    * @param password the password
    */
-  public User createOne(String email, String password) {
-    String hashedPassword = passwordEncoder.encode(password);
-
-    User user = new User();
-    user.setEmail(email);
-    user.setActive(true);
-    user.setPassword(hashedPassword);
-
-    return userRepository.save(user);
-  }
-
-  /**
-   * Create a new user.
-   *
-   * @param email the username
-   * @param password the password
-   */
   public User createOneUserForTeacher(String email, String password) {
     String hashedPassword = passwordEncoder.encode(password);
 
@@ -211,5 +193,22 @@ public class UserService {
 
     return user;
   }
+
+  @Transactional
+  public User createUserWithAddress(User existingUser, Address savedAddress) {
+    User newUser = createOneUserForTeacher(existingUser.getEmail(), existingUser.getPassword());
+
+    newUser.setAddress(savedAddress);
+    newUser.setFirstname(existingUser.getFirstname());
+    newUser.setLastname(existingUser.getLastname());
+    newUser.setPhone(existingUser.getPhone());
+    newUser.setCivility(existingUser.getCivility());
+    newUser.setRole(existingUser.getRole());
+    newUser.setRegistrationDate(existingUser.getRegistrationDate());
+
+    return userRepository.save(newUser);
+  }
+
+
 
 }

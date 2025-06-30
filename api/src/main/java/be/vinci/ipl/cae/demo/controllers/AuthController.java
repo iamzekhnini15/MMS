@@ -7,8 +7,6 @@ import be.vinci.ipl.cae.demo.models.dtos.Credentials;
 import be.vinci.ipl.cae.demo.models.dtos.RegisterRequest;
 import be.vinci.ipl.cae.demo.models.entities.User;
 import be.vinci.ipl.cae.demo.services.UserService;
-import java.util.Objects;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;

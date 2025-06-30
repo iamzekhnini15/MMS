@@ -1,8 +1,14 @@
 package be.vinci.ipl.cae.demo.models.entities;
 
 import java.io.Serializable;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * Composite primary key class for TeacherSubject entity.
+ * Represents the composite key consisting of teacher ID and subject ID.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

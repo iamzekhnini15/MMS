@@ -11,5 +11,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentRepository extends CrudRepository<Student, Long> {
 
-  List<Student> findByClassEntity_IdClass(Long idClass);
+  /**
+   * Finds all students associated with a specific class ID.
+   *
+   * @param idClass the ID of the class to filter students by
+   * @return a list of students belonging to the specified class
+   */
+  List<Student> findByClassEntityIdClass(Long idClass);
 }

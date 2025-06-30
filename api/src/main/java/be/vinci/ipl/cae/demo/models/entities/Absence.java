@@ -9,9 +9,13 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.util.Date;
 
+/**
+ * Entity representing an absence of a student.
+ */
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Absence {
+
   @Id
   @GeneratedValue
   private Long id;
@@ -25,5 +29,5 @@ public class Absence {
   private String reason;
 
   private boolean justified;
-}
 
+}

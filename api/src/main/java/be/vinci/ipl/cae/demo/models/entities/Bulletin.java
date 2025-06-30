@@ -6,9 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
+/**
+ * Entity representing a student's bulletin containing trimester results.
+ */
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Bulletin {
+
   @Id
   @GeneratedValue
   private Long id;
@@ -22,6 +26,4 @@ public class Bulletin {
 
   private String appreciation;
 
-  // peut-être @OneToMany vers Notes
 }
-

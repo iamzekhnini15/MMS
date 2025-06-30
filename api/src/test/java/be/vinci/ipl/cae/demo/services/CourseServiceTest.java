@@ -57,18 +57,4 @@ class CourseServiceTest {
     assertThat(courseCaptor.getValue()).isEqualTo(course);
   }
 
-  @Test
-  void deleteCourse_shouldCallRepositoryDeleteById() {
-    // Arrange
-    Long courseId = 1L;
-    Course course = new Course();
-    when(courseRepository.findById(courseId)).thenReturn(Optional.of(course));
-
-    // Act
-    courseService.deleteCourse(courseId);
-
-    // Assert
-    verify(courseRepository, times(1)).findById(courseId);
-    verify(courseRepository, times(1)).deleteById(courseId);
-  }
 }

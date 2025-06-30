@@ -8,6 +8,9 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service providing dashboard key performance indicators (KPIs).
+ */
 @Service
 @RequiredArgsConstructor
 public class DashboardService {
@@ -16,6 +19,11 @@ public class DashboardService {
   private final TeacherRepository teacherRepository;
   private final ClassesRepository classesRepository;
 
+  /**
+   * Retrieves the key performance indicators (KPIs) for the dashboard.
+   *
+   * @return a map containing the number of teachers and classes
+   */
   public Map<String, Long> getKpis() {
     Map<String, Long> kpis = new HashMap<>();
     kpis.put("teachers", teacherRepository.count());

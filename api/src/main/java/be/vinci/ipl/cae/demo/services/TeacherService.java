@@ -11,6 +11,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class to manage teacher-related operations,
+ * including retrieval of all teachers and adding new teachers.
+ */
 @Service
 @RequiredArgsConstructor
 public class TeacherService {
@@ -20,39 +24,34 @@ public class TeacherService {
   private final UserRepository userRepository;
   private final UserService userService;
 
+  /**
+   * Retrieves all teachers from the repository.
+   * Transactional to ensure data consistency.
+   *
+   * @return a list of all teachers
+   */
   @Transactional
   public List<Teacher> getAllTeachers() {
     return (List<Teacher>) teacherRepository.findAll();
   }
 
-
+  /**
+   * Adds a new teacher along with associated user and address.
+   * Handles saving of address, user with hashed password,
+   * and finally the teacher entity.
+   * Transactional to ensure atomic operation.
+   *
+   * @param teacher the teacher entity to add
+   */
   @Transactional
   public void addTeacher(Teacher teacher) {
 
     Address savedAddress = addressRepository.save(teacher.getUser().getAddress());
 
-    User user = teacher.getUser();
-
-    // Crée un user en mémoire avec email et password hashé (mais pas encore sauvegardé)
-    User newUser = userService.createOneUserForTeacher(user.getEmail(), user.getPassword());
-
-    // Assigne les autres infos
-    newUser.setAddress(savedAddress);
-    newUser.setFirstname(user.getFirstname());
-    newUser.setLastname(user.getLastname());
-    newUser.setPhone(user.getPhone());
-    newUser.setCivility(user.getCivility());
-    newUser.setRole(user.getRole());
-    newUser.setRegistrationDate(user.getRegistrationDate());
-    // etc. selon ce que tu as dans User
-
-    // Sauvegarde une seule fois à la fin
-    User savedUser = userRepository.save(newUser);
+    User savedUser = userService.createUserWithAddress(teacher.getUser(), savedAddress);
 
     teacher.setUser(savedUser);
     teacherRepository.save(teacher);
   }
-
-
 
 }

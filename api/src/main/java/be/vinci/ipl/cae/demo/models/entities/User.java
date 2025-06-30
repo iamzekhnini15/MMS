@@ -1,10 +1,28 @@
 package be.vinci.ipl.cae.demo.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * Entity representing a user in the system.
+ * Contains personal, authentication and role-related information.
+ */
 @Entity
 @Table(name = "users")
 @Data
@@ -49,6 +67,9 @@ public class User {
   @JoinColumn(name = "idAddress", nullable = false)
   private Address address;
 
+  /**
+   * Enumeration of possible user roles.
+   */
   public enum Role {
     ADMIN,
     STUDENT,

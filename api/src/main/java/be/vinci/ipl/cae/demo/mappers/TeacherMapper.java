@@ -1,43 +1,37 @@
 package be.vinci.ipl.cae.demo.mappers;
 
-import be.vinci.ipl.cae.demo.models.dtos.AddressDTO;
-import be.vinci.ipl.cae.demo.models.dtos.TeacherDTO;
-import be.vinci.ipl.cae.demo.models.dtos.UserDTO;
+import be.vinci.ipl.cae.demo.models.dtos.TeacherDto;
+import be.vinci.ipl.cae.demo.models.dtos.UserDto;
 import be.vinci.ipl.cae.demo.models.entities.Address;
 import be.vinci.ipl.cae.demo.models.entities.Teacher;
 import be.vinci.ipl.cae.demo.models.entities.User;
-import be.vinci.ipl.cae.demo.models.entities.User.Role;
-import java.util.Date;
 
-public class TeacherMapper {
 
-  public static Teacher toEntity(TeacherDTO dto) {
-    if (dto == null) return null;
+/**
+ * Mapper utilitaire pour convertir un {@link TeacherDto} en entité {@link Teacher}.
+ */
+public final class TeacherMapper {
+
+
+  private TeacherMapper() {}
+
+  /**
+   * Convertit un {@link TeacherDto} en entité {@link Teacher}.
+   *
+   * @param dto le DTO à convertir
+   * @return l'entité correspondante ou {@code null} si le DTO est {@code null}
+   */
+  public static Teacher toEntity(TeacherDto dto) {
+    if (dto == null) {
+      return null;
+    }
 
     System.out.println(dto);
 
-    UserDTO userDto = dto.getUser();
-    AddressDTO addressDto = userDto.getAddress();
-
-    Address address = new Address();
-    address.setStreet(addressDto.getStreet());
-    address.setNumber(addressDto.getNumber());
-    address.setBox(addressDto.getBox());
-    address.setPostalCode(addressDto.getPostalCode());
-    address.setCommune(addressDto.getCommune());
-    address.setCountry(addressDto.getCountry());
-
-    User user = new User();
-    user.setEmail(userDto.getEmail());
-    user.setPassword(userDto.getPassword());
-    user.setLastname(userDto.getLastname());
-    user.setFirstname(userDto.getFirstname());
-    user.setPhone(userDto.getPhone());
-    user.setCivility(userDto.getCivility());
-    user.setRegistrationDate(new Date());
-    user.setActive(true);
+    UserDto userDto = dto.getUser();
+    User user = UserMapper.mapToUser(userDto);
+    Address address = AddressMapper.mapToAddress(userDto.getAddress());
     user.setAddress(address);
-    user.setRole(Role.valueOf(userDto.getRole()));
 
     Teacher teacher = new Teacher();
     teacher.setUser(user);
