@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useTeachers } from '../../../contexts/TeacherContext';
-import { useClasses } from '../../../contexts/ClassesContext';
+import React, { useState, useEffect, useContext } from 'react';
+import { TeacherContext } from '../../../contexts/TeacherContext';
+import { ClassesContext } from '../../../contexts/ClassesContext';
 import { TeacherFormData, Teacher, Classes } from '../../../types';
 import {
   Table,
@@ -30,10 +30,25 @@ import {
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 
+type SelectChangeEvent = {
+  target: {
+    name: string;
+    value: string;
+  };
+};
+
+type CheckboxChangeEvent = {
+  target: {
+    name: string;
+    type: 'checkbox';
+    checked: boolean | undefined;
+  };
+};
+
 const ManageTeacher: React.FC = () => {
   const { teachers, fetchTeachers, createTeacher, deleteTeacher } =
-    useTeachers();
-  const { classes, fetchClasses } = useClasses();
+    useContext(TeacherContext);
+  const { classes, fetchClasses } = useContext(ClassesContext);
 
   const emptyForm: TeacherFormData = {
     user: {
@@ -67,12 +82,28 @@ const ManageTeacher: React.FC = () => {
   useEffect(() => {
     fetchTeachers();
     fetchClasses();
-  }, []);
+  });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      | SelectChangeEvent
+      | CheckboxChangeEvent,
   ) => {
-    const { name, value, type } = e.target;
+    const { name } = e.target;
+
+    // Pour SelectChangeEvent et CheckboxChangeEvent, on doit gérer le type
+    if ('checked' in e.target && e.target.type === 'checkbox') {
+      // Checkbox
+      const checked = e.target.checked ?? false;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+      return;
+    }
+
+    const value = 'value' in e.target ? e.target.value : '';
 
     if (name.startsWith('address.')) {
       const key = name.split('.')[1];
@@ -112,12 +143,6 @@ const ManageTeacher: React.FC = () => {
             classes?.find((c) => String(c.idClass) === value) ||
             ({} as Classes),
         },
-      }));
-    } else if (type === 'checkbox') {
-      const target = e.target as HTMLInputElement;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: target.checked,
       }));
     } else {
       setFormData((prev) => ({
@@ -307,9 +332,9 @@ const ManageTeacher: React.FC = () => {
                 <Input
                   id="phone"
                   name="phone"
+                  type="tel"
                   value={formData.user.phone}
                   onChange={handleChange}
-                  required
                 />
               </div>
 
@@ -319,63 +344,21 @@ const ManageTeacher: React.FC = () => {
                   name="civility"
                   value={formData.user.civility}
                   onValueChange={(value) =>
-                    handleChange({ target: { name: 'civility', value } } as any)
+                    handleChange({
+                      target: { name: 'civility', value },
+                    } as SelectChangeEvent)
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner" />
+                    <SelectValue placeholder="Civilité" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="M">Monsieur</SelectItem>
-                    <SelectItem value="F">Madame</SelectItem>
-                    <SelectItem value="A">Autre</SelectItem>
+                    <SelectItem value="Mme">Madame</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-            </div>
 
-            <Separator className="my-4" />
-
-            <div className="space-y-4">
-              <Label className="text-sm font-medium">Adresse</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  'street',
-                  'number',
-                  'box',
-                  'postalCode',
-                  'commune',
-                  'country',
-                ].map((key) => (
-                  <div key={key} className="space-y-2">
-                    <Label htmlFor={`address.${key}`}>
-                      {key === 'box'
-                        ? 'Boîte (optionnel)'
-                        : key === 'street'
-                          ? 'Rue'
-                          : key === 'number'
-                            ? 'Numéro'
-                            : key === 'postalCode'
-                              ? 'Code postal'
-                              : key === 'commune'
-                                ? 'Commune'
-                                : 'Pays'}
-                    </Label>
-                    <Input
-                      id={`address.${key}`}
-                      name={`address.${key}`}
-                      value={(formData.user.address as any)[key] || ''}
-                      onChange={handleChange}
-                      required={key !== 'box'}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Separator className="my-4" />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="contractType">Type de contrat</Label>
                 <Select
@@ -384,89 +367,69 @@ const ManageTeacher: React.FC = () => {
                   onValueChange={(value) =>
                     handleChange({
                       target: { name: 'contractType', value },
-                    } as any)
+                    } as SelectChangeEvent)
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner" />
+                    <SelectValue placeholder="Type de contrat" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="CDI">CDI</SelectItem>
                     <SelectItem value="CDD">CDD</SelectItem>
+                    <SelectItem value="Interim">Intérim</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="specialities">Spécialité</Label>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="isfullTime"
+                  name="isfullTime"
+                  checked={formData.isFullTime}
+                  onCheckedChange={(checked) =>
+                    handleChange({
+                      target: {
+                        name: 'isFullTime',
+                        type: 'checkbox',
+                        checked,
+                      },
+                    } as CheckboxChangeEvent)
+                  }
+                />
+                <Label htmlFor="isfullTime">Temps plein</Label>
+              </div>
+
+              <div className="space-y-2 col-span-1 md:col-span-2">
+                <Label htmlFor="availability">Disponibilité</Label>
+                <Input
+                  id="availability"
+                  name="availability"
+                  value={formData.availability}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="space-y-2 col-span-1 md:col-span-2">
+                <Label htmlFor="specialities">Spécialités</Label>
                 <Input
                   id="specialities"
                   name="specialities"
                   value={formData.specialities}
                   onChange={handleChange}
-                  required
                 />
-              </div>
-
-              <div className="flex items-center space-x-2 pt-2">
-                <Checkbox
-                  id="isFullTime"
-                  name="isFullTime"
-                  checked={formData.isFullTime}
-                  onCheckedChange={(checked) =>
-                    handleChange({
-                      target: { name: 'isFullTime', type: 'checkbox', checked },
-                    } as any)
-                  }
-                />
-                <Label htmlFor="isFullTime">Temps plein</Label>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="availability">Disponibilité</Label>
-                <Select
-                  name="availability"
-                  value={formData.availability || undefined}
-                  onValueChange={(value) =>
-                    handleChange({
-                      target: { name: 'availability', value },
-                    } as any)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner une disponibilité" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Lundi - Vendredi">
-                      Lundi - Vendredi
-                    </SelectItem>
-                    <SelectItem value="Lundi - Mercredi">
-                      Lundi - Mercredi
-                    </SelectItem>
-                    <SelectItem value="Toutes les semaines">
-                      Toutes les semaines
-                    </SelectItem>
-                    <SelectItem value="Uniquement le week-end">
-                      Uniquement le week-end
-                    </SelectItem>
-                    <SelectItem value="Sur rendez-vous">
-                      Sur rendez-vous
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3 pt-6">
+            <Separator />
+
+            <div className="text-right space-x-2">
+              <Button type="submit">{editing ? 'Modifier' : 'Créer'}</Button>
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setShowModal(false)}
               >
                 Annuler
-              </Button>
-              <Button type="submit" className="bg-[#0071e3] hover:bg-[#0077ed]">
-                {editing ? 'Enregistrer' : 'Créer'}
               </Button>
             </div>
           </form>

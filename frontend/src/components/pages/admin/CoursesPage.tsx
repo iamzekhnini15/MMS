@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useCourses } from '../../../contexts/CoursesContext';
-import { useTeachers } from '../../../contexts/TeacherContext';
-import { useClassrooms } from '../../../contexts/ClassroomContext';
+import React, { useContext, useState } from 'react';
+import { CoursesContext } from '../../../contexts/CoursesContext';
+import { TeacherContext } from '../../../contexts/TeacherContext';
+import { ClassroomContext } from '../../../contexts/ClassroomContext';
 import { Classroom, Course, Teacher } from '../../../types';
 import { Button } from '../../ui/button';
 import {
@@ -16,9 +16,10 @@ import { useNavigate } from 'react-router-dom';
 
 const Courses: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
-  const { courses, loading, error, deleteCourses, createCourse } = useCourses();
-  const { teachers } = useTeachers();
-  const { classrooms } = useClassrooms();
+  const { courses, loading, error, deleteCourses, createCourse } =
+    useContext(CoursesContext);
+  const { teachers } = useContext(TeacherContext);
+  const { classrooms } = useContext(ClassroomContext);
   const navigate = useNavigate();
 
   const [form, setForm] = useState<Course>({

@@ -162,7 +162,7 @@ export const RegisterPage: React.FC = () => {
               <Label>Civilité</Label>
               <Select
                 value={formData.civility}
-                onValueChange={(value: any) =>
+                onValueChange={(value: string) =>
                   setFormData({ ...formData, civility: value })
                 }
               >

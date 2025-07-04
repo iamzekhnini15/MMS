@@ -1,4 +1,6 @@
+// eslint-disable-next-line spaced-comment
 /// <reference types="node" />
+
 // eslint-disable-next-line spaced-comment
 /// <reference types="vitest/config" />
 

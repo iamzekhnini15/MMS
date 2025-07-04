@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from 'react';
+import { createContext, useEffect, useState, ReactNode } from 'react';
 import { ClassesContextType, Classes } from '../types';
 
 const defaultContext: ClassesContextType = {
@@ -17,9 +11,7 @@ const defaultContext: ClassesContextType = {
 
 const ClassesContext = createContext<ClassesContextType>(defaultContext);
 
-export const useClasses = () => useContext(ClassesContext);
-
-export const ClassesProvider = ({ children }: { children: ReactNode }) => {
+const ClassesProvider = ({ children }: { children: ReactNode }) => {
   const [classes, setClasses] = useState<Classes[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -66,9 +58,14 @@ export const ClassesProvider = ({ children }: { children: ReactNode }) => {
       // setClasses(prev => prev ? [...prev, createdClass] : [createdClass]);
 
       setError(null);
-    } catch (err: any) {
-      console.error('createClass::error', err);
-      setError(err.message || 'Erreur lors de la création de la classe.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('createClass::error', err);
+        setError(err.message || 'Erreur lors de la création de la classe.');
+      } else {
+        console.error('createClass::error', err);
+        setError('Erreur inconnue lors de la création de la classe.');
+      }
     } finally {
       setLoading(false);
     }
@@ -92,3 +89,5 @@ export const ClassesProvider = ({ children }: { children: ReactNode }) => {
     </ClassesContext.Provider>
   );
 };
+
+export { ClassesContext, ClassesProvider };

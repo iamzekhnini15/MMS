@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-} from 'react';
+import { createContext, useState, ReactNode } from 'react';
 import { Subject, SubjectContextType, File } from '../types';
 // import { getAuthenticatedUser } from '../utils/session';
 
@@ -12,18 +7,16 @@ const defaultContext: SubjectContextType = {
   subjects: null,
   loading: false,
   error: null,
-  fetchAllFile: async () => { },
-  fetchSubject: async () => { },
-  fetchSubjectsByCourse: async () => { },
-  toggleFileVisibility: async () => { },
-  createSubject: async () => { },
+  fetchAllFile: async () => {},
+  fetchSubject: async () => {},
+  fetchSubjectsByCourse: async () => {},
+  toggleFileVisibility: async () => {},
+  createSubject: async () => {},
 };
 
 const SubjectContext = createContext<SubjectContextType>(defaultContext);
 
-export const useSubject = () => useContext(SubjectContext);
-
-export const SubjectProvider = ({ children }: { children: ReactNode }) => {
+const SubjectProvider = ({ children }: { children: ReactNode }) => {
   const [subjects, setSubjects] = useState<Subject[] | null>(null);
   const [files, setFiles] = useState<File[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -58,7 +51,7 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
     setSubjects(data);
   }
 
-  const createSubject = async (newCourse: any) => {
+  const createSubject = async (newCourse: Omit<Subject, 'idSubject'>) => {
     try {
       setLoading(true);
       console.log(newCourse);
@@ -76,9 +69,14 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
       }
       setError(null);
       await fetchSubjectsByCourse(newCourse.idCourse);
-    } catch (err: any) {
-      console.error('createClass::error', err);
-      setError(err.message || 'Erreur lors de la création du cours.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('createClass::error', err);
+        setError(err.message || 'Erreur lors de la création du cours.');
+      } else {
+        console.error('createClass::error', err);
+        setError('Erreur inconnue lors de la création du cours.');
+      }
     } finally {
       setLoading(false);
     }
@@ -89,7 +87,9 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       const response = await fetch(`/api/file/getAll`);
       if (!response.ok) {
-        throw new Error(`fetch error : ${response.status} ${response.statusText}`);
+        throw new Error(
+          `fetch error : ${response.status} ${response.statusText}`,
+        );
       }
       const data = await response.json();
       console.log(data);
@@ -103,7 +103,10 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const toggleFileVisibility = async (fileId: number, currentVisibility: boolean) => {
+  const toggleFileVisibility = async (
+    fileId: number,
+    currentVisibility: boolean,
+  ) => {
     try {
       const response = await fetch(`/api/file/${fileId}/toggleVisibility`, {
         method: 'PATCH',
@@ -111,16 +114,15 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify({ visible: !currentVisibility }),
       });
 
-      if (!response.ok) throw new Error('Erreur lors de la mise à jour de la visibilité');
+      if (!response.ok)
+        throw new Error('Erreur lors de la mise à jour de la visibilité');
 
       await fetchAllFile();
     } catch (error) {
       console.error(error);
       alert('Une erreur est survenue lors de la mise à jour de la visibilité.');
     }
-  }
-
-
+  };
 
   const myContext: SubjectContextType = {
     fetchAllFile,
@@ -140,3 +142,5 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
     </SubjectContext.Provider>
   );
 };
+
+export { SubjectContext, SubjectProvider };

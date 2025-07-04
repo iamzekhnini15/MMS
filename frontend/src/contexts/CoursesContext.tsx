@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from 'react';
+import { createContext, useEffect, useState, ReactNode } from 'react';
 import { Course, CoursesContextType } from '../types';
 import { getAuthenticatedUser } from '../utils/session';
 
@@ -19,9 +13,7 @@ const defaultContext: CoursesContextType = {
 
 const CoursesContext = createContext<CoursesContextType>(defaultContext);
 
-export const useCourses = () => useContext(CoursesContext);
-
-export const CoursesProvider = ({ children }: { children: ReactNode }) => {
+const CoursesProvider = ({ children }: { children: ReactNode }) => {
   const [courses, setCourses] = useState<Course[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,9 +60,14 @@ export const CoursesProvider = ({ children }: { children: ReactNode }) => {
 
       await fetchCourses();
       setError(null);
-    } catch (err: any) {
-      console.error('createClass::error', err);
-      setError(err.message || 'Erreur lors de la création du cours.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('fetchClasses::error', err);
+        setError(err.message || 'Erreur lors de la création du cours.');
+      } else {
+        console.error('fetchClasses::error', err);
+        setError('Erreur inconnue lors de la création du cours.');
+      }
     } finally {
       setLoading(false);
     }
@@ -120,3 +117,5 @@ export const CoursesProvider = ({ children }: { children: ReactNode }) => {
     </CoursesContext.Provider>
   );
 };
+
+export { CoursesContext, CoursesProvider };

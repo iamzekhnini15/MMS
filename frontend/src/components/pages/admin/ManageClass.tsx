@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useClasses } from '../../../contexts/ClassesContext';
-import { useTeachers } from '../../../contexts/TeacherContext';
+import React, { useState, useEffect, useContext } from 'react';
+import { ClassesContext } from '../../../contexts/ClassesContext';
+import { TeacherContext } from '../../../contexts/TeacherContext';
 import { Teacher, Classroom } from '../../../types';
 import { useNavigate } from 'react-router-dom';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -29,8 +28,8 @@ import {
 } from '@/components/ui/select';
 
 const ManageClass: React.FC = () => {
-  const { classes, fetchClasses, createClass } = useClasses();
-  const { teachers } = useTeachers();
+  const { classes, fetchClasses, createClass } = useContext(ClassesContext);
+  const { teachers } = useContext(TeacherContext);
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
@@ -46,7 +45,7 @@ const ManageClass: React.FC = () => {
 
   useEffect(() => {
     fetchClasses();
-  }, []);
+  });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;

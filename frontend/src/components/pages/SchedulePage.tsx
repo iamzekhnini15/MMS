@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 
 const Schedule = () => {
@@ -18,7 +29,9 @@ const Schedule = () => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold">Emploi du temps</h1>
-          <p className="text-muted-foreground">Gestion des plannings et des ressources</p>
+          <p className="text-muted-foreground">
+            Gestion des plannings et des ressources
+          </p>
         </div>
         <Button onClick={() => setShowScheduleModal(true)}>
           <i className="fa-solid fa-plus mr-2"></i>
@@ -37,7 +50,11 @@ const Schedule = () => {
                   variant={selectedView === view ? 'default' : 'outline'}
                   onClick={() => setSelectedView(view)}
                 >
-                  {view === 'day' ? 'Jour' : view === 'week' ? 'Semaine' : 'Mois'}
+                  {view === 'day'
+                    ? 'Jour'
+                    : view === 'week'
+                      ? 'Semaine'
+                      : 'Mois'}
                 </Button>
               ))}
             </div>
@@ -112,7 +129,11 @@ const Schedule = () => {
           <form className="space-y-4">
             {/* Ajoute les champs ici si besoin */}
             <div className="flex justify-end space-x-3 pt-4">
-              <Button variant="outline" type="button" onClick={() => setShowScheduleModal(false)}>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => setShowScheduleModal(false)}
+              >
                 Annuler
               </Button>
               <Button type="submit">Enregistrer</Button>

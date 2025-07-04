@@ -123,10 +123,13 @@ interface SubjectContextType {
   subjects: Subject[] | null;
   loading: boolean;
   error: string | null;
-  fetchAllFile: () => Promise<void>,
+  fetchAllFile: () => Promise<void>;
   fetchSubject: () => Promise<void>;
   fetchSubjectsByCourse: (courseId: number) => Promise<void>;
-  toggleFileVisibility: (fileId: number, currentVisibility: boolean) => Promise<void>
+  toggleFileVisibility: (
+    fileId: number,
+    currentVisibility: boolean,
+  ) => Promise<void>;
   createSubject: (newSubject: Omit<Subject, 'idSubject'>) => Promise<void>;
 }
 

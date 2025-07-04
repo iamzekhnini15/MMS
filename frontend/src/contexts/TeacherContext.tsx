@@ -1,11 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from 'react';
-import { Teacher, TeacherContextType } from '../types';
+import { createContext, useEffect, useState, ReactNode } from 'react';
+import { Teacher, TeacherContextType, TeacherFormData } from '../types';
 import { getAuthenticatedUser } from '../utils/session';
 
 const defaultContext: TeacherContextType = {
@@ -19,9 +13,7 @@ const defaultContext: TeacherContextType = {
 
 const TeacherContext = createContext<TeacherContextType>(defaultContext);
 
-export const useTeachers = () => useContext(TeacherContext);
-
-export const TeacherProvider = ({ children }: { children: ReactNode }) => {
+const TeacherProvider = ({ children }: { children: ReactNode }) => {
   const [teachers, setTeachers] = useState<Teacher[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +59,7 @@ export const TeacherProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const createTeacher = async (formData: any) => {
+  const createTeacher = async (formData: TeacherFormData) => {
     console.log(formData);
     try {
       const response = await fetch('/api/teachers/create', {
@@ -111,3 +103,5 @@ export const TeacherProvider = ({ children }: { children: ReactNode }) => {
     </TeacherContext.Provider>
   );
 };
+
+export { TeacherContext, TeacherProvider };

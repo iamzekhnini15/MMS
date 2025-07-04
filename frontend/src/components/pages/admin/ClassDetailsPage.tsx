@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useClasses } from '../../../contexts/ClassesContext';
-import { useStudents } from '../../../contexts/StudentContext';
+import { ClassesContext } from '../../../contexts/ClassesContext';
+import { StudentContext } from '../../../contexts/StudentContext';
 import { Address, Student, UserReceived } from '../../../types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,14 +21,27 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+type UserField = keyof UserReceived;
+
+const userFields: { label: string; field: UserField }[] = [
+  { label: 'Prénom', field: 'firstname' },
+  { label: 'Nom', field: 'lastname' },
+  { label: 'Email', field: 'email' },
+  { label: 'Mot de passe', field: 'password' },
+  { label: 'Téléphone', field: 'phone' },
+  { label: 'Civilité', field: 'civility' },
+];
+
 const ClassDetailPage: React.FC = () => {
   const { id } = useParams();
-  const { classes, fetchClasses } = useClasses();
-  const { getAllStudentsForClass, addStudent, students } = useStudents();
+  const { classes, fetchClasses } = useContext(ClassesContext);
+  const { getAllStudentsForClass, addStudent, students } =
+    useContext(StudentContext);
   const [showForm, setShowForm] = useState(false);
 
   const [userForm, setUserForm] = useState<Student>({
     user: {
+      idUser: 0,
       email: '',
       password: '',
       lastname: '',
@@ -44,7 +57,6 @@ const ClassDetailPage: React.FC = () => {
         commune: '',
         country: '',
       },
-      idUser: 0,
     },
     dateOfBirth: '',
     classId: 0,
@@ -53,7 +65,7 @@ const ClassDetailPage: React.FC = () => {
   useEffect(() => {
     fetchClasses();
     if (id) getAllStudentsForClass(Number(id));
-  }, [id]);
+  }, [id, fetchClasses, getAllStudentsForClass]);
 
   const classe = classes?.find((c) => c.idClass === Number(id));
   if (!classe) return <p className="p-6 text-gray-600">Classe non trouvée.</p>;
@@ -202,22 +214,15 @@ const ClassDetailPage: React.FC = () => {
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { label: 'Prénom', field: 'firstname' },
-                { label: 'Nom', field: 'lastname' },
-                { label: 'Email', field: 'email' },
-                { label: 'Mot de passe', field: 'password' },
-                { label: 'Téléphone', field: 'phone' },
-                { label: 'Civilité', field: 'civility' },
-              ].map(({ label, field }) => (
+              {userFields.map(({ label, field }) => (
                 <div key={field}>
                   <label className="block text-sm font-medium mb-1">
                     {label}
                   </label>
                   <Input
                     type={field === 'password' ? 'password' : 'text'}
-                    value={userForm.user[field as keyof UserReceived] as string}
-                    onChange={(e) => handleChange(e, field as any, 'user')}
+                    value={userForm.user[field] as string}
+                    onChange={(e) => handleChange(e, field, 'user')}
                     required={[
                       'firstname',
                       'lastname',
@@ -262,7 +267,9 @@ const ClassDetailPage: React.FC = () => {
                   <Input
                     type="text"
                     value={userForm.user.address[field as keyof Address]}
-                    onChange={(e) => handleChange(e, field as any, 'address')}
+                    onChange={(e) =>
+                      handleChange(e, field as keyof Address, 'address')
+                    }
                   />
                 </div>
               ))}

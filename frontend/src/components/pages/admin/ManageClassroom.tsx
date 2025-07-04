@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,10 +15,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useClassrooms } from '@/contexts/ClassroomContext';
+import { ClassroomContext } from '@/contexts/ClassroomContext';
 
 const ManageClassroom: React.FC = () => {
-  const { fetchClassrooms, classrooms, createClassroom } = useClassrooms();
+  const { fetchClassrooms, classrooms, createClassroom } =
+    useContext(ClassroomContext);
 
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,7 @@ const ManageClassroom: React.FC = () => {
 
   useEffect(() => {
     fetchClassrooms();
-  }, []);
+  });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;

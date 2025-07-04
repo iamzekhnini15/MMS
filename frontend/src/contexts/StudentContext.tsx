@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from 'react';
+import { createContext, useEffect, useState, ReactNode } from 'react';
 import { Student, StudentContextType } from '../types';
 import { getAuthenticatedUser } from '../utils/session';
 
@@ -18,9 +12,7 @@ const defaultContext: StudentContextType = {
 
 const StudentContext = createContext<StudentContextType>(defaultContext);
 
-export const useStudents = () => useContext(StudentContext);
-
-export const StudentProvider = ({ children }: { children: ReactNode }) => {
+const StudentProvider = ({ children }: { children: ReactNode }) => {
   const [students, setStudents] = useState<Student[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -122,3 +114,5 @@ export const StudentProvider = ({ children }: { children: ReactNode }) => {
     </StudentContext.Provider>
   );
 };
+
+export { StudentContext, StudentProvider };
