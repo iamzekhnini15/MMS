@@ -58,8 +58,6 @@ const router = createBrowserRouter([
       {
         path: 'manage-courses',
         element: (
-          <ProtectedRoute
-            element={
               <CoursesProvider>
                 <TeacherProvider>
                   <ClassroomProvider>
@@ -67,16 +65,11 @@ const router = createBrowserRouter([
                   </ClassroomProvider>
                 </TeacherProvider>
               </CoursesProvider>
-            }
-            requiredRoles={['ADMIN']}
-          />
         ),
       },
       {
         path: 'manage-courses/:id',
         element: (
-          <ProtectedRoute
-            element={
               <CoursesProvider>
                 <TeacherProvider>
                   <SubjectProvider>
@@ -84,16 +77,11 @@ const router = createBrowserRouter([
                   </SubjectProvider>
                 </TeacherProvider>
               </CoursesProvider>
-            }
-            requiredRoles={['ADMIN']}
-          />
         ),
       },
       {
         path: 'manage-teachers',
         element: (
-          <ProtectedRoute
-            element={
               <CoursesProvider>
                 <TeacherProvider>
                   <ClassroomProvider>
@@ -103,31 +91,21 @@ const router = createBrowserRouter([
                   </ClassroomProvider>
                 </TeacherProvider>
               </CoursesProvider>
-            }
-            requiredRoles={['ADMIN']}
-          />
         ),
       },
       {
         path: 'manage-classes',
         element: (
-          <ProtectedRoute
-            element={
               <ClassesProvider>
                 <TeacherProvider>
                   <ManageClass />
                 </TeacherProvider>
               </ClassesProvider>
-            }
-            requiredRoles={['ADMIN']}
-          />
         ),
       },
       {
         path: 'manage-classes/:id',
         element: (
-          <ProtectedRoute
-            element={
               <ClassesProvider>
                 <TeacherProvider>
                   <StudentProvider>
@@ -135,9 +113,6 @@ const router = createBrowserRouter([
                   </StudentProvider>
                 </TeacherProvider>
               </ClassesProvider>
-            }
-            requiredRoles={['ADMIN']}
-          />
         ),
       },
       {
