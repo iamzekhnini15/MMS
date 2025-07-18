@@ -49,7 +49,7 @@ public class TeacherService {
     Address savedAddress = addressRepository.save(teacher.getUser().getAddress());
 
     User savedUser = userService.createUserWithAddress(teacher.getUser(), savedAddress);
-  
+
     teacher.setUser(savedUser);
     teacherRepository.save(teacher);
   }

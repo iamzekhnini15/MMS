@@ -3,15 +3,7 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>dmy</DateStyle>
-      <Grants>1||-9223372036854775808|c|G
-1||10|c|G
-1||10|C|G
-1||10|T|G
-4||-9223372036854775808|c|G
-4||10|c|G
-4||10|C|G
-4||10|T|G</Grants>
-      <IntrospectionStateNumber>3368</IntrospectionStateNumber>
+      <IntrospectionStateNumber>3376</IntrospectionStateNumber>
       <ServerVersion>17.4</ServerVersion>
       <StartupTime>1752849000</StartupTime>
       <TimeZones>true ACDT
@@ -820,7 +812,7 @@ false Zulu
 14751||10|C|G
 14751||-9223372036854775808|U|G
 14751||10|U|G</Grants>
-      <IntrospectionStateNumber>3368</IntrospectionStateNumber>
+      <IntrospectionStateNumber>3376</IntrospectionStateNumber>
       <ObjectId>49853</ObjectId>
       <OwnerName>postgres</OwnerName>
     </database>
@@ -4256,8 +4248,8 @@ false Zulu
     <schema id="269" parent="5" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>3368</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2025-07-18.15:31:18</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>3376</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2025-07-18.16:32:52</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>532</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4398,7 +4390,7 @@ false Zulu
     </table>
     <table id="288" parent="269" name="courses">
       <ObjectId>52743</ObjectId>
-      <StateNumber>3030</StateNumber>
+      <StateNumber>3375</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>postgres</OwnerName>
     </table>
@@ -4777,9 +4769,9 @@ false Zulu
     <column id="342" parent="288" name="end_date_time">
       <NotNull>1</NotNull>
       <Position>2</Position>
-      <StateNumber>3027</StateNumber>
-      <StoredType>date|0s</StoredType>
-      <TypeId>1082</TypeId>
+      <StateNumber>3374</StateNumber>
+      <StoredType>timestamp|0s</StoredType>
+      <TypeId>1114</TypeId>
     </column>
     <column id="343" parent="288" name="name">
       <NotNull>1</NotNull>
@@ -4791,9 +4783,9 @@ false Zulu
     <column id="344" parent="288" name="start_date_time">
       <NotNull>1</NotNull>
       <Position>4</Position>
-      <StateNumber>3027</StateNumber>
-      <StoredType>date|0s</StoredType>
-      <TypeId>1082</TypeId>
+      <StateNumber>3375</StateNumber>
+      <StoredType>timestamp|0s</StoredType>
+      <TypeId>1114</TypeId>
     </column>
     <column id="345" parent="288" name="id_classroom">
       <NotNull>1</NotNull>
@@ -4828,14 +4820,14 @@ false Zulu
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>52746</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>3027</StateNumber>
+      <StateNumber>3375</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
     <index id="350" parent="288" name="uk5o6x4fpafbywj4v2g0owhh11r">
       <ColNames>name</ColNames>
       <ObjectId>52748</ObjectId>
-      <StateNumber>3029</StateNumber>
+      <StateNumber>3375</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
       <CollationNames>default</CollationNames>

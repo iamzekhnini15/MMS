@@ -44,11 +44,11 @@ public class Course {
   @JoinColumn(name = "idClassroom", nullable = false)
   private Classroom classroom;
 
-  @Temporal(TemporalType.DATE)
+  @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false)
   private Date startDateTime;
 
-  @Temporal(TemporalType.DATE)
+  @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false)
   private Date endDateTime;
 }
