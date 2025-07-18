@@ -5,9 +5,16 @@ import be.vinci.ipl.cae.demo.models.entities.File;
 import be.vinci.ipl.cae.demo.models.entities.Subject;
 import be.vinci.ipl.cae.demo.repositories.FileRepository;
 import be.vinci.ipl.cae.demo.repositories.SubjectRepository;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Service managing file-related operations.
@@ -19,6 +26,9 @@ public class FileService {
   private final SubjectRepository subjectRepository;
   private final FileRepository fileRepository;
 
+  @Value("${file.upload.dir:uploads}")
+  private String uploadDir;
+
   /**
    * Retrieves all files.
    *
@@ -29,7 +39,7 @@ public class FileService {
   }
 
   /**
-   * Adds a new file to a specific subject.
+   * Adds a new file to a specific subject (from URL).
    *
    * @param subjectId The ID of the subject.
    * @param fileDto   The DTO representing the file to add.
@@ -53,6 +63,84 @@ public class FileService {
     savedFileDto.setUrl(savedFile.getUrl());
 
     return savedFileDto;
+  }
+
+  /**
+   * Uploads a physical file and adds it to a specific subject.
+   *
+   * @param subjectId The ID of the subject.
+   * @param file      The multipart file to upload.
+   * @param filename  The custom filename (optional).
+   * @return The saved file as a DTO.
+   * @throws IllegalArgumentException If the subject is not found.
+   * @throws IOException If file upload fails.
+   */
+  public FileDto uploadFileToSubject(Long subjectId, MultipartFile file, String filename) throws IOException {
+    Subject subject = subjectRepository.findById(subjectId)
+        .orElseThrow(() -> new IllegalArgumentException("Subject not found with id " + subjectId));
+
+    // Validation du fichier
+    if (file.isEmpty()) {
+      throw new IllegalArgumentException("File is empty");
+    }
+
+    // Validation du type de fichier
+    String contentType = file.getContentType();
+    if (!isValidFileType(contentType)) {
+      throw new IllegalArgumentException("File type not allowed: " + contentType);
+    }
+
+    // Génération d'un nom de fichier unique
+    String originalFilename = file.getOriginalFilename();
+    String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+    String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
+
+    // Création du dossier de destination
+    Path uploadPath = Paths.get(uploadDir);
+    if (!Files.exists(uploadPath)) {
+      Files.createDirectories(uploadPath);
+    }
+
+    // Sauvegarde du fichier
+    Path filePath = uploadPath.resolve(uniqueFilename);
+    Files.copy(file.getInputStream(), filePath);
+
+    // Sauvegarde en base de données
+    File fileEntity = new File();
+    fileEntity.setName(filename != null ? filename : originalFilename);
+    fileEntity.setUrl("/uploads/" + uniqueFilename); // URL relative pour accès web
+    fileEntity.setSubject(subject);
+    fileEntity.setVisible(true);
+
+    File savedFile = fileRepository.save(fileEntity);
+
+    FileDto savedFileDto = new FileDto();
+    savedFileDto.setName(savedFile.getName());
+    savedFileDto.setUrl(savedFile.getUrl());
+
+    return savedFileDto;
+  }
+
+  /**
+   * Validates if the file type is allowed.
+   *
+   * @param contentType The MIME type of the file.
+   * @return true if the file type is allowed, false otherwise.
+   */
+  private boolean isValidFileType(String contentType) {
+    return contentType != null && (
+        contentType.equals("application/pdf") ||
+        contentType.equals("application/msword") ||
+        contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document") ||
+        contentType.equals("application/vnd.ms-powerpoint") ||
+        contentType.equals("application/vnd.openxmlformats-officedocument.presentationml.presentation") ||
+        contentType.equals("application/vnd.ms-excel") ||
+        contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") ||
+        contentType.equals("image/jpeg") ||
+        contentType.equals("image/png") ||
+        contentType.equals("image/gif") ||
+        contentType.equals("text/plain")
+    );
   }
 
   /**

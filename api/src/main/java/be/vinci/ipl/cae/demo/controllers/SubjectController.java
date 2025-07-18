@@ -5,6 +5,7 @@ import be.vinci.ipl.cae.demo.models.dtos.SubjectDto;
 import be.vinci.ipl.cae.demo.models.entities.Subject;
 import be.vinci.ipl.cae.demo.services.FileService;
 import be.vinci.ipl.cae.demo.services.SubjectService;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * REST controller managing subject-related endpoints.
@@ -64,6 +67,29 @@ public class SubjectController {
     System.out.println(fileDto);
     FileDto savedFileDto = fileService.addFileToSubject(subjectId, fileDto);
     return ResponseEntity.status(201).body(savedFileDto);
+  }
+
+  /**
+   * Uploads a physical file to a specific subject.
+   *
+   * @param subjectId the ID of the subject.
+   * @param file the multipart file to upload.
+   * @param filename the custom filename (optional).
+   * @return a ResponseEntity containing the uploaded file DTO.
+   */
+  @PostMapping("/{subjectId}/uploadFile")
+  public ResponseEntity<FileDto> uploadFileToSubject(
+      @PathVariable Long subjectId,
+      @RequestParam("file") MultipartFile file,
+      @RequestParam(value = "filename", required = false) String filename) {
+    try {
+      FileDto savedFileDto = fileService.uploadFileToSubject(subjectId, file, filename);
+      return ResponseEntity.status(201).body(savedFileDto);
+    } catch (IOException e) {
+      return ResponseEntity.status(500).body(null);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.status(400).body(null);
+    }
   }
 
   /**
