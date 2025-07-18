@@ -9,13 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Users, 
-  BookOpen, 
-  Building, 
-  GraduationCap, 
-  Calendar, 
-  Clock, 
+import {
+  Users,
+  BookOpen,
+  Building,
+  GraduationCap,
+  Calendar,
+  Clock,
   AlertTriangle,
   BarChart3,
   Plus,
@@ -36,7 +36,7 @@ import {
   Zap,
   UserCheck,
   UserX,
-  MapPin
+  MapPin,
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -49,61 +49,71 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   // Calculer les statistiques en temps réel à partir des données de la BD
-  const today = new Date();
+  const today = useMemo(() => new Date(), []);
   const todayStr = today.toDateString();
-  
-  const todayCourses = courses?.filter(course => {
-    const courseDate = new Date(course.startDateTime);
-    return courseDate.toDateString() === todayStr;
-  }).length || 0;
 
-  const thisWeekCourses = courses?.filter(course => {
-    const courseDate = new Date(course.startDateTime);
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay() + 1);
-    startOfWeek.setHours(0, 0, 0, 0);
-    
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
-    endOfWeek.setHours(23, 59, 59, 999);
-    
-    return courseDate >= startOfWeek && courseDate <= endOfWeek;
-  }).length || 0;
+  const todayCourses =
+    courses?.filter((course) => {
+      const courseDate = new Date(course.startDateTime);
+      return courseDate.toDateString() === todayStr;
+    }).length || 0;
 
-  // Calculer le taux d'occupation des salles
-  const totalClassrooms = classrooms?.length || 0;
-  const occupiedClassrooms = courses?.filter(course => {
-    const courseDate = new Date(course.startDateTime);
-    const courseEndDate = new Date(course.endDateTime);
-    const now = new Date();
-    return courseDate <= now && courseEndDate >= now;
-  }).length || 0;
-
-  const occupancyRate = totalClassrooms > 0 ? Math.round((occupiedClassrooms / totalClassrooms) * 100) : 0;
-
-  // Calculer les enseignants actifs (ayant des cours cette semaine)
-  const activeTeachers = teachers?.filter(teacher => {
-    return courses?.some(course => {
+  const thisWeekCourses =
+    courses?.filter((course) => {
       const courseDate = new Date(course.startDateTime);
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+      startOfWeek.setHours(0, 0, 0, 0);
+
       const endOfWeek = new Date(startOfWeek);
       endOfWeek.setDate(startOfWeek.getDate() + 6);
-      
-      return course.teacher.idTeacher === teacher.idTeacher &&
-             courseDate >= startOfWeek && courseDate <= endOfWeek;
-    });
-  }).length || 0;
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      return courseDate >= startOfWeek && courseDate <= endOfWeek;
+    }).length || 0;
+
+  // Calculer le taux d'occupation des salles
+  const totalClassrooms = classrooms?.length || 0;
+  const occupiedClassrooms =
+    courses?.filter((course) => {
+      const courseDate = new Date(course.startDateTime);
+      const courseEndDate = new Date(course.endDateTime);
+      const now = new Date();
+      return courseDate <= now && courseEndDate >= now;
+    }).length || 0;
+
+  const occupancyRate =
+    totalClassrooms > 0
+      ? Math.round((occupiedClassrooms / totalClassrooms) * 100)
+      : 0;
+
+  // Calculer les enseignants actifs (ayant des cours cette semaine)
+  const activeTeachers =
+    teachers?.filter((teacher) => {
+      return courses?.some((course) => {
+        const courseDate = new Date(course.startDateTime);
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+        return (
+          course.teacher.idTeacher === teacher.idTeacher &&
+          courseDate >= startOfWeek &&
+          courseDate <= endOfWeek
+        );
+      });
+    }).length || 0;
 
   // Analyse des créneaux horaires les plus populaires
   const timeSlotAnalysis = useMemo(() => {
     const timeSlots = {
       morning: { label: 'Matin (8h-12h)', count: 0, icon: Sun },
       afternoon: { label: 'Après-midi (12h-17h)', count: 0, icon: Coffee },
-      evening: { label: 'Soir (17h-20h)', count: 0, icon: Moon }
+      evening: { label: 'Soir (17h-20h)', count: 0, icon: Moon },
     };
 
-    courses?.forEach(course => {
+    courses?.forEach((course) => {
       const hour = new Date(course.startDateTime).getHours();
       if (hour >= 8 && hour < 12) timeSlots.morning.count++;
       else if (hour >= 12 && hour < 17) timeSlots.afternoon.count++;
@@ -115,29 +125,43 @@ const Dashboard: React.FC = () => {
 
   // Analyse de la charge de travail des enseignants
   const teacherWorkload = useMemo(() => {
-    const workload = teachers?.map(teacher => {
-      const teacherCourses = courses?.filter(course => 
-        course.teacher.idTeacher === teacher.idTeacher
-      ).length || 0;
-      
-      const thisWeekCourses = courses?.filter(course => {
-        const courseDate = new Date(course.startDateTime);
-        const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - today.getDay() + 1);
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
-        
-        return course.teacher.idTeacher === teacher.idTeacher &&
-               courseDate >= startOfWeek && courseDate <= endOfWeek;
-      }).length || 0;
+    const workload =
+      teachers
+        ?.map((teacher) => {
+          const teacherCourses =
+            courses?.filter(
+              (course) => course.teacher.idTeacher === teacher.idTeacher,
+            ).length || 0;
 
-      return {
-        teacher,
-        totalCourses: teacherCourses,
-        weekCourses: thisWeekCourses,
-        workloadLevel: thisWeekCourses > 15 ? 'high' : thisWeekCourses > 10 ? 'medium' : 'low'
-      };
-    }).sort((a, b) => b.weekCourses - a.weekCourses).slice(0, 5) || [];
+          const thisWeekCourses =
+            courses?.filter((course) => {
+              const courseDate = new Date(course.startDateTime);
+              const startOfWeek = new Date(today);
+              startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+              const endOfWeek = new Date(startOfWeek);
+              endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+              return (
+                course.teacher.idTeacher === teacher.idTeacher &&
+                courseDate >= startOfWeek &&
+                courseDate <= endOfWeek
+              );
+            }).length || 0;
+
+          return {
+            teacher,
+            totalCourses: teacherCourses,
+            weekCourses: thisWeekCourses,
+            workloadLevel:
+              thisWeekCourses > 15
+                ? 'high'
+                : thisWeekCourses > 10
+                  ? 'medium'
+                  : 'low',
+          };
+        })
+        .sort((a, b) => b.weekCourses - a.weekCourses)
+        .slice(0, 5) || [];
 
     return workload;
   }, [teachers, courses, today]);
@@ -147,7 +171,9 @@ const Dashboard: React.FC = () => {
     const alerts = [];
 
     // Alertes de surcharge des enseignants
-    const overloadedTeachers = teacherWorkload.filter(t => t.workloadLevel === 'high');
+    const overloadedTeachers = teacherWorkload.filter(
+      (t) => t.workloadLevel === 'high',
+    );
     if (overloadedTeachers.length > 0) {
       alerts.push({
         type: 'warning',
@@ -155,7 +181,7 @@ const Dashboard: React.FC = () => {
         message: `${overloadedTeachers.length} enseignant(s) ont plus de 15 cours cette semaine`,
         icon: UserX,
         color: 'text-orange-600',
-        bgColor: 'bg-orange-50'
+        bgColor: 'bg-orange-50',
       });
     }
 
@@ -167,12 +193,13 @@ const Dashboard: React.FC = () => {
         message: `Taux d'occupation élevé: ${occupancyRate}%`,
         icon: AlertTriangle,
         color: 'text-red-600',
-        bgColor: 'bg-red-50'
+        bgColor: 'bg-red-50',
       });
     }
 
     // Alertes de cours sans salle
-    const coursesWithoutRoom = courses?.filter(course => !course.classroom).length || 0;
+    const coursesWithoutRoom =
+      courses?.filter((course) => !course.classroom).length || 0;
     if (coursesWithoutRoom > 0) {
       alerts.push({
         type: 'warning',
@@ -180,7 +207,7 @@ const Dashboard: React.FC = () => {
         message: `${coursesWithoutRoom} cours n'ont pas de salle assignée`,
         icon: MapPin,
         color: 'text-yellow-600',
-        bgColor: 'bg-yellow-50'
+        bgColor: 'bg-yellow-50',
       });
     }
 
@@ -189,39 +216,46 @@ const Dashboard: React.FC = () => {
 
   // Performance metrics
   const performanceMetrics = useMemo(() => {
-    const totalHoursWeek = courses?.filter(course => {
-      const courseDate = new Date(course.startDateTime);
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay() + 1);
-      const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6);
-      return courseDate >= startOfWeek && courseDate <= endOfWeek;
-    }).reduce((total, course) => {
-      const start = new Date(course.startDateTime);
-      const end = new Date(course.endDateTime);
-      return total + (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-    }, 0) || 0;
+    const totalHoursWeek =
+      courses
+        ?.filter((course) => {
+          const courseDate = new Date(course.startDateTime);
+          const startOfWeek = new Date(today);
+          startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+          const endOfWeek = new Date(startOfWeek);
+          endOfWeek.setDate(startOfWeek.getDate() + 6);
+          return courseDate >= startOfWeek && courseDate <= endOfWeek;
+        })
+        .reduce((total, course) => {
+          const start = new Date(course.startDateTime);
+          const end = new Date(course.endDateTime);
+          return total + (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+        }, 0) || 0;
 
-    const averageClassSize = classes?.length ? (courses?.length || 0) / classes.length : 0;
-    const teacherUtilization = teachers?.length ? (activeTeachers / teachers.length) * 100 : 0;
+    const averageClassSize = classes?.length
+      ? (courses?.length || 0) / classes.length
+      : 0;
+    const teacherUtilization = teachers?.length
+      ? (activeTeachers / teachers.length) * 100
+      : 0;
 
     return {
       totalHoursWeek: Math.round(totalHoursWeek),
       averageClassSize: Math.round(averageClassSize * 10) / 10,
       teacherUtilization: Math.round(teacherUtilization),
-      roomUtilization: occupancyRate
+      roomUtilization: occupancyRate,
     };
   }, [courses, classes, teachers, activeTeachers, occupancyRate, today]);
 
   const stats = [
     {
-      title: 'Cours aujourd\'hui',
+      title: "Cours aujourd'hui",
       value: todayCourses,
       icon: BookOpen,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
       change: todayCourses > 0 ? `${todayCourses} cours` : 'Aucun cours',
-      changeType: 'info'
+      changeType: 'info',
     },
     {
       title: 'Enseignants actifs',
@@ -230,7 +264,7 @@ const Dashboard: React.FC = () => {
       color: 'text-green-600',
       bgColor: 'bg-green-50',
       change: `${Math.round((activeTeachers / (teachers?.length || 1)) * 100)}% actifs`,
-      changeType: 'increase'
+      changeType: 'increase',
     },
     {
       title: 'Salles occupées',
@@ -239,7 +273,7 @@ const Dashboard: React.FC = () => {
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
       change: `${occupancyRate}% d'occupation`,
-      changeType: occupancyRate > 75 ? 'increase' : 'stable'
+      changeType: occupancyRate > 75 ? 'increase' : 'stable',
     },
     {
       title: 'Classes gérées',
@@ -248,7 +282,7 @@ const Dashboard: React.FC = () => {
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
       change: `${classes?.length || 0} classes actives`,
-      changeType: 'info'
+      changeType: 'info',
     },
   ];
 
@@ -261,7 +295,7 @@ const Dashboard: React.FC = () => {
       description: `${course.teacher.user.firstname} ${course.teacher.user.lastname} - ${course.classroom.name}`,
       time: new Date(course.startDateTime).toLocaleDateString('fr-FR'),
       icon: BookOpen,
-      color: 'text-blue-600'
+      color: 'text-blue-600',
     })) || []),
     ...(teachers?.slice(-2).map((teacher) => ({
       id: `teacher-${teacher.idTeacher}`,
@@ -270,27 +304,33 @@ const Dashboard: React.FC = () => {
       description: `Spécialités: ${teacher.specialities}`,
       time: 'Récemment ajouté',
       icon: Users,
-      color: 'text-green-600'
-    })) || [])
+      color: 'text-green-600',
+    })) || []),
   ].slice(0, 4);
 
   // Générer les événements à venir à partir des cours à venir
-  const upcomingEvents = courses?.filter(course => {
-    const courseDate = new Date(course.startDateTime);
-    return courseDate > today;
-  })
-  .sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime())
-  .slice(0, 3)
-  .map(course => ({
-    id: course.idCourse,
-    title: course.name,
-    date: course.startDateTime.split('T')[0],
-    time: `${new Date(course.startDateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${new Date(course.endDateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
-    type: 'Cours',
-    priority: 'medium',
-    teacher: `${course.teacher.user.firstname} ${course.teacher.user.lastname}`,
-    classroom: course.classroom.name
-  })) || [];
+  const upcomingEvents =
+    courses
+      ?.filter((course) => {
+        const courseDate = new Date(course.startDateTime);
+        return courseDate > today;
+      })
+      .sort(
+        (a, b) =>
+          new Date(a.startDateTime).getTime() -
+          new Date(b.startDateTime).getTime(),
+      )
+      .slice(0, 3)
+      .map((course) => ({
+        id: course.idCourse,
+        title: course.name,
+        date: course.startDateTime.split('T')[0],
+        time: `${new Date(course.startDateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${new Date(course.endDateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
+        type: 'Cours',
+        priority: 'medium',
+        teacher: `${course.teacher.user.firstname} ${course.teacher.user.lastname}`,
+        classroom: course.classroom.name,
+      })) || [];
 
   const quickActions = [
     {
@@ -299,7 +339,7 @@ const Dashboard: React.FC = () => {
       icon: Plus,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
-      action: () => console.log('Créer cours')
+      action: () => console.log('Créer cours'),
     },
     {
       title: 'Gérer les enseignants',
@@ -307,15 +347,15 @@ const Dashboard: React.FC = () => {
       icon: Users,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
-      action: () => console.log('Gérer enseignants')
+      action: () => console.log('Gérer enseignants'),
     },
     {
-      title: 'Voir l\'emploi du temps',
+      title: "Voir l'emploi du temps",
       description: 'Planning complet',
       icon: Calendar,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
-      action: () => console.log('Voir emploi du temps')
+      action: () => console.log('Voir emploi du temps'),
     },
     {
       title: 'Rapports',
@@ -323,8 +363,8 @@ const Dashboard: React.FC = () => {
       icon: BarChart3,
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
-      action: () => console.log('Voir rapports')
-    }
+      action: () => console.log('Voir rapports'),
+    },
   ];
 
   if (error) {
@@ -369,7 +409,9 @@ const Dashboard: React.FC = () => {
         {stats.map((stat, index) => (
           <Card key={index} className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                {stat.title}
+              </CardTitle>
               <div className={`${stat.bgColor} p-2 rounded-lg`}>
                 <stat.icon className={`h-4 w-4 ${stat.color}`} />
               </div>
@@ -377,7 +419,9 @@ const Dashboard: React.FC = () => {
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
               <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                <span className={`${stat.changeType === 'increase' ? 'text-green-600' : 'text-gray-600'}`}>
+                <span
+                  className={`${stat.changeType === 'increase' ? 'text-green-600' : 'text-gray-600'}`}
+                >
                   {stat.change}
                 </span>
                 <span>cette semaine</span>
@@ -402,7 +446,10 @@ const Dashboard: React.FC = () => {
           {smartAlerts.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {smartAlerts.map((alert, index) => (
-                <Card key={index} className={`border-l-4 ${alert.type === 'error' ? 'border-l-red-500' : alert.type === 'warning' ? 'border-l-orange-500' : 'border-l-blue-500'}`}>
+                <Card
+                  key={index}
+                  className={`border-l-4 ${alert.type === 'error' ? 'border-l-red-500' : alert.type === 'warning' ? 'border-l-orange-500' : 'border-l-blue-500'}`}
+                >
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-3">
                       <div className={`${alert.bgColor} p-2 rounded-lg`}>
@@ -410,7 +457,9 @@ const Dashboard: React.FC = () => {
                       </div>
                       <div>
                         <p className="font-medium text-sm">{alert.title}</p>
-                        <p className="text-xs text-muted-foreground">{alert.message}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {alert.message}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -433,10 +482,15 @@ const Dashboard: React.FC = () => {
               <CardContent>
                 <div className="space-y-4">
                   {recentActivities.map((activity) => (
-                    <div key={activity.id} className="flex items-start space-x-3">
+                    <div
+                      key={activity.id}
+                      className="flex items-start space-x-3"
+                    >
                       <div className="mt-1">
                         <div className="p-2 bg-muted rounded-lg">
-                          <activity.icon className={`h-4 w-4 ${activity.color}`} />
+                          <activity.icon
+                            className={`h-4 w-4 ${activity.color}`}
+                          />
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
@@ -468,30 +522,38 @@ const Dashboard: React.FC = () => {
                 <div className="space-y-4">
                   {upcomingEvents.length > 0 ? (
                     upcomingEvents.map((event) => (
-                      <div key={event.id} className="flex items-center space-x-3">
+                      <div
+                        key={event.id}
+                        className="flex items-center space-x-3"
+                      >
                         <div className="flex-shrink-0">
                           <div className="text-center">
                             <div className="text-sm font-medium">
                               {new Date(event.date).getDate()}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {new Date(event.date).toLocaleDateString('fr-FR', { month: 'short' })}
+                              {new Date(event.date).toLocaleDateString(
+                                'fr-FR',
+                                { month: 'short' },
+                              )}
                             </div>
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2">
-                            <p className="text-sm font-medium truncate">{event.title}</p>
-                            <Badge variant="secondary">
-                              {event.type}
-                            </Badge>
+                            <p className="text-sm font-medium truncate">
+                              {event.title}
+                            </p>
+                            <Badge variant="secondary">{event.type}</Badge>
                           </div>
                           <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                             <Clock className="w-3 h-3" />
                             <span>{event.time}</span>
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            <span>{event.teacher} • {event.classroom}</span>
+                            <span>
+                              {event.teacher} • {event.classroom}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -499,7 +561,9 @@ const Dashboard: React.FC = () => {
                   ) : (
                     <div className="text-center py-6">
                       <Calendar className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                      <p className="text-sm text-muted-foreground">Aucun cours à venir</p>
+                      <p className="text-sm text-muted-foreground">
+                        Aucun cours à venir
+                      </p>
                     </div>
                   )}
                 </div>
@@ -525,7 +589,9 @@ const Dashboard: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-sm font-medium">{action.title}</p>
-                      <p className="text-xs text-muted-foreground">{action.description}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {action.description}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -544,19 +610,27 @@ const Dashboard: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Cours cette semaine</span>
-                    <span className="text-sm font-medium">{thisWeekCourses}</span>
+                    <span className="text-sm font-medium">
+                      {thisWeekCourses}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Total des cours</span>
-                    <span className="text-sm font-medium">{courses?.length || 0}</span>
+                    <span className="text-sm font-medium">
+                      {courses?.length || 0}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Taux d'occupation</span>
-                    <span className="text-sm font-medium">{occupancyRate}%</span>
+                    <span className="text-sm font-medium">
+                      {occupancyRate}%
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Classes actives</span>
-                    <span className="text-sm font-medium">{classes?.length || 0}</span>
+                    <span className="text-sm font-medium">
+                      {classes?.length || 0}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -570,7 +644,9 @@ const Dashboard: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Total enseignants</span>
-                    <span className="text-sm font-medium">{teachers?.length || 0}</span>
+                    <span className="text-sm font-medium">
+                      {teachers?.length || 0}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Enseignants actifs</span>
@@ -578,11 +654,15 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Salles disponibles</span>
-                    <span className="text-sm font-medium">{totalClassrooms}</span>
+                    <span className="text-sm font-medium">
+                      {totalClassrooms}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Salles occupées maintenant</span>
-                    <Badge variant={occupiedClassrooms > 0 ? "default" : "secondary"}>
+                    <Badge
+                      variant={occupiedClassrooms > 0 ? 'default' : 'secondary'}
+                    >
                       {occupiedClassrooms} occupées
                     </Badge>
                   </div>
@@ -595,7 +675,9 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Tendance hebdomadaire</CardTitle>
+                <CardTitle className="text-base">
+                  Tendance hebdomadaire
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -603,19 +685,25 @@ const Dashboard: React.FC = () => {
                     <span className="text-sm">Cette semaine</span>
                     <div className="flex items-center space-x-1">
                       <TrendingUp className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium">{thisWeekCourses}</span>
+                      <span className="text-sm font-medium">
+                        {thisWeekCourses}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Semaine dernière</span>
                     <div className="flex items-center space-x-1">
                       <TrendingDown className="w-4 h-4 text-red-600" />
-                      <span className="text-sm font-medium">{Math.max(0, thisWeekCourses - 5)}</span>
+                      <span className="text-sm font-medium">
+                        {Math.max(0, thisWeekCourses - 5)}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-green-600">Évolution</span>
-                    <Badge variant="secondary">+{Math.min(5, thisWeekCourses)}%</Badge>
+                    <Badge variant="secondary">
+                      +{Math.min(5, thisWeekCourses)}%
+                    </Badge>
                   </div>
                 </div>
               </CardContent>
@@ -629,7 +717,9 @@ const Dashboard: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Taux de réussite</span>
-                    <span className="text-sm font-medium text-green-600">98.5%</span>
+                    <span className="text-sm font-medium text-green-600">
+                      98.5%
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Temps de réponse</span>
@@ -659,7 +749,9 @@ const Dashboard: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm">Utilisation salles</span>
-                      <span className="text-sm font-medium">{occupancyRate}%</span>
+                      <span className="text-sm font-medium">
+                        {occupancyRate}%
+                      </span>
                     </div>
                     <Progress value={occupancyRate} />
                   </div>
@@ -687,8 +779,13 @@ const Dashboard: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{performanceMetrics.totalHoursWeek}h</div>
-                <Progress value={(performanceMetrics.totalHoursWeek / 40) * 100} className="mt-2" />
+                <div className="text-2xl font-bold">
+                  {performanceMetrics.totalHoursWeek}h
+                </div>
+                <Progress
+                  value={(performanceMetrics.totalHoursWeek / 40) * 100}
+                  className="mt-2"
+                />
                 <p className="text-xs text-muted-foreground mt-2">
                   Objectif: 40h/semaine
                 </p>
@@ -703,11 +800,19 @@ const Dashboard: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{performanceMetrics.teacherUtilization}%</div>
-                <Progress value={performanceMetrics.teacherUtilization} className="mt-2" />
+                <div className="text-2xl font-bold">
+                  {performanceMetrics.teacherUtilization}%
+                </div>
+                <Progress
+                  value={performanceMetrics.teacherUtilization}
+                  className="mt-2"
+                />
                 <p className="text-xs text-muted-foreground mt-2">
-                  {performanceMetrics.teacherUtilization > 80 ? 'Excellent' : 
-                   performanceMetrics.teacherUtilization > 60 ? 'Bon' : 'À améliorer'}
+                  {performanceMetrics.teacherUtilization > 80
+                    ? 'Excellent'
+                    : performanceMetrics.teacherUtilization > 60
+                      ? 'Bon'
+                      : 'À améliorer'}
                 </p>
               </CardContent>
             </Card>
@@ -720,11 +825,19 @@ const Dashboard: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{performanceMetrics.roomUtilization}%</div>
-                <Progress value={performanceMetrics.roomUtilization} className="mt-2" />
+                <div className="text-2xl font-bold">
+                  {performanceMetrics.roomUtilization}%
+                </div>
+                <Progress
+                  value={performanceMetrics.roomUtilization}
+                  className="mt-2"
+                />
                 <p className="text-xs text-muted-foreground mt-2">
-                  {performanceMetrics.roomUtilization > 85 ? 'Saturé' : 
-                   performanceMetrics.roomUtilization > 70 ? 'Optimal' : 'Sous-utilisé'}
+                  {performanceMetrics.roomUtilization > 85
+                    ? 'Saturé'
+                    : performanceMetrics.roomUtilization > 70
+                      ? 'Optimal'
+                      : 'Sous-utilisé'}
                 </p>
               </CardContent>
             </Card>
@@ -737,8 +850,16 @@ const Dashboard: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{performanceMetrics.averageClassSize}</div>
-                <Progress value={Math.min((performanceMetrics.averageClassSize / 10) * 100, 100)} className="mt-2" />
+                <div className="text-2xl font-bold">
+                  {performanceMetrics.averageClassSize}
+                </div>
+                <Progress
+                  value={Math.min(
+                    (performanceMetrics.averageClassSize / 10) * 100,
+                    100,
+                  )}
+                  className="mt-2"
+                />
                 <p className="text-xs text-muted-foreground mt-2">
                   Moyenne par classe
                 </p>
@@ -763,9 +884,9 @@ const Dashboard: React.FC = () => {
                     <h4 className="font-medium text-sm">{slot.label}</h4>
                     <div className="text-2xl font-bold mt-1">{slot.count}</div>
                     <div className="text-xs text-muted-foreground">cours</div>
-                    <Progress 
-                      value={(slot.count / (courses?.length || 1)) * 100} 
-                      className="mt-2" 
+                    <Progress
+                      value={(slot.count / (courses?.length || 1)) * 100}
+                      className="mt-2"
                     />
                   </div>
                 ))}
@@ -781,30 +902,42 @@ const Dashboard: React.FC = () => {
             <CardContent>
               <div className="space-y-4">
                 {teacherWorkload.map((teacher, index) => (
-                  <div key={teacher.teacher.idTeacher} className="flex items-center space-x-4">
+                  <div
+                    key={teacher.teacher.idTeacher}
+                    className="flex items-center space-x-4"
+                  >
                     <div className="flex-shrink-0 w-8 text-center">
                       <span className="text-sm font-medium">#{index + 1}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium">
-                          {teacher.teacher.user.firstname} {teacher.teacher.user.lastname}
+                          {teacher.teacher.user.firstname}{' '}
+                          {teacher.teacher.user.lastname}
                         </p>
-                        <Badge variant={
-                          teacher.workloadLevel === 'high' ? 'destructive' : 
-                          teacher.workloadLevel === 'medium' ? 'default' : 'secondary'
-                        }>
-                          {teacher.workloadLevel === 'high' ? 'Surchargé' : 
-                           teacher.workloadLevel === 'medium' ? 'Normal' : 'Léger'}
+                        <Badge
+                          variant={
+                            teacher.workloadLevel === 'high'
+                              ? 'destructive'
+                              : teacher.workloadLevel === 'medium'
+                                ? 'default'
+                                : 'secondary'
+                          }
+                        >
+                          {teacher.workloadLevel === 'high'
+                            ? 'Surchargé'
+                            : teacher.workloadLevel === 'medium'
+                              ? 'Normal'
+                              : 'Léger'}
                         </Badge>
                       </div>
                       <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
                         <span>{teacher.weekCourses} cours cette semaine</span>
                         <span>{teacher.totalCourses} cours total</span>
                       </div>
-                      <Progress 
-                        value={Math.min((teacher.weekCourses / 20) * 100, 100)} 
-                        className="mt-2" 
+                      <Progress
+                        value={Math.min((teacher.weekCourses / 20) * 100, 100)}
+                        className="mt-2"
                       />
                     </div>
                   </div>
@@ -812,7 +945,9 @@ const Dashboard: React.FC = () => {
                 {teacherWorkload.length === 0 && (
                   <div className="text-center py-6">
                     <UserCheck className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                    <p className="text-sm text-muted-foreground">Aucune donnée de charge de travail</p>
+                    <p className="text-sm text-muted-foreground">
+                      Aucune donnée de charge de travail
+                    </p>
                   </div>
                 )}
               </div>
@@ -834,16 +969,27 @@ const Dashboard: React.FC = () => {
                 <div className="space-y-4">
                   {smartAlerts.length > 0 ? (
                     smartAlerts.map((alert, index) => (
-                      <div key={index} className={`p-4 rounded-lg border-l-4 ${
-                        alert.type === 'error' ? 'border-l-red-500 bg-red-50' : 
-                        alert.type === 'warning' ? 'border-l-orange-500 bg-orange-50' : 
-                        'border-l-blue-500 bg-blue-50'
-                      }`}>
+                      <div
+                        key={index}
+                        className={`p-4 rounded-lg border-l-4 ${
+                          alert.type === 'error'
+                            ? 'border-l-red-500 bg-red-50'
+                            : alert.type === 'warning'
+                              ? 'border-l-orange-500 bg-orange-50'
+                              : 'border-l-blue-500 bg-blue-50'
+                        }`}
+                      >
                         <div className="flex items-start space-x-3">
-                          <alert.icon className={`h-5 w-5 mt-0.5 ${alert.color}`} />
+                          <alert.icon
+                            className={`h-5 w-5 mt-0.5 ${alert.color}`}
+                          />
                           <div className="flex-1">
-                            <h4 className="font-medium text-sm">{alert.title}</h4>
-                            <p className="text-sm text-muted-foreground mt-1">{alert.message}</p>
+                            <h4 className="font-medium text-sm">
+                              {alert.title}
+                            </h4>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {alert.message}
+                            </p>
                             <div className="flex items-center space-x-2 mt-3">
                               <Button size="sm" variant="outline">
                                 Résoudre
@@ -860,7 +1006,9 @@ const Dashboard: React.FC = () => {
                     <div className="text-center py-8">
                       <CheckCircle className="h-8 w-8 mx-auto text-green-600 mb-2" />
                       <p className="text-sm font-medium">Tout va bien !</p>
-                      <p className="text-xs text-muted-foreground">Aucune alerte système</p>
+                      <p className="text-xs text-muted-foreground">
+                        Aucune alerte système
+                      </p>
                     </div>
                   )}
                 </div>
@@ -883,9 +1031,12 @@ const Dashboard: React.FC = () => {
                       <div className="flex items-start space-x-3">
                         <Building className="h-5 w-5 mt-0.5 text-blue-600" />
                         <div>
-                          <h4 className="font-medium text-sm">Optimiser l'utilisation des salles</h4>
+                          <h4 className="font-medium text-sm">
+                            Optimiser l'utilisation des salles
+                          </h4>
                           <p className="text-sm text-muted-foreground mt-1">
-                            Considérez ajouter des créneaux en soirée ou réorganiser certains cours.
+                            Considérez ajouter des créneaux en soirée ou
+                            réorganiser certains cours.
                           </p>
                         </div>
                       </div>
@@ -893,14 +1044,17 @@ const Dashboard: React.FC = () => {
                   )}
 
                   {/* Recommandation basée sur la charge des enseignants */}
-                  {teacherWorkload.some(t => t.workloadLevel === 'high') && (
+                  {teacherWorkload.some((t) => t.workloadLevel === 'high') && (
                     <div className="p-4 rounded-lg bg-orange-50 border-l-4 border-l-orange-500">
                       <div className="flex items-start space-x-3">
                         <Users className="h-5 w-5 mt-0.5 text-orange-600" />
                         <div>
-                          <h4 className="font-medium text-sm">Équilibrer la charge de travail</h4>
+                          <h4 className="font-medium text-sm">
+                            Équilibrer la charge de travail
+                          </h4>
                           <p className="text-sm text-muted-foreground mt-1">
-                            Certains enseignants sont surchargés. Redistribuez les cours si possible.
+                            Certains enseignants sont surchargés. Redistribuez
+                            les cours si possible.
                           </p>
                         </div>
                       </div>
@@ -910,8 +1064,12 @@ const Dashboard: React.FC = () => {
                   {smartAlerts.length === 0 && (
                     <div className="text-center py-8">
                       <Award className="h-8 w-8 mx-auto text-green-600 mb-2" />
-                      <p className="text-sm font-medium">Excellente gestion !</p>
-                      <p className="text-xs text-muted-foreground">Aucune recommandation pour le moment</p>
+                      <p className="text-sm font-medium">
+                        Excellente gestion !
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Aucune recommandation pour le moment
+                      </p>
                     </div>
                   )}
                 </div>
@@ -930,27 +1088,43 @@ const Dashboard: React.FC = () => {
                   <CheckCircle className="h-4 w-4 text-green-600" />
                   <div className="flex-1">
                     <p className="text-sm font-medium">Système opérationnel</p>
-                    <p className="text-xs text-muted-foreground">Tous les services fonctionnent normalement</p>
+                    <p className="text-xs text-muted-foreground">
+                      Tous les services fonctionnent normalement
+                    </p>
                   </div>
-                  <span className="text-xs text-muted-foreground">Il y a 5 min</span>
+                  <span className="text-xs text-muted-foreground">
+                    Il y a 5 min
+                  </span>
                 </div>
-                
+
                 <div className="flex items-center space-x-3 p-3 rounded-lg bg-blue-50">
                   <Activity className="h-5 w-5 text-blue-600" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Sauvegarde automatique</p>
-                    <p className="text-xs text-muted-foreground">Sauvegarde des données effectuée avec succès</p>
+                    <p className="text-sm font-medium">
+                      Sauvegarde automatique
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Sauvegarde des données effectuée avec succès
+                    </p>
                   </div>
-                  <span className="text-xs text-muted-foreground">Il y a 1h</span>
+                  <span className="text-xs text-muted-foreground">
+                    Il y a 1h
+                  </span>
                 </div>
 
                 <div className="flex items-center space-x-3 p-3 rounded-lg bg-yellow-50">
                   <AlertCircle className="h-4 w-4 text-yellow-600" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Maintenance programmée</p>
-                    <p className="text-xs text-muted-foreground">Maintenance du système prévue dimanche 2h-4h</p>
+                    <p className="text-sm font-medium">
+                      Maintenance programmée
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Maintenance du système prévue dimanche 2h-4h
+                    </p>
                   </div>
-                  <span className="text-xs text-muted-foreground">Il y a 2h</span>
+                  <span className="text-xs text-muted-foreground">
+                    Il y a 2h
+                  </span>
                 </div>
               </div>
             </CardContent>

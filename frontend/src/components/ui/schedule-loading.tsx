@@ -58,7 +58,7 @@ const ScheduleLoadingSkeleton = () => {
                 <Skeleton key={i} className="h-10 w-full" />
               ))}
             </div>
-            
+
             {/* Lignes de créneaux */}
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="grid grid-cols-6 gap-2">

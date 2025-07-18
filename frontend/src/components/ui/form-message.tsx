@@ -19,7 +19,9 @@ const FormMessage = ({ type, message }: FormMessageProps) => {
   };
 
   return (
-    <div className={`flex items-center space-x-2 p-3 rounded-lg border ${styles[type]}`}>
+    <div
+      className={`flex items-center space-x-2 p-3 rounded-lg border ${styles[type]}`}
+    >
       {icons[type]}
       <span className="text-sm font-medium">{message}</span>
     </div>

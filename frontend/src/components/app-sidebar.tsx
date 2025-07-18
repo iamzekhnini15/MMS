@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from 'react';
 import {
   Calendar,
   Command,
@@ -9,11 +9,11 @@ import {
   Send,
   Settings2,
   SquareTerminal,
-} from "lucide-react"
+} from 'lucide-react';
 
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from '@/components/nav-main';
+import { NavSecondary } from '@/components/nav-secondary';
+import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -22,80 +22,80 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar';
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: 'shadcn',
+    email: 'm@example.com',
+    avatar: '/avatars/shadcn.jpg',
   },
   navMain: [
     {
-      title: "Tableau de bord",
-      url: "/dashboard",
+      title: 'Tableau de bord',
+      url: '/dashboard',
       icon: Gauge,
       isActive: true,
     },
     {
-      title: "Gestion",
-      url: "#",
+      title: 'Gestion',
+      url: '#',
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "Cours",
-          url: "/manage-courses",
+          title: 'Cours',
+          url: '/manage-courses',
         },
         {
-          title: "Enseignants",
-          url: "/manage-teachers",
+          title: 'Enseignants',
+          url: '/manage-teachers',
         },
         {
-          title: "Classes",
-          url: "/manage-classes",
+          title: 'Classes',
+          url: '/manage-classes',
         },
         {
-          title: "Salles de cours",
-          url: "/manage-classroom",
+          title: 'Salles de cours',
+          url: '/manage-classroom',
         },
       ],
     },
     {
-      title: "Emploi du temps",
-      url: "/schedule",
+      title: 'Emploi du temps',
+      url: '/schedule',
       icon: Calendar,
     },
     {
-      title: "Bulletins scolaires",
-      url: "/reports",
+      title: 'Bulletins scolaires',
+      url: '/reports',
       icon: FileText,
     },
     {
-      title: "Communication",
-      url: "/communication",
+      title: 'Communication',
+      url: '/communication',
       icon: MessageCircle,
     },
     {
-      title: "Paramètres",
-      url: "/settings",
+      title: 'Paramètres',
+      url: '/settings',
       icon: Settings2,
     },
   ],
   navSecondary: [
     {
-      title: "Support",
-      url: "#",
+      title: 'Support',
+      url: '#',
       icon: LifeBuoy,
     },
     {
-      title: "Feedback",
-      url: "#",
+      title: 'Feedback',
+      url: '#',
       icon: Send,
     },
   ],
   projects: [],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -110,7 +110,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">ManageMySchool</span>
-                  <span className="truncate text-xs">Système de gestion scolaire</span>
+                  <span className="truncate text-xs">
+                    Système de gestion scolaire
+                  </span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -125,5 +127,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

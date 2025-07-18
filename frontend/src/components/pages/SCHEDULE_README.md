@@ -7,10 +7,12 @@ La page `SchedulePage` est une interface complète de gestion d'emploi du temps 
 ## ✨ Fonctionnalités principales
 
 ### 📊 Tableau de bord
+
 - **Statistiques en temps réel** : Cours du jour, enseignants actifs, salles utilisées, total des cours
 - **Indicateurs visuels** avec icônes Lucide React
 
 ### 🗓️ Visualisation de l'emploi du temps
+
 - **Vue grille hebdomadaire** : Affichage des cours de 8h à 20h
 - **Navigation temporelle** : Boutons précédent/suivant pour naviguer entre les semaines
 - **Cartes de cours interactives** avec informations détaillées :
@@ -20,17 +22,20 @@ La page `SchedulePage` est une interface complète de gestion d'emploi du temps 
   - Salle de classe
 
 ### 🔍 Recherche et filtrage
+
 - **Barre de recherche** : Recherche par nom de cours, enseignant ou salle
 - **Filtres** : Par enseignant, par salle de classe
 - **Onglets de vue** : Jour, Semaine, Mois
 
 ### ➕ Gestion des créneaux
+
 - **Création de nouveaux créneaux** via modal
 - **Édition en un clic** sur les cours existants
 - **Suppression avec confirmation**
 - **Validation de formulaire** complète
 
 ### 📱 Interface responsive
+
 - **Design adaptatif** pour desktop, tablet et mobile
 - **Composants UI modernes** avec shadcn/ui
 - **Animations fluides** et transitions
@@ -38,6 +43,7 @@ La page `SchedulePage` est une interface complète de gestion d'emploi du temps 
 ## 🛠️ Architecture technique
 
 ### Composants principaux
+
 ```
 SchedulePage.tsx                 // Composant principal
 ├── course-card.tsx             // Carte de cours dans la grille
@@ -48,12 +54,14 @@ SchedulePage.tsx                 // Composant principal
 ```
 
 ### Contextes utilisés
+
 - `CoursesContext` : Gestion des cours (CRUD)
 - `TeacherContext` : Liste des enseignants
 - `ClassesContext` : Gestion des classes
 - `ClassroomContext` : Gestion des salles
 
 ### Technologies
+
 - **React 18** avec hooks modernes
 - **TypeScript** pour la sécurité des types
 - **React Router** pour la navigation
@@ -64,6 +72,7 @@ SchedulePage.tsx                 // Composant principal
 ## 🎨 Design System
 
 ### Palette de couleurs
+
 - **Primaire** : Bleu (#3B82F6)
 - **Secondaire** : Gris (#6B7280)
 - **Succès** : Vert (#10B981)
@@ -71,6 +80,7 @@ SchedulePage.tsx                 // Composant principal
 - **Avertissement** : Jaune (#F59E0B)
 
 ### Composants UI
+
 - `Button` : Actions utilisateur
 - `Card` : Conteneurs de contenu
 - `Badge` : Labels et statuts
@@ -82,6 +92,7 @@ SchedulePage.tsx                 // Composant principal
 ## 📋 Fonctionnalités détaillées
 
 ### 1. Grille horaire
+
 ```tsx
 // Créneaux de 8h à 20h (12 heures)
 const timeSlots = Array.from({ length: 12 }, (_, i) => ({
@@ -91,6 +102,7 @@ const timeSlots = Array.from({ length: 12 }, (_, i) => ({
 ```
 
 ### 2. Gestion des cours
+
 ```tsx
 // Création de cours
 const handleSubmit = async (e: React.FormEvent) => {
@@ -101,6 +113,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 ```
 
 ### 3. Navigation temporelle
+
 ```tsx
 // Navigation par semaine
 const navigateWeek = (direction: 'prev' | 'next') => {
@@ -113,11 +126,13 @@ const navigateWeek = (direction: 'prev' | 'next') => {
 ## 🔄 États de l'application
 
 ### États de chargement
+
 - **Loading** : Skeleton avec animation
 - **Empty** : Message d'encouragement + bouton création
 - **Error** : Message d'erreur avec possibilité de retry
 
 ### États de données
+
 - **Courses** : Liste des cours avec filtrage
 - **Teachers** : Enseignants disponibles
 - **Classrooms** : Salles disponibles
@@ -126,12 +141,14 @@ const navigateWeek = (direction: 'prev' | 'next') => {
 ## 🚀 Performance
 
 ### Optimisations
+
 - **Filtrage côté client** pour une recherche instantanée
 - **Composants mémorisés** pour éviter les re-renders inutiles
 - **Lazy loading** pour les gros datasets
 - **Skeleton loading** pour une meilleure UX
 
 ### Gestion d'erreur
+
 - **Try-catch** sur toutes les opérations async
 - **Messages d'erreur contextuels**
 - **Fallbacks** pour les cas d'échec
@@ -139,11 +156,13 @@ const navigateWeek = (direction: 'prev' | 'next') => {
 ## 📱 Responsive Design
 
 ### Breakpoints
+
 - **Mobile** : < 768px
 - **Tablet** : 768px - 1024px
 - **Desktop** : > 1024px
 
 ### Adaptations
+
 - **Navigation mobile** : Menu hamburger
 - **Grille adaptative** : Scroll horizontal sur mobile
 - **Modals full-screen** sur petits écrans
@@ -151,12 +170,14 @@ const navigateWeek = (direction: 'prev' | 'next') => {
 ## 🧪 Tests recommandés
 
 ### Tests unitaires
+
 - Rendu des composants
 - Gestion des états
 - Validation des formulaires
 - Fonctions utilitaires
 
 ### Tests d'intégration
+
 - CRUD des cours
 - Navigation temporelle
 - Recherche et filtrage
@@ -165,6 +186,7 @@ const navigateWeek = (direction: 'prev' | 'next') => {
 ## 🔮 Améliorations futures
 
 ### Fonctionnalités v2
+
 - **Vue calendrier mensuel** complète
 - **Drag & drop** pour déplacer les cours
 - **Récurrence** pour les cours réguliers
@@ -174,6 +196,7 @@ const navigateWeek = (direction: 'prev' | 'next') => {
 - **Mode sombre** pour l'interface
 
 ### Intégrations
+
 - **Synchronisation Google Calendar**
 - **Import/Export iCal**
 - **API de géolocalisation** pour les salles
@@ -184,6 +207,7 @@ const navigateWeek = (direction: 'prev' | 'next') => {
 ## 💡 Notes de développement
 
 Cette page représente un exemple complet d'application React moderne avec :
+
 - Architecture modulaire et réutilisable
 - Gestion d'état avancée avec Context API
 - Interface utilisateur responsive et accessible

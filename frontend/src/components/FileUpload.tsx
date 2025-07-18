@@ -6,14 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Upload, 
-  X, 
-  FileText, 
-  AlertCircle, 
-  CheckCircle, 
+import {
+  Upload,
+  X,
+  FileText,
+  AlertCircle,
+  CheckCircle,
   Link as LinkIcon,
-  Shield
+  Shield,
 } from 'lucide-react';
 
 interface FileUploadProps {
@@ -22,7 +22,11 @@ interface FileUploadProps {
   onClose: () => void;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose }) => {
+const FileUpload: React.FC<FileUploadProps> = ({
+  subjectId,
+  onFileAdded,
+  onClose,
+}) => {
   const { authenticatedUser } = useContext(UserContext);
   const [uploadMethod, setUploadMethod] = useState<'file' | 'url'>('file');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -52,26 +56,36 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
     accept: {
       'application/pdf': ['.pdf'],
       'application/msword': ['.doc'],
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        ['.docx'],
       'application/vnd.ms-powerpoint': ['.ppt'],
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['.pptx'],
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+        ['.pptx'],
       'application/vnd.ms-excel': ['.xls'],
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
+        '.xlsx',
+      ],
       'image/jpeg': ['.jpg', '.jpeg'],
       'image/png': ['.png'],
       'image/gif': ['.gif'],
-      'text/plain': ['.txt']
+      'text/plain': ['.txt'],
     },
     maxFiles: 1,
     maxSize: 10 * 1024 * 1024, // 10MB
     onDropRejected: (rejectedFiles) => {
       const rejection = rejectedFiles[0];
       if (rejection.file.size > 10 * 1024 * 1024) {
-        setUploadStatus({ type: 'error', message: 'Le fichier est trop volumineux (max 10MB)' });
+        setUploadStatus({
+          type: 'error',
+          message: 'Le fichier est trop volumineux (max 10MB)',
+        });
       } else {
-        setUploadStatus({ type: 'error', message: 'Type de fichier non autorisé' });
+        setUploadStatus({
+          type: 'error',
+          message: 'Type de fichier non autorisé',
+        });
       }
-    }
+    },
   });
 
   const handleFileUpload = async () => {
@@ -96,19 +110,25 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
         throw new Error('Erreur lors du téléchargement du fichier');
       }
 
-      setUploadStatus({ type: 'success', message: 'Fichier téléchargé avec succès!' });
+      setUploadStatus({
+        type: 'success',
+        message: 'Fichier téléchargé avec succès!',
+      });
       onFileAdded();
-      
+
       // Reset form
       setSelectedFile(null);
       setCustomFilename('');
-      
+
       // Close modal after success
       setTimeout(() => {
         onClose();
       }, 2000);
     } catch (error) {
-      setUploadStatus({ type: 'error', message: 'Erreur lors du téléchargement du fichier' });
+      setUploadStatus({
+        type: 'error',
+        message: 'Erreur lors du téléchargement du fichier',
+      });
     } finally {
       setIsUploading(false);
     }
@@ -116,7 +136,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
 
   const handleUrlSubmit = async () => {
     if (!fileUrl || !urlFilename) {
-      setUploadStatus({ type: 'error', message: 'Veuillez remplir tous les champs' });
+      setUploadStatus({
+        type: 'error',
+        message: 'Veuillez remplir tous les champs',
+      });
       return;
     }
 
@@ -136,22 +159,25 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'ajout du lien');
+        throw new Error("Erreur lors de l'ajout du lien");
       }
 
       setUploadStatus({ type: 'success', message: 'Lien ajouté avec succès!' });
       onFileAdded();
-      
+
       // Reset form
       setFileUrl('');
       setUrlFilename('');
-      
+
       // Close modal after success
       setTimeout(() => {
         onClose();
       }, 2000);
     } catch (error) {
-      setUploadStatus({ type: 'error', message: 'Erreur lors de l\'ajout du lien' });
+      setUploadStatus({
+        type: 'error',
+        message: "Erreur lors de l'ajout du lien",
+      });
     } finally {
       setIsUploading(false);
     }
@@ -172,7 +198,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
             <div className="flex items-center">
               <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
               <p className="text-red-800">
-                Seuls les administrateurs peuvent ajouter des fichiers aux matières.
+                Seuls les administrateurs peuvent ajouter des fichiers aux
+                matières.
               </p>
             </div>
           </div>
@@ -193,7 +220,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs value={uploadMethod} onValueChange={(value) => setUploadMethod(value as 'file' | 'url')}>
+        <Tabs
+          value={uploadMethod}
+          onValueChange={(value) => setUploadMethod(value as 'file' | 'url')}
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="file">Télécharger un fichier</TabsTrigger>
             <TabsTrigger value="url">Ajouter un lien</TabsTrigger>
@@ -212,14 +242,18 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
                 <input {...getInputProps()} />
                 <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 {isDragActive ? (
-                  <p className="text-lg font-medium">Déposez le fichier ici...</p>
+                  <p className="text-lg font-medium">
+                    Déposez le fichier ici...
+                  </p>
                 ) : (
                   <div>
                     <p className="text-lg font-medium mb-2">
-                      Glissez-déposez un fichier ici, ou cliquez pour sélectionner
+                      Glissez-déposez un fichier ici, ou cliquez pour
+                      sélectionner
                     </p>
                     <p className="text-sm text-gray-500 mb-2">
-                      Types autorisés: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, JPG, PNG, GIF, TXT
+                      Types autorisés: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX,
+                      JPG, PNG, GIF, TXT
                     </p>
                     <p className="text-sm text-gray-500">
                       Taille maximum: 10MB
@@ -262,8 +296,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
               )}
 
               <div className="flex gap-2">
-                <Button 
-                  onClick={handleFileUpload} 
+                <Button
+                  onClick={handleFileUpload}
                   disabled={!selectedFile || isUploading}
                   className="flex-1"
                 >
@@ -300,8 +334,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
               </div>
 
               <div className="flex gap-2">
-                <Button 
-                  onClick={handleUrlSubmit} 
+                <Button
+                  onClick={handleUrlSubmit}
                   disabled={!fileUrl || !urlFilename || isUploading}
                   className="flex-1"
                 >
@@ -317,18 +351,26 @@ const FileUpload: React.FC<FileUploadProps> = ({ subjectId, onFileAdded, onClose
         </Tabs>
 
         {uploadStatus.message && (
-          <div className={`mt-4 p-4 rounded border-l-4 ${
-            uploadStatus.type === 'success' 
-              ? 'border-green-500 bg-green-50' 
-              : 'border-red-500 bg-red-50'
-          }`}>
+          <div
+            className={`mt-4 p-4 rounded border-l-4 ${
+              uploadStatus.type === 'success'
+                ? 'border-green-500 bg-green-50'
+                : 'border-red-500 bg-red-50'
+            }`}
+          >
             <div className="flex items-center">
               {uploadStatus.type === 'success' ? (
                 <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
               ) : (
                 <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
               )}
-              <p className={uploadStatus.type === 'success' ? 'text-green-800' : 'text-red-800'}>
+              <p
+                className={
+                  uploadStatus.type === 'success'
+                    ? 'text-green-800'
+                    : 'text-red-800'
+                }
+              >
                 {uploadStatus.message}
               </p>
             </div>

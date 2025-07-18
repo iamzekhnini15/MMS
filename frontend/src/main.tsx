@@ -58,17 +58,20 @@ const router = createBrowserRouter([
           </KpiContextProvider>
         ),
       },
-      { path: 'schedule', element: (
-        <CoursesProvider>
-          <TeacherProvider>
-            <ClassroomProvider>
-              <ClassesProvider>
-                <Schedule />
-              </ClassesProvider>
-            </ClassroomProvider>
-          </TeacherProvider>
-        </CoursesProvider>
-      ) },
+      {
+        path: 'schedule',
+        element: (
+          <CoursesProvider>
+            <TeacherProvider>
+              <ClassroomProvider>
+                <ClassesProvider>
+                  <Schedule />
+                </ClassesProvider>
+              </ClassroomProvider>
+            </TeacherProvider>
+          </CoursesProvider>
+        ),
+      },
       {
         path: 'manage-courses',
         element: (

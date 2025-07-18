@@ -25,7 +25,8 @@ const Navbar: React.FC<NavbarProps> = ({
   setActiveMenuItem,
 }) => {
   const navigate = useNavigate();
-  const { clearUser, authenticatedUser } = useContext<UserContextType>(UserContext);
+  const { clearUser, authenticatedUser } =
+    useContext<UserContextType>(UserContext);
 
   const handleLogout = () => {
     clearUser();

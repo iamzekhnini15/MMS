@@ -8,17 +8,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { 
-  BookOpen, 
-  Mail, 
-  Lock, 
-  Eye, 
-  EyeOff, 
+import {
+  BookOpen,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
   ArrowRight,
   Shield,
   Zap,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
 
 export function LoginForm() {
@@ -56,7 +56,7 @@ export function LoginForm() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-2xl"></div>
             <div className="relative p-12 space-y-8">
-              <motion.div 
+              <motion.div
                 className="space-y-4"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -70,15 +70,19 @@ export function LoginForm() {
                   <Badge variant="secondary" className="w-fit">
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'linear',
+                      }}
                     >
                       <Zap className="w-4 h-4 mr-1" />
                     </motion.div>
                     Système MMS
                   </Badge>
                 </motion.div>
-                
-                <motion.h1 
+
+                <motion.h1
                   className="text-4xl font-bold text-gray-900"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -86,32 +90,34 @@ export function LoginForm() {
                 >
                   Bienvenue sur
                   <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    {" "}MMS
+                    {' '}
+                    MMS
                   </span>
                 </motion.h1>
-                
-                <motion.p 
+
+                <motion.p
                   className="text-lg text-gray-600"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
                 >
-                  Connectez-vous à votre plateforme de gestion des matières scolaires
+                  Connectez-vous à votre plateforme de gestion des matières
+                  scolaires
                 </motion.p>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 className="space-y-4"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               >
-                <motion.div 
+                <motion.div
                   className="flex items-center space-x-3"
                   whileHover={{ x: 10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     transition={{ duration: 0.3 }}
@@ -119,17 +125,21 @@ export function LoginForm() {
                     <BookOpen className="w-5 h-5 text-blue-600" />
                   </motion.div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Gestion Complète</h3>
-                    <p className="text-sm text-gray-600">Cours, enseignants, étudiants et ressources</p>
+                    <h3 className="font-semibold text-gray-900">
+                      Gestion Complète
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Cours, enseignants, étudiants et ressources
+                    </p>
                   </div>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                   className="flex items-center space-x-3"
                   whileHover={{ x: 10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center"
                     whileHover={{ scale: 1.1, rotate: -5 }}
                     transition={{ duration: 0.3 }}
@@ -138,16 +148,18 @@ export function LoginForm() {
                   </motion.div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Sécurisé</h3>
-                    <p className="text-sm text-gray-600">Vos données sont protégées</p>
+                    <p className="text-sm text-gray-600">
+                      Vos données sont protégées
+                    </p>
                   </div>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                   className="flex items-center space-x-3"
                   whileHover={{ x: 10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     transition={{ duration: 0.3 }}
@@ -156,7 +168,9 @@ export function LoginForm() {
                   </motion.div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Fiable</h3>
-                    <p className="text-sm text-gray-600">Disponible 24h/24, 7j/7</p>
+                    <p className="text-sm text-gray-600">
+                      Disponible 24h/24, 7j/7
+                    </p>
                   </div>
                 </motion.div>
               </motion.div>
@@ -173,41 +187,46 @@ export function LoginForm() {
           >
             <Card className="shadow-xl border-0">
               <CardContent className="p-8">
-                <motion.div 
+                <motion.div
                   className="text-center mb-8"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    transition={{
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
                   >
                     <BookOpen className="w-8 h-8 text-white" />
                   </motion.div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">
                     Connexion
                   </h2>
-                  <p className="text-gray-600">
-                    Accédez à votre espace MMS
-                  </p>
+                  <p className="text-gray-600">Accédez à votre espace MMS</p>
                 </motion.div>
 
-                <motion.form 
-                  onSubmit={handleSubmit} 
+                <motion.form
+                  onSubmit={handleSubmit}
                   className="space-y-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 }}
                 >
-                  <motion.div 
+                  <motion.div
                     className="space-y-2"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: 0.8 }}
                   >
-                    <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    <Label
+                      htmlFor="email"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Adresse email
                     </Label>
                     <div className="relative">
@@ -229,13 +248,16 @@ export function LoginForm() {
                     </div>
                   </motion.div>
 
-                  <motion.div 
+                  <motion.div
                     className="space-y-2"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: 1.0 }}
                   >
-                    <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                    <Label
+                      htmlFor="password"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Mot de passe
                     </Label>
                     <div className="relative">
@@ -247,7 +269,7 @@ export function LoginForm() {
                       </motion.div>
                       <Input
                         id="password"
-                        type={showPassword ? "text" : "password"}
+                        type={showPassword ? 'text' : 'password'}
                         placeholder="Votre mot de passe"
                         required
                         value={password}
@@ -261,12 +283,16 @@ export function LoginForm() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </motion.button>
                     </div>
                   </motion.div>
 
-                  <motion.div 
+                  <motion.div
                     className="flex items-center justify-between"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -281,7 +307,10 @@ export function LoginForm() {
                         onChange={(e) => setRememberMe(e.target.checked)}
                         className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
-                      <Label htmlFor="rememberMe" className="text-sm text-gray-700">
+                      <Label
+                        htmlFor="rememberMe"
+                        className="text-sm text-gray-700"
+                      >
                         Se souvenir de moi
                       </Label>
                     </div>
@@ -296,7 +325,7 @@ export function LoginForm() {
                   </motion.div>
 
                   {error && (
-                    <motion.div 
+                    <motion.div
                       className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-lg"
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -323,7 +352,7 @@ export function LoginForm() {
                     </Button>
                   </motion.div>
 
-                  <motion.div 
+                  <motion.div
                     className="text-center pt-4 border-t border-gray-200"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -350,4 +379,4 @@ export function LoginForm() {
       </div>
     </div>
   );
-};
+}

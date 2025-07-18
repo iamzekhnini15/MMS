@@ -153,7 +153,9 @@ const CourseDetailPage: React.FC = () => {
                   <div className="mt-4 space-y-2">
                     {/* Bouton d'ajout de fichier - visible seulement pour les admins */}
                     {isAdmin && (
-                      <Button onClick={() => openFileUpload(subject.idSubject!)}>
+                      <Button
+                        onClick={() => openFileUpload(subject.idSubject!)}
+                      >
                         <Plus className="w-4 h-4 mr-1" /> Ajouter un fichier
                       </Button>
                     )}
@@ -261,7 +263,11 @@ const CourseDetailPage: React.FC = () => {
             </div>
 
             <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowForm(false)}
+              >
                 Annuler
               </Button>
               <Button type="submit">Ajouter</Button>

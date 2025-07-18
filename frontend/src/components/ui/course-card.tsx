@@ -25,27 +25,28 @@ const CourseCard = ({ course, onEdit, onDelete }: CourseCardProps) => {
         <div className="font-medium text-blue-900 truncate text-sm">
           {course.name}
         </div>
-        
+
         <div className="flex items-center text-blue-700">
           <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
           <span className="truncate">
-            {formatTime(course.startDateTime)} - {formatTime(course.endDateTime)}
+            {formatTime(course.startDateTime)} -{' '}
+            {formatTime(course.endDateTime)}
           </span>
         </div>
-        
+
         <div className="flex items-center text-blue-700">
           <User className="w-3 h-3 mr-1 flex-shrink-0" />
           <span className="truncate">
             {course.teacher.user.firstname} {course.teacher.user.lastname}
           </span>
         </div>
-        
+
         <div className="flex items-center text-blue-700">
           <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
           <span className="truncate">{course.classroom.name}</span>
         </div>
       </div>
-      
+
       <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <div className="flex space-x-1">
           <Button

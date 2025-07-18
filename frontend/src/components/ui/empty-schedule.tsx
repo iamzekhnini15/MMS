@@ -15,7 +15,8 @@ const EmptySchedule = ({ onCreateNew }: EmptyScheduleProps) => {
         </div>
         <h3 className="text-lg font-semibold mb-2">Aucun cours planifié</h3>
         <p className="text-muted-foreground text-center mb-6 max-w-sm">
-          Commencez par créer votre premier créneau de cours pour organiser votre emploi du temps.
+          Commencez par créer votre premier créneau de cours pour organiser
+          votre emploi du temps.
         </p>
         <Button onClick={onCreateNew}>
           <Plus className="w-4 h-4 mr-2" />

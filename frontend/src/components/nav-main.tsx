@@ -1,13 +1,13 @@
-"use client"
+'use client';
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { ChevronRight, type LucideIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from '@/components/ui/collapsible';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -18,23 +18,23 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar';
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon: LucideIcon
-    isActive?: boolean
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive?: boolean;
     items?: {
-      title: string
-      url: string
-    }[]
-  }[]
+      title: string;
+      url: string;
+    }[];
+  }[];
 }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <SidebarGroup>
@@ -44,8 +44,8 @@ export function NavMain({
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
-                <button 
-                  onClick={() => item.url !== "#" && navigate(item.url)}
+                <button
+                  onClick={() => item.url !== '#' && navigate(item.url)}
                   className="w-full flex items-center cursor-pointer"
                 >
                   <item.icon />
@@ -65,7 +65,7 @@ export function NavMain({
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <button 
+                            <button
                               onClick={() => navigate(subItem.url)}
                               className="w-full flex items-center cursor-pointer"
                             >
@@ -83,5 +83,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }
