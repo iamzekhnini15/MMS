@@ -46,7 +46,15 @@ const router = createBrowserRouter([
         path: 'dashboard',
         element: (
           <KpiContextProvider>
-            <DashboardPage />
+            <CoursesProvider>
+              <TeacherProvider>
+                <ClassroomProvider>
+                  <ClassesProvider>
+                    <DashboardPage />
+                  </ClassesProvider>
+                </ClassroomProvider>
+              </TeacherProvider>
+            </CoursesProvider>
           </KpiContextProvider>
         ),
       },
