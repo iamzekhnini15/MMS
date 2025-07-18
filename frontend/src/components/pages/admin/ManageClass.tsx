@@ -45,7 +45,8 @@ const ManageClass: React.FC = () => {
 
   useEffect(() => {
     fetchClasses();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -180,7 +181,7 @@ const ManageClass: React.FC = () => {
 
       {/* Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-3xl backdrop-blur-sm">
+        <DialogContent className="max-w-3xl bg-black/30">
           <DialogHeader>
             <DialogTitle>Ajouter une classe</DialogTitle>
           </DialogHeader>

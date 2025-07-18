@@ -54,7 +54,8 @@ const CourseDetailPage: React.FC = () => {
       fetchSubjectsByCourse(Number(id));
       fetchAllFile();
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const course = courses?.find((c) => c.idCourse === Number(id));
   if (!course) return <p className="p-6 text-gray-600">Cours non trouvé.</p>;

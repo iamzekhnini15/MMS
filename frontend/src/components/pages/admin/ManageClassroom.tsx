@@ -33,7 +33,8 @@ const ManageClassroom: React.FC = () => {
 
   useEffect(() => {
     fetchClassrooms();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;

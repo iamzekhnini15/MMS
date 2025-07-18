@@ -25,7 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({
   setActiveMenuItem,
 }) => {
   const navigate = useNavigate();
-  const { clearUser } = useContext<UserContextType>(UserContext);
+  const { clearUser, authenticatedUser } = useContext<UserContextType>(UserContext);
 
   const handleLogout = () => {
     clearUser();
@@ -54,6 +54,8 @@ const Navbar: React.FC<NavbarProps> = ({
       icon: 'fa-solid fa-book',
     },
   ];
+
+  if (!authenticatedUser) return null;
 
   return (
     <header className="w-full bg-white shadow-md z-10">

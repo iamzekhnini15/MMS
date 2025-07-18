@@ -65,7 +65,8 @@ const ClassDetailPage: React.FC = () => {
   useEffect(() => {
     fetchClasses();
     if (id) getAllStudentsForClass(Number(id));
-  }, [id, fetchClasses, getAllStudentsForClass]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const classe = classes?.find((c) => c.idClass === Number(id));
   if (!classe) return <p className="p-6 text-gray-600">Classe non trouvée.</p>;
