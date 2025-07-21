@@ -192,41 +192,40 @@ const ManageClass: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block mb-1 font-medium">Nom</label>
+                <label htmlFor='name' className="block mb-1 font-medium">Nom</label>
                 <Input
+                  id='name'
                   name="name"
                   value={form.name}
                   onChange={handleChange}
-                  required
                 />
               </div>
               <div>
-                <label className="block mb-1 font-medium">Niveau</label>
+                <label htmlFor="level" className="block mb-1 font-medium">Niveau</label>
                 <Input
+                  id="level"
                   name="level"
                   type="number"
                   value={form.level}
                   onChange={handleChange}
-                  required
                 />
               </div>
               <div>
-                <label className="block mb-1 font-medium">Département</label>
+                <label htmlFor="department" className="block mb-1 font-medium">Département</label>
                 <Input
+                  id="department"
                   name="department"
                   value={form.department}
                   onChange={handleChange}
-                  required
                 />
               </div>
               <div>
-                <label className="block mb-1 font-medium">Responsable</label>
+                <label htmlFor="responsibleTeacherId" className="block mb-1 font-medium">Responsable</label>
                 <Select
                   onValueChange={handleTeacherSelect}
                   value={form.responsibleTeacherId}
-                  required
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger id="responsibleTeacherId" className="w-full">
                     <SelectValue placeholder="Sélectionnez un responsable" />
                   </SelectTrigger>
                   <SelectContent>
