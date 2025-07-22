@@ -1,6 +1,17 @@
-### Read all students
+### Read all subjects
 @baseUrl = http://localhost:3000
 GET {{baseUrl}}/subject/getAll
 
 ### Read subject id 2
 GET {{baseUrl}}/subject/2
+
+### Create a new subject
+POST {{baseUrl}}/subject/create
+Content-Type: application/json
+
+{
+  "name": "Physique",
+  "description": "Cours de physique fondamentale",
+  "coefficient": 3.0,
+  "courseId": 1
+}

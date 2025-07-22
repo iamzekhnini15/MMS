@@ -1,3 +1,14 @@
 ### Read all classes
 @baseUrl = http://localhost:3000
 GET {{baseUrl}}/classes/getAll
+
+### Create a new class
+POST {{baseUrl}}/classes/create
+Content-Type: application/json
+
+{
+  "name": "6ème A",
+  "level": "6",
+  "department": "Secondaire",
+  "responsibleTeacherId": 1
+}

@@ -1,0 +1,59 @@
+@baseUrl = http://localhost:3000
+
+### Get evaluations by teacher (replace 1 with actual teacher ID)
+GET {{baseUrl}}/evaluations/teacher/1
+
+### Get visible evaluations by class and period (replace IDs with actual values)
+GET {{baseUrl}}/evaluations/visible/class/1/period/1
+
+### Get evaluations by subject and class (replace IDs with actual values)
+GET {{baseUrl}}/evaluations/subject/1/class/1
+
+### Get evaluations by subject, class and period (replace IDs with actual values)
+GET {{baseUrl}}/evaluations/subject/1/class/1/period/1
+
+### Get evaluation by ID (replace 1 with actual evaluation ID)
+GET {{baseUrl}}/evaluations/1
+
+### Create a new evaluation
+POST {{baseUrl}}/evaluations/create
+Content-Type: application/json
+
+{
+  "title": "Test d'évaluation Mathematics",
+  "description": "Évaluation sur les équations du second degré",
+  "evaluationDate": "2025-01-15T10:00:00.000Z",
+  "maxScore": 20,
+  "coefficient": 1.5,
+  "isVisible": true,
+  "gradesVisible": false,
+  "subjectId": 1,
+  "classId": 1,
+  "bulletinPeriodId": 1
+}
+
+### Update evaluation (replace 1 with actual evaluation ID)
+PUT {{baseUrl}}/evaluations/1
+Content-Type: application/json
+
+{
+  "title": "Test d'évaluation Mathematics (Modifié)",
+  "description": "Évaluation sur les équations du second degré - Version mise à jour",
+  "evaluationDate": "2025-01-15T10:00:00.000Z",
+  "maxScore": 25,
+  "coefficient": 2.0,
+  "isVisible": true,
+  "gradesVisible": true,
+  "subjectId": 1,
+  "classId": 1,
+  "bulletinPeriodId": 1
+}
+
+### Toggle evaluation visibility (replace 1 with actual evaluation ID)
+PUT {{baseUrl}}/evaluations/1/toggle-visibility
+
+### Toggle grades visibility (replace 1 with actual evaluation ID)
+PUT {{baseUrl}}/evaluations/1/toggle-grades-visibility
+
+### Delete evaluation (replace 1 with actual evaluation ID)
+DELETE {{baseUrl}}/evaluations/1

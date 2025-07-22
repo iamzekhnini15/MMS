@@ -40,6 +40,7 @@ const ClassDetailPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
 
   const [userForm, setUserForm] = useState<Student>({
+    idStudent: 0, // Ajout de l'ID étudiant requis
     user: {
       idUser: 0,
       email: '',
@@ -48,7 +49,7 @@ const ClassDetailPage: React.FC = () => {
       firstname: '',
       phone: '',
       role: 'STUDENT',
-      civility: '',
+      civility: 'MR',
       address: {
         street: '',
         number: '',
@@ -112,6 +113,7 @@ const ClassDetailPage: React.FC = () => {
 
   function resetForm() {
     setUserForm({
+      idStudent: 0, // Ajout de l'ID étudiant requis
       user: {
         idUser: 0,
         email: '',

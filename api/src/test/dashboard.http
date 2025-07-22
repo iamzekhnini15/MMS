@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:3000
+
+### Get dashboard KPIs (Key Performance Indicators)
+GET {{baseUrl}}/dashboard/kpis
+
+### Additional dashboard endpoints that might be used
+### (These would need to be implemented if not already existing)
+
+### Get class statistics
+# GET {{baseUrl}}/dashboard/class-stats
+
+### Get subject statistics  
+# GET {{baseUrl}}/dashboard/subject-stats
+
+### Get evaluation statistics
+# GET {{baseUrl}}/dashboard/evaluation-stats
+
+### Get grade distribution
+# GET {{baseUrl}}/dashboard/grade-distribution

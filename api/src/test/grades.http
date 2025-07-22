@@ -1,0 +1,64 @@
+@baseUrl = http://localhost:3000
+
+### Get grades by evaluation (replace 1 with actual evaluation ID)
+GET {{baseUrl}}/grades/evaluation/1
+
+### Get visible grades by student (replace 1 with actual student ID)
+GET {{baseUrl}}/grades/student/1/visible
+
+### Get grades for calculation (replace IDs with actual values)
+GET {{baseUrl}}/grades/calculation/student/1/subject/1/period/1
+
+### Get average grade (replace IDs with actual values)
+GET {{baseUrl}}/grades/average/student/1/subject/1/period/1
+
+### Get grade by ID (replace 1 with actual grade ID)
+GET {{baseUrl}}/grades/1
+
+### Save a single grade
+POST {{baseUrl}}/grades/save
+Content-Type: application/json
+
+{
+  "score": 15.5,
+  "studentId": 1,
+  "evaluationId": 1,
+  "comment": "Bon travail, quelques erreurs mineures"
+}
+
+### Save multiple grades (bulk save)
+POST {{baseUrl}}/grades/bulk-save
+Content-Type: application/json
+
+{
+  "evaluationId": 1,
+  "grades": [
+    {
+      "studentId": 1,
+      "score": 15.5,
+      "comment": "Très bon travail"
+    },
+    {
+      "studentId": 2,
+      "score": 12.0,
+      "comment": "Peut mieux faire"
+    },
+    {
+      "studentId": 3,
+      "score": 18.0,
+      "comment": "Excellent"
+    }
+  ]
+}
+
+### Update grade (replace 1 with actual grade ID)
+PUT {{baseUrl}}/grades/1
+Content-Type: application/json
+
+{
+  "score": 16.0,
+  "comment": "Très bon travail - note mise à jour"
+}
+
+### Delete grade (replace 1 with actual grade ID)
+DELETE {{baseUrl}}/grades/1

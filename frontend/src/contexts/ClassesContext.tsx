@@ -6,6 +6,7 @@ const defaultContext: ClassesContextType = {
   loading: true,
   error: null,
   fetchClasses: async () => {},
+  fetchAllClasses: async () => {},
   createClass: async () => {},
 };
 
@@ -27,7 +28,7 @@ const ClassesProvider = ({ children }: { children: ReactNode }) => {
       setError(null);
     } catch (err) {
       console.error('fetchClasses::error', err);
-      setError('Erreur lors du chargement des salles.');
+      setError('Erreur lors du chargement des classes.');
     } finally {
       setLoading(false);
     }
@@ -71,12 +72,16 @@ const ClassesProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Alias for fetchClasses to match the interface
+  const fetchAllClasses = fetchClasses;
+
   useEffect(() => {
     fetchClasses();
   }, []);
 
   const myContext: ClassesContextType = {
     fetchClasses,
+    fetchAllClasses,
     createClass,
     classes,
     loading,

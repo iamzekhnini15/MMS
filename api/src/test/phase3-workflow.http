@@ -1,0 +1,119 @@
+@baseUrl = http://localhost:3000
+
+### ===========================================
+### PHASE 3 WORKFLOW TESTS - Teacher Interface
+### ===========================================
+
+### Step 1: Get all teachers (to get teacher ID)
+GET {{baseUrl}}/teachers/getAll
+
+### Step 2: Get all classes (to get class ID)
+GET {{baseUrl}}/classes/getAll
+
+### Step 3: Get all subjects (to get subject ID)
+GET {{baseUrl}}/subject/getAll
+
+### Step 4: Get students by class (to get student IDs)
+GET {{baseUrl}}/students/class/1
+
+### Step 5: Create a bulletin period
+POST {{baseUrl}}/bulletin-periods/create
+Content-Type: application/json
+
+{
+  "name": "Première période 2024-2025",
+  "startDate": "2024-09-01T00:00:00.000Z",
+  "endDate": "2024-12-15T23:59:59.999Z",
+  "year": "2024-2025",
+  "isActive": true
+}
+
+### Step 6: Get active bulletin periods
+GET {{baseUrl}}/bulletin-periods/active
+
+### Step 7: Get current bulletin period
+GET {{baseUrl}}/bulletin-periods/current
+
+### Step 8: Create an evaluation
+POST {{baseUrl}}/evaluations/create
+Content-Type: application/json
+
+{
+  "title": "Interrogation Mathématiques - Algèbre",
+  "description": "Test sur les équations du second degré et les inéquations",
+  "evaluationDate": "2025-01-15T10:00:00.000Z",
+  "maxScore": 20,
+  "coefficient": 1.5,
+  "isVisible": true,
+  "gradesVisible": false,
+  "subjectId": 1,
+  "classId": 1,
+  "bulletinPeriodId": 1
+}
+
+### Step 9: Get evaluations by teacher (replace with actual teacher ID)
+GET {{baseUrl}}/evaluations/teacher/1
+
+### Step 10: Get visible evaluations by class and period
+GET {{baseUrl}}/evaluations/visible/class/1/period/1
+
+### Step 11: Get grades by evaluation (replace with actual evaluation ID)
+GET {{baseUrl}}/grades/evaluation/1
+
+### Step 12: Bulk save grades for the evaluation
+POST {{baseUrl}}/grades/bulk-save
+Content-Type: application/json
+
+{
+  "evaluationId": 1,
+  "grades": [
+    {
+      "studentId": 1,
+      "score": 15.5,
+      "comment": "Très bon travail, maîtrise les concepts"
+    },
+    {
+      "studentId": 2,
+      "score": 12.0,
+      "comment": "Effort à poursuivre, quelques lacunes"
+    },
+    {
+      "studentId": 3,
+      "score": 18.0,
+      "comment": "Excellent, parfaite compréhension"
+    }
+  ]
+}
+
+### Step 13: Make grades visible to students
+PUT {{baseUrl}}/evaluations/1/toggle-grades-visibility
+
+### Step 14: Get coefficients by class
+GET {{baseUrl}}/coefficients/class/1
+
+### Step 15: Save coefficient for subject-class combination
+POST {{baseUrl}}/coefficients/save
+Content-Type: application/json
+
+{
+  "subjectId": 1,
+  "classId": 1,
+  "coefficient": 2.5,
+  "isActive": true
+}
+
+### Step 16: Get student grades for calculation
+GET {{baseUrl}}/grades/calculation/student/1/subject/1/period/1
+
+### Step 17: Get student average
+GET {{baseUrl}}/grades/average/student/1/subject/1/period/1
+
+### ===========================================
+### CLEANUP (Optional - for testing only)
+### ===========================================
+
+### Delete evaluation (replace with actual ID)
+# DELETE {{baseUrl}}/evaluations/1
+
+### Delete bulletin period (replace with actual ID)  
+# DELETE {{baseUrl}}/bulletin-periods/1

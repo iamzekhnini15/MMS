@@ -192,16 +192,20 @@ const ManageClass: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor='name' className="block mb-1 font-medium">Nom</label>
+                <label htmlFor="name" className="block mb-1 font-medium">
+                  Nom
+                </label>
                 <Input
-                  id='name'
+                  id="name"
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                 />
               </div>
               <div>
-                <label htmlFor="level" className="block mb-1 font-medium">Niveau</label>
+                <label htmlFor="level" className="block mb-1 font-medium">
+                  Niveau
+                </label>
                 <Input
                   id="level"
                   name="level"
@@ -211,7 +215,9 @@ const ManageClass: React.FC = () => {
                 />
               </div>
               <div>
-                <label htmlFor="department" className="block mb-1 font-medium">Département</label>
+                <label htmlFor="department" className="block mb-1 font-medium">
+                  Département
+                </label>
                 <Input
                   id="department"
                   name="department"
@@ -220,7 +226,12 @@ const ManageClass: React.FC = () => {
                 />
               </div>
               <div>
-                <label htmlFor="responsibleTeacherId" className="block mb-1 font-medium">Responsable</label>
+                <label
+                  htmlFor="responsibleTeacherId"
+                  className="block mb-1 font-medium"
+                >
+                  Responsable
+                </label>
                 <Select
                   onValueChange={handleTeacherSelect}
                   value={form.responsibleTeacherId}

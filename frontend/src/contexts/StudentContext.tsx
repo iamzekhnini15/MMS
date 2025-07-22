@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState, ReactNode } from 'react';
 import { Student, StudentContextType } from '../types';
-import { getAuthenticatedUser } from '../utils/session';
 
 const defaultContext: StudentContextType = {
   students: null,
@@ -16,22 +15,14 @@ const StudentProvider = ({ children }: { children: ReactNode }) => {
   const [students, setStudents] = useState<Student[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const authenticatedUserFromStorage = getAuthenticatedUser();
 
   const getAllStudentsForClass = async (idClass: number) => {
     try {
       setLoading(true);
 
-      // Vérification du token
-      if (!authenticatedUserFromStorage?.token) {
-        throw new Error("Token d'authentification manquant");
-      }
-
       const response = await fetch(`/api/students/class/${idClass}`, {
-        // Ajout du slash avant api
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${authenticatedUserFromStorage.token}`,
           'Content-Type': 'application/json',
         },
       });

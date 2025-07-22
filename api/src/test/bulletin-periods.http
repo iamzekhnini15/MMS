@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:3000
+
+### Get all active bulletin periods
+GET {{baseUrl}}/bulletin-periods/active
+
+### Get current bulletin period
+GET {{baseUrl}}/bulletin-periods/current
+
+### Get bulletin periods by year (example with 2024)
+GET {{baseUrl}}/bulletin-periods/year/2024
+
+### Create a new bulletin period
+POST {{baseUrl}}/bulletin-periods/create
+Content-Type: application/json
+
+{
+  "name": "Première période 2024-2025",
+  "startDate": "2024-09-01T00:00:00.000Z",
+  "endDate": "2024-12-15T23:59:59.999Z",
+  "year": "2024-2025",
+  "isActive": true
+}
+
+### Get bulletin period by ID (replace 1 with actual ID)
+GET {{baseUrl}}/bulletin-periods/1
+
+### Update bulletin period (replace 1 with actual ID)
+PUT {{baseUrl}}/bulletin-periods/1
+Content-Type: application/json
+
+{
+  "name": "Première période 2024-2025 (Modifiée)",
+  "startDate": "2024-09-01T00:00:00.000Z",
+  "endDate": "2024-12-20T23:59:59.999Z",
+  "year": "2024-2025",
+  "isActive": true
+}
+
+### Delete bulletin period (replace 1 with actual ID)
+DELETE {{baseUrl}}/bulletin-periods/1

@@ -9,6 +9,7 @@ const defaultContext: SubjectContextType = {
   error: null,
   fetchAllFile: async () => {},
   fetchSubject: async () => {},
+  fetchAllSubjects: async () => {},
   fetchSubjectsByCourse: async () => {},
   toggleFileVisibility: async () => {},
   createSubject: async () => {},
@@ -38,8 +39,8 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
       setSubjects(data);
       setError(null);
     } catch (err) {
-      console.error('fetchCourses::error', err);
-      setError('Erreur lors du chargement des cours.');
+      console.error('fetchSubjects::error', err);
+      setError('Erreur lors du chargement des matières.');
     } finally {
       setLoading(false);
     }
@@ -124,9 +125,13 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Alias for fetchSubject to match the interface
+  const fetchAllSubjects = fetchSubject;
+
   const myContext: SubjectContextType = {
     fetchAllFile,
     fetchSubject,
+    fetchAllSubjects,
     fetchSubjectsByCourse,
     toggleFileVisibility,
     createSubject,

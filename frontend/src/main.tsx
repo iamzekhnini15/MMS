@@ -18,6 +18,16 @@ import ManageTeacher from './components/pages/admin/ManageTeacher';
 import ManageClassroom from './components/pages/admin/ManageClassroom';
 import ClassDetailPage from './components/pages/admin/ClassDetailsPage';
 import CourseDetailPage from './components/pages/admin/CourseDetailsPage';
+import {
+  TeacherDashboard,
+  EvaluationsManagement,
+  GradeEntry,
+  BulletinPeriodsManagement,
+  TeacherGradesPage,
+  TeacherCoefficientsPage,
+  TeacherClassesPage,
+  TeacherBulletinsPage,
+} from './components/pages/teacher';
 import { LoginForm } from './components/login-form';
 import ProtectedRoute from './components/ProtectedRoutes';
 
@@ -29,6 +39,8 @@ import { ClassroomProvider } from './contexts/ClassroomContext';
 import { ClassesProvider } from './contexts/ClassesContext';
 import { StudentProvider } from './contexts/StudentContext';
 import { SubjectProvider } from './contexts/SubjectContext';
+import { BulletinPeriodProvider } from './contexts/BulletinPeriodContext';
+import { EvaluationProvider } from './contexts/EvaluationContext';
 
 import theme from './themes';
 
@@ -141,6 +153,138 @@ const router = createBrowserRouter([
               <ClassroomProvider>
                 <ManageClassroom />
               </ClassroomProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <BulletinPeriodProvider>
+                <EvaluationProvider>
+                  <ClassesProvider>
+                    <StudentProvider>
+                      <SubjectProvider>
+                        <TeacherDashboard />
+                      </SubjectProvider>
+                    </StudentProvider>
+                  </ClassesProvider>
+                </EvaluationProvider>
+              </BulletinPeriodProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/evaluations',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <BulletinPeriodProvider>
+                <EvaluationProvider>
+                  <ClassesProvider>
+                    <StudentProvider>
+                      <SubjectProvider>
+                        <EvaluationsManagement teacherId={1} />
+                      </SubjectProvider>
+                    </StudentProvider>
+                  </ClassesProvider>
+                </EvaluationProvider>
+              </BulletinPeriodProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/grades/:evaluationId',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <EvaluationProvider>
+                <StudentProvider>
+                  <GradeEntry />
+                </StudentProvider>
+              </EvaluationProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/periods',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <BulletinPeriodProvider>
+                <BulletinPeriodsManagement />
+              </BulletinPeriodProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/grades',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <EvaluationProvider>
+                <BulletinPeriodProvider>
+                  <ClassesProvider>
+                    <SubjectProvider>
+                      <TeacherGradesPage />
+                    </SubjectProvider>
+                  </ClassesProvider>
+                </BulletinPeriodProvider>
+              </EvaluationProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/coefficients',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <ClassesProvider>
+                <SubjectProvider>
+                  <TeacherCoefficientsPage />
+                </SubjectProvider>
+              </ClassesProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/classes',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <ClassesProvider>
+                <StudentProvider>
+                  <TeacherClassesPage />
+                </StudentProvider>
+              </ClassesProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/bulletins',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <BulletinPeriodProvider>
+                <TeacherBulletinsPage />
+              </BulletinPeriodProvider>
             }
           />
         ),

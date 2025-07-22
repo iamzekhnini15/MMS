@@ -1,0 +1,55 @@
+@baseUrl = http://localhost:3000
+
+### Get coefficients by class (replace 1 with actual class ID)
+GET {{baseUrl}}/coefficients/class/1
+
+### Get coefficients by subject (replace 1 with actual subject ID)
+GET {{baseUrl}}/coefficients/subject/1
+
+### Get coefficient by subject and class (replace IDs with actual values)
+GET {{baseUrl}}/coefficients/subject/1/class/1
+
+### Get coefficient value by subject and class (replace IDs with actual values)
+GET {{baseUrl}}/coefficients/value/subject/1/class/1
+
+### Get all coefficients
+GET {{baseUrl}}/coefficients/all
+
+### Save a single coefficient
+POST {{baseUrl}}/coefficients/save
+Content-Type: application/json
+
+{
+  "subjectId": 1,
+  "classId": 1,
+  "coefficient": 2.5,
+  "isActive": true
+}
+
+### Bulk save coefficients for a class (replace 1 with actual class ID)
+POST {{baseUrl}}/coefficients/bulk-save/class/1
+Content-Type: application/json
+
+[
+  {
+    "subjectId": 1,
+    "coefficient": 2.5,
+    "isActive": true
+  },
+  {
+    "subjectId": 2,
+    "coefficient": 3.0,
+    "isActive": true
+  },
+  {
+    "subjectId": 3,
+    "coefficient": 1.5,
+    "isActive": true
+  }
+]
+
+### Deactivate coefficient (replace 1 with actual coefficient ID)
+PUT {{baseUrl}}/coefficients/1/deactivate
+
+### Delete coefficient (replace 1 with actual coefficient ID)
+DELETE {{baseUrl}}/coefficients/1

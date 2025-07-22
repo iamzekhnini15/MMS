@@ -1,0 +1,379 @@
+import React, { useEffect, useState, useContext, useMemo } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  PencilSquareIcon,
+  CheckIcon,
+  XMarkIcon,
+  ChartBarIcon,
+} from '@heroicons/react/24/outline';
+import { ClassesContext } from '../../../contexts/ClassesContext';
+import { SubjectContext } from '../../../contexts/SubjectContext';
+import type { Classes, Subject } from '../../../types';
+
+interface SubjectCoefficient {
+  idCoefficient?: number;
+  subject: {
+    idSubject: number;
+    name: string;
+    description: string;
+    coefficient: number;
+  };
+  classEntity: {
+    idClass: number;
+    name: string;
+  };
+  coefficient: number;
+  isActive: boolean;
+}
+
+interface SubjectWithCoefficient extends Subject {
+  coefficient: number;
+  isActive: boolean;
+  hasCoefficientSet: boolean;
+}
+
+const TeacherCoefficientsPage: React.FC = () => {
+  const {
+    classes,
+    loading: classesLoading,
+    fetchClasses,
+  } = useContext(ClassesContext);
+  const {
+    subjects,
+    loading: subjectsLoading,
+    fetchSubject,
+  } = useContext(SubjectContext);
+
+  const [coefficients, setCoefficients] = useState<SubjectCoefficient[]>([]);
+  const [coefficientsLoading, setCoefficientsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [editingCoefficient, setEditingCoefficient] = useState<number | null>(
+    null,
+  );
+  const [editValue, setEditValue] = useState<string>('');
+  const [selectedClass, setSelectedClass] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetchClasses();
+    fetchSubject();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Sélectionner automatiquement la première classe quand les classes sont chargées
+  useEffect(() => {
+    if (classes && classes.length > 0 && !selectedClass) {
+      setSelectedClass(classes[0].idClass);
+    }
+  }, [classes, selectedClass]);
+
+  // Charger les coefficients spécifiques quand une classe est sélectionnée
+  useEffect(() => {
+    if (selectedClass) {
+      fetchCoefficientsByClass(selectedClass);
+    }
+  }, [selectedClass]);
+
+  const fetchCoefficientsByClass = async (classId: number) => {
+    console.log('Fetching coefficients for class:', classId);
+    setCoefficientsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/coefficients/class/${classId}`);
+      if (!response.ok) {
+        // Si l'API retourne 404, ce n'est pas grave, on utilisera les coefficients de base
+        if (response.status === 404) {
+          console.log(
+            'No specific coefficients found for class, using defaults',
+          );
+          setCoefficients([]);
+          return;
+        }
+        throw new Error('Failed to fetch coefficients');
+      }
+      const data = await response.json();
+      console.log('Fetched coefficients:', data);
+      console.log('Setting coefficients:', data);
+      setCoefficients(data);
+    } catch (err) {
+      console.warn(
+        'Could not fetch specific coefficients, using default from subjects:',
+        err,
+      );
+      setCoefficients([]);
+    } finally {
+      setCoefficientsLoading(false);
+    }
+  };
+
+  const saveCoefficient = async (
+    subjectId: number,
+    classId: number,
+    coefficient: number,
+  ) => {
+    console.log('saveCoefficient called with:', {
+      subjectId,
+      classId,
+      coefficient,
+    });
+    try {
+      const response = await fetch('/api/coefficients/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subjectId,
+          classId,
+          coefficient,
+          isActive: true,
+        }),
+      });
+
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        throw new Error('Failed to save coefficient');
+      }
+
+      const result = await response.json();
+      console.log('Save result:', result);
+
+      // Recharger les coefficients spécifiques pour cette classe
+      if (selectedClass) {
+        console.log('Reloading coefficients for class:', selectedClass);
+        await fetchCoefficientsByClass(selectedClass);
+      }
+    } catch (err) {
+      console.error('Error in saveCoefficient:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      throw err;
+    }
+  };
+
+  const handleEditStart = (coefficientId: number, currentValue: number) => {
+    setEditingCoefficient(coefficientId);
+    setEditValue(currentValue.toString());
+  };
+
+  const handleEditSave = async (subjectId: number, classId: number) => {
+    const newValue = parseFloat(editValue);
+    if (isNaN(newValue) || newValue <= 0) {
+      setError('Le coefficient doit être un nombre positif');
+      return;
+    }
+
+    console.log('Saving coefficient:', { subjectId, classId, newValue });
+
+    try {
+      await saveCoefficient(subjectId, classId, newValue);
+      setEditingCoefficient(null);
+      setEditValue('');
+      console.log('Coefficient saved successfully');
+    } catch (err) {
+      console.error('Error saving coefficient:', err);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditingCoefficient(null);
+    setEditValue('');
+  };
+
+  const getClassName = (classId: number) => {
+    const classe = classes?.find((c: Classes) => c.idClass === classId);
+    return classe?.name || `Classe ${classId}`;
+  };
+
+  // Calculate subjects for the selected class with their coefficients
+  const subjectsForClass = useMemo(() => {
+    if (!subjects || !selectedClass) return [];
+
+    return subjects.map((subject: Subject) => {
+      // Chercher un coefficient spécifique pour cette classe
+      const specificCoefficient = coefficients.find(
+        (coeff) =>
+          coeff.subject?.idSubject === subject.idSubject &&
+          coeff.classEntity?.idClass === selectedClass,
+      );
+
+      return {
+        ...subject,
+        // Utiliser le coefficient spécifique s'il existe, sinon le coefficient par défaut du subject
+        coefficient: specificCoefficient?.coefficient ?? subject.coefficient,
+        isActive: specificCoefficient?.isActive ?? true,
+        hasCoefficientSet: !!specificCoefficient, // true si coefficient personnalisé
+      };
+    });
+  }, [subjects, selectedClass, coefficients]);
+
+  if (classesLoading || subjectsLoading) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg text-gray-600">Chargement...</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto p-6">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          Gestion des Coefficients
+        </h1>
+        <p className="text-gray-600">
+          Configurez les coefficients pour chaque matière par classe
+        </p>
+      </div>
+
+      {/* Class Selector */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ChartBarIcon className="h-5 w-5" />
+            Sélection de la classe
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {classes?.map((classe: Classes) => (
+              <Button
+                key={classe.idClass}
+                variant={
+                  selectedClass === classe.idClass ? 'default' : 'outline'
+                }
+                onClick={() => setSelectedClass(classe.idClass)}
+                className="mb-2"
+              >
+                {classe.name}
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <h3 className="text-red-800 font-medium">Erreur</h3>
+          <p className="text-red-600">{error}</p>
+        </div>
+      )}
+
+      {selectedClass && (
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Coefficients pour {getClassName(selectedClass)}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {subjectsLoading || coefficientsLoading ? (
+              <div className="text-center py-8">
+                <div className="text-gray-600">
+                  Chargement des coefficients...
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {subjectsForClass.map((subject: SubjectWithCoefficient) => (
+                  <div
+                    key={subject.idSubject}
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          {subject.name}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {subject.description}
+                        </p>
+                      </div>
+                      {subject.hasCoefficientSet && (
+                        <Badge variant="default">Configuré</Badge>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {editingCoefficient === subject.idSubject ? (
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            min="0.1"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            className="w-20"
+                            autoFocus
+                          />
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              selectedClass &&
+                              subject.idSubject &&
+                              handleEditSave(subject.idSubject, selectedClass)
+                            }
+                            disabled={!selectedClass || !subject.idSubject}
+                          >
+                            <CheckIcon className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handleEditCancel}
+                          >
+                            <XMarkIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-semibold text-gray-900 min-w-[3rem] text-right">
+                            {subject.coefficient}
+                          </span>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              subject.idSubject &&
+                              handleEditStart(
+                                subject.idSubject,
+                                subject.coefficient,
+                              )
+                            }
+                            disabled={!subject.idSubject}
+                          >
+                            <PencilSquareIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {!selectedClass && classes && classes.length === 0 && (
+        <Card className="text-center py-12">
+          <CardContent>
+            <ChartBarIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Aucune classe trouvée
+            </h3>
+            <p className="text-gray-600">
+              Aucune classe n'est disponible pour configurer les coefficients.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+export default TeacherCoefficientsPage;
