@@ -28,6 +28,7 @@ import {
   TeacherClassesPage,
   TeacherBulletinsPage,
 } from './components/pages/teacher';
+import { MyGradesPage, StudentDashboard } from './components/pages/student';
 import { LoginForm } from './components/login-form';
 import ProtectedRoute from './components/ProtectedRoutes';
 
@@ -285,6 +286,32 @@ const router = createBrowserRouter([
               <BulletinPeriodProvider>
                 <TeacherBulletinsPage />
               </BulletinPeriodProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'student',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['STUDENT', 'ADMIN']}
+            element={<StudentDashboard />}
+          />
+        ),
+      },
+      {
+        path: 'student/grades',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['STUDENT', 'ADMIN']}
+            element={
+              <EvaluationProvider>
+                <BulletinPeriodProvider>
+                  <SubjectProvider>
+                    <MyGradesPage />
+                  </SubjectProvider>
+                </BulletinPeriodProvider>
+              </EvaluationProvider>
             }
           />
         ),

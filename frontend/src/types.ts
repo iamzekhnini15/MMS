@@ -304,6 +304,7 @@ interface EvaluationContextType {
   ) => Promise<void>;
   deleteEvaluation: (evaluationId: number) => Promise<void>;
   fetchGradesByEvaluation: (evaluationId: number) => Promise<void>;
+  fetchVisibleGradesByStudent: (studentId: number) => Promise<void>;
   submitGrades: (grades: BulkGradeInput) => Promise<void>;
   updateGrade: (grade: EvaluationGrade) => Promise<void>;
   deleteGrade: (gradeId: number) => Promise<void>;

@@ -18,6 +18,7 @@ const defaultEvaluationContext: EvaluationContextType = {
   updateEvaluation: async () => {},
   deleteEvaluation: async () => {},
   fetchGradesByEvaluation: async () => {},
+  fetchVisibleGradesByStudent: async () => {},
   submitGrades: async () => {},
   updateGrade: async () => {},
   deleteGrade: async () => {},
@@ -176,6 +177,24 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const fetchVisibleGradesByStudent = async (studentId: number) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/grades/student/${studentId}/visible`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch student grades');
+      }
+      const data = await response.json();
+      console.log('📊 Student grades fetched from API:', data);
+      setEvaluationGrades(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const submitGrades = async (grades: BulkGradeInput) => {
     setLoading(true);
     setError(null);
@@ -272,6 +291,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     updateEvaluation,
     deleteEvaluation,
     fetchGradesByEvaluation,
+    fetchVisibleGradesByStudent,
     submitGrades,
     updateGrade,
     deleteGrade,
