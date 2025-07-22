@@ -10,19 +10,19 @@ const App = () => {
   const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
   const { authenticatedUser } = useContext(UserContext);
 
-  // Vérifie si l'utilisateur est admin
-  const isAdmin = authenticatedUser?.user.role === 'ADMIN';
+  // Vérifie si l'utilisateur est connecté (peu importe le rôle)
+  const isAuthenticated = authenticatedUser?.user?.role;
 
   return (
     <SidebarProvider>
       <div className="flex h-screen overflow-hidden w-full">
-        {/* Sidebar si admin */}
-        {isAdmin && <AppSidebar />}
+        {/* Sidebar pour tous les utilisateurs connectés */}
+        {isAuthenticated && <AppSidebar />}
 
         {/* Contenu principal */}
         <div className="flex-1 flex flex-col">
-          {/* Navbar si non-admin */}
-          {!isAdmin && (
+          {/* Navbar uniquement pour les utilisateurs non-connectés */}
+          {!isAuthenticated && (
             <>
               <Navbar
                 activeMenuItem={activeMenuItem}
@@ -32,7 +32,9 @@ const App = () => {
             </>
           )}
 
-          <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <main className={`flex-1 overflow-y-auto bg-gray-50 ${
+            isAuthenticated ? 'p-6' : 'p-6'
+          }`}>
             <Outlet />
           </main>
         </div>

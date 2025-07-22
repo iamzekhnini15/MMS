@@ -28,7 +28,7 @@ import {
   TeacherClassesPage,
   TeacherBulletinsPage,
 } from './components/pages/teacher';
-import { MyGradesPage, StudentDashboard } from './components/pages/student';
+import { MyGradesPage, StudentDashboard, StudentSchedule, StudentBulletins, StudentResources } from './components/pages/student';
 import { LoginForm } from './components/login-form';
 import ProtectedRoute from './components/ProtectedRoutes';
 
@@ -313,6 +313,33 @@ const router = createBrowserRouter([
                 </BulletinPeriodProvider>
               </EvaluationProvider>
             }
+          />
+        ),
+      },
+      {
+        path: 'student/schedule',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['STUDENT', 'ADMIN']}
+            element={<StudentSchedule />}
+          />
+        ),
+      },
+      {
+        path: 'student/bulletins',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['STUDENT', 'ADMIN']}
+            element={<StudentBulletins />}
+          />
+        ),
+      },
+      {
+        path: 'student/resources',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['STUDENT', 'ADMIN']}
+            element={<StudentResources />}
           />
         ),
       },
