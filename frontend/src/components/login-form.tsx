@@ -1,8 +1,9 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { UserContext } from '@/contexts/UserContext';
 import { UserContextType } from '@/types';
+import { useRoleBasedRedirect } from '@/hooks/useRoleBasedRedirect';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,8 +28,9 @@ export function LoginForm() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { loginUser }: UserContextType = useContext(UserContext);
+  const { loginUser, authenticatedUser }: UserContextType = useContext(UserContext);
   const navigate = useNavigate();
+  const { redirectBasedOnRole } = useRoleBasedRedirect();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +43,19 @@ export function LoginForm() {
     setError('');
     try {
       await loginUser({ email, password }, rememberMe);
-      navigate('/dashboard');
+      // La redirection sera gérée par un useEffect qui surveille authenticatedUser
     } catch (err) {
       console.error('LoginForm::error:', err);
       setError('Email ou mot de passe incorrect.');
     }
   };
+
+  // Effect pour rediriger l'utilisateur après la connexion
+  useEffect(() => {
+    if (authenticatedUser) {
+      redirectBasedOnRole(authenticatedUser);
+    }
+  }, [authenticatedUser, redirectBasedOnRole]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center p-4">

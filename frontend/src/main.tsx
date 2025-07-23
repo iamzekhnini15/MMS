@@ -29,6 +29,7 @@ import {
   TeacherClassesPage,
   TeacherBulletinsPage,
 } from './components/pages/teacher';
+import { RoleBasedDashboardRedirect } from './components/pages/RoleBasedDashboardRedirect';
 import DetailedBulletinPage from './components/pages/teacher/DetailedBulletinPage';
 import { MyGradesPage, StudentDashboard, StudentSchedule, StudentBulletins, StudentResources } from './components/pages/student';
 import { LoginForm } from './components/login-form';
@@ -61,95 +62,126 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <HomePage /> },
-      { path: 'debug', element: <NetworkDebugPage /> },
+      { 
+        path: 'debug', 
+        element: (
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={<NetworkDebugPage />}
+          />
+        )
+      },
       {
         path: 'dashboard',
         element: (
-          <KpiContextProvider>
-            <CoursesProvider>
-              <TeacherProvider>
-                <ClassroomProvider>
-                  <ClassesProvider>
-                    <DashboardPage />
-                  </ClassesProvider>
-                </ClassroomProvider>
-              </TeacherProvider>
-            </CoursesProvider>
-          </KpiContextProvider>
+          <ProtectedRoute
+            requiredRoles={['ADMIN', 'TEACHER', 'STUDENT']}
+            element={<RoleBasedDashboardRedirect />}
+          />
         ),
       },
       {
         path: 'schedule',
         element: (
-          <CoursesProvider>
-            <TeacherProvider>
-              <ClassroomProvider>
-                <ClassesProvider>
-                  <Schedule />
-                </ClassesProvider>
-              </ClassroomProvider>
-            </TeacherProvider>
-          </CoursesProvider>
+          <ProtectedRoute
+            requiredRoles={['ADMIN', 'TEACHER', 'STUDENT']}
+            element={
+              <CoursesProvider>
+                <TeacherProvider>
+                  <ClassroomProvider>
+                    <ClassesProvider>
+                      <Schedule />
+                    </ClassesProvider>
+                  </ClassroomProvider>
+                </TeacherProvider>
+              </CoursesProvider>
+            }
+          />
         ),
       },
       {
         path: 'manage-courses',
         element: (
-          <CoursesProvider>
-            <TeacherProvider>
-              <ClassroomProvider>
-                <Courses />
-              </ClassroomProvider>
-            </TeacherProvider>
-          </CoursesProvider>
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={
+              <CoursesProvider>
+                <TeacherProvider>
+                  <ClassroomProvider>
+                    <Courses />
+                  </ClassroomProvider>
+                </TeacherProvider>
+              </CoursesProvider>
+            }
+          />
         ),
       },
       {
         path: 'manage-courses/:id',
         element: (
-          <CoursesProvider>
-            <TeacherProvider>
-              <SubjectProvider>
-                <CourseDetailPage />
-              </SubjectProvider>
-            </TeacherProvider>
-          </CoursesProvider>
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={
+              <CoursesProvider>
+                <TeacherProvider>
+                  <SubjectProvider>
+                    <CourseDetailPage />
+                  </SubjectProvider>
+                </TeacherProvider>
+              </CoursesProvider>
+            }
+          />
         ),
       },
       {
         path: 'manage-teachers',
         element: (
-          <CoursesProvider>
-            <TeacherProvider>
-              <ClassroomProvider>
-                <ClassesProvider>
-                  <ManageTeacher />
-                </ClassesProvider>
-              </ClassroomProvider>
-            </TeacherProvider>
-          </CoursesProvider>
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={
+              <CoursesProvider>
+                <TeacherProvider>
+                  <ClassroomProvider>
+                    <ClassesProvider>
+                      <ManageTeacher />
+                    </ClassesProvider>
+                  </ClassroomProvider>
+                </TeacherProvider>
+              </CoursesProvider>
+            }
+          />
         ),
       },
       {
         path: 'manage-classes',
         element: (
-          <ClassesProvider>
-            <TeacherProvider>
-              <ManageClass />
-            </TeacherProvider>
-          </ClassesProvider>
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={
+              <ClassesProvider>
+                <TeacherProvider>
+                  <ManageClass />
+                </TeacherProvider>
+              </ClassesProvider>
+            }
+          />
         ),
       },
       {
         path: 'manage-classes/:id',
         element: (
-          <ClassesProvider>
-            <TeacherProvider>
-              <StudentProvider>
-                <ClassDetailPage />
-              </StudentProvider>
-            </TeacherProvider>
-          </ClassesProvider>
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={
+              <ClassesProvider>
+                <TeacherProvider>
+                  <StudentProvider>
+                    <ClassDetailPage />
+                  </StudentProvider>
+                </TeacherProvider>
+              </ClassesProvider>
+            }
+          />
         ),
       },
       {
@@ -161,6 +193,49 @@ const router = createBrowserRouter([
               <ClassroomProvider>
                 <ManageClassroom />
               </ClassroomProvider>
+            }
+          />
+        ),
+      },
+      // Routes spécifiques par rôle pour les dashboards
+      {
+        path: 'admin/dashboard',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={
+              <KpiContextProvider>
+                <CoursesProvider>
+                  <TeacherProvider>
+                    <ClassroomProvider>
+                      <ClassesProvider>
+                        <DashboardPage />
+                      </ClassesProvider>
+                    </ClassroomProvider>
+                  </TeacherProvider>
+                </CoursesProvider>
+              </KpiContextProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/dashboard',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER']}
+            element={
+              <BulletinPeriodProvider>
+                <EvaluationProvider>
+                  <ClassesProvider>
+                    <StudentProvider>
+                      <SubjectProvider>
+                        <TeacherDashboard />
+                      </SubjectProvider>
+                    </StudentProvider>
+                  </ClassesProvider>
+                </EvaluationProvider>
+              </BulletinPeriodProvider>
             }
           />
         ),
