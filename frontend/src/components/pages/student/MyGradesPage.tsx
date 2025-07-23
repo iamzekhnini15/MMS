@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import {
   Select,
   SelectContent,
@@ -13,6 +22,8 @@ import {
   AcademicCapIcon,
   ChartBarIcon,
   EyeIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
 } from '@heroicons/react/24/outline';
 import EvaluationContext from '../../../contexts/EvaluationContext';
 import { SubjectContext } from '../../../contexts/SubjectContext';
@@ -28,6 +39,8 @@ const MyGradesPage: React.FC = () => {
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
   const [selectedPeriod, setSelectedPeriod] = useState<string>('all');
   const [filteredGrades, setFilteredGrades] = useState<EvaluationGrade[]>([]);
+  const [sortBy, setSortBy] = useState<'date' | 'subject' | 'score'>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
     // Pour le moment, utilisons un ID étudiant hardcodé pour les tests
@@ -62,15 +75,46 @@ const MyGradesPage: React.FC = () => {
       });
     }
 
-    // Trier par date de notation (plus récent en premier)
+    // Trier selon les critères sélectionnés
     filtered.sort((a: EvaluationGrade, b: EvaluationGrade) => {
-      const dateA = new Date(a.gradedAt || '');
-      const dateB = new Date(b.gradedAt || '');
-      return dateB.getTime() - dateA.getTime();
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case 'date':
+          const dateA = new Date(a.gradedAt || '');
+          const dateB = new Date(b.gradedAt || '');
+          comparison = dateB.getTime() - dateA.getTime(); // Par défaut le plus récent en premier
+          break;
+        case 'subject':
+          const subjectA = a.evaluationTitle || '';
+          const subjectB = b.evaluationTitle || '';
+          comparison = subjectA.localeCompare(subjectB);
+          break;
+        case 'score':
+          const scoreA = a.score || 0;
+          const scoreB = b.score || 0;
+          const maxScoreA = a.maxScore || 20;
+          const maxScoreB = b.maxScore || 20;
+          const percentageA = (scoreA / maxScoreA) * 100;
+          const percentageB = (scoreB / maxScoreB) * 100;
+          comparison = percentageB - percentageA; // Par défaut les meilleures notes en premier
+          break;
+      }
+      
+      return sortOrder === 'desc' ? comparison : -comparison;
     });
 
     setFilteredGrades(filtered);
-  }, [evaluationGrades, selectedSubject, selectedPeriod]);
+  }, [evaluationGrades, selectedSubject, selectedPeriod, sortBy, sortOrder]);
+
+  const handleSort = (column: 'date' | 'subject' | 'score') => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('desc');
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
@@ -267,92 +311,189 @@ const MyGradesPage: React.FC = () => {
         </Card>
       )}
 
-      {/* Liste des notes */}
+      {/* Table des notes */}
       {filteredGrades.length > 0 ? (
-        <div className="grid gap-4">
-          {filteredGrades.map((grade: EvaluationGrade) => (
-            <Card key={grade.idGrade} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="text-lg font-semibold">
-                          {grade.evaluationTitle || `Évaluation ${grade.evaluationId}`}
-                        </h3>
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
-                          <span className="flex items-center">
-                            <AcademicCapIcon className="h-4 w-4 mr-1" />
-                            {/* Temporaire : sera remplacé par les vraies données */}
-                            Matière
-                          </span>
-                          <span className="flex items-center">
-                            <CalendarIcon className="h-4 w-4 mr-1" />
-                            {formatDate(grade.gradedAt || new Date().toISOString())}
-                          </span>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center">
+                <AcademicCapIcon className="h-5 w-5 mr-2" />
+                Mes Notes ({filteredGrades.length} évaluation{filteredGrades.length > 1 ? 's' : ''})
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <span>Trier par:</span>
+                <Button
+                  variant={sortBy === 'date' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleSort('date')}
+                  className="flex items-center"
+                >
+                  Date
+                  {sortBy === 'date' && (
+                    sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 ml-1" /> : <ArrowUpIcon className="w-3 h-3 ml-1" />
+                  )}
+                </Button>
+                <Button
+                  variant={sortBy === 'subject' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleSort('subject')}
+                  className="flex items-center"
+                >
+                  Matière
+                  {sortBy === 'subject' && (
+                    sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 ml-1" /> : <ArrowUpIcon className="w-3 h-3 ml-1" />
+                  )}
+                </Button>
+                <Button
+                  variant={sortBy === 'score' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleSort('score')}
+                  className="flex items-center"
+                >
+                  Note
+                  {sortBy === 'score' && (
+                    sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 ml-1" /> : <ArrowUpIcon className="w-3 h-3 ml-1" />
+                  )}
+                </Button>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50" 
+                    onClick={() => handleSort('date')}
+                  >
+                    <div className="flex items-center">
+                      Date
+                      {sortBy === 'date' && (
+                        sortOrder === 'desc' ? <ArrowDownIcon className="w-4 h-4 ml-1" /> : <ArrowUpIcon className="w-4 h-4 ml-1" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50" 
+                    onClick={() => handleSort('subject')}
+                  >
+                    <div className="flex items-center">
+                      Évaluation
+                      {sortBy === 'subject' && (
+                        sortOrder === 'desc' ? <ArrowDownIcon className="w-4 h-4 ml-1" /> : <ArrowUpIcon className="w-4 h-4 ml-1" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead>Matière</TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50 text-right" 
+                    onClick={() => handleSort('score')}
+                  >
+                    <div className="flex items-center justify-end">
+                      Note
+                      {sortBy === 'score' && (
+                        sortOrder === 'desc' ? <ArrowDownIcon className="w-4 h-4 ml-1" /> : <ArrowUpIcon className="w-4 h-4 ml-1" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-right">Pourcentage</TableHead>
+                  <TableHead>Statut</TableHead>
+                  <TableHead>Commentaire</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredGrades.map((grade: EvaluationGrade) => {
+                  const percentage = grade.score && grade.maxScore 
+                    ? ((grade.score / grade.maxScore) * 100) 
+                    : 0;
+                  
+                  return (
+                    <TableRow key={grade.idGrade} className="hover:bg-muted/50">
+                      <TableCell>
+                        <div className="flex items-center text-sm">
+                          <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+                          {formatDate(grade.gradedAt || new Date().toISOString())}
                         </div>
-                      </div>
-
-                      {/* Note */}
-                      <div className="text-right">
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div className="font-medium">
+                          {grade.evaluationTitle || `Évaluation ${grade.evaluationId}`}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Max: {grade.maxScore || 20} points
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <Badge variant="secondary" className="text-xs">
+                          {/* Temporaire : sera remplacé par les vraies données */}
+                          Matière
+                        </Badge>
+                      </TableCell>
+                      
+                      <TableCell className="text-right">
                         {grade.score !== null && grade.score !== undefined ? (
-                          <div>
+                          <div className="flex items-center justify-end">
                             <Badge
-                              className={`text-lg font-bold px-3 py-1 ${getGradeBadgeColor(
-                                grade.score || 0,
+                              className={`font-bold ${getGradeBadgeColor(
+                                grade.score,
                                 grade.maxScore || 20
                               )}`}
                             >
                               {grade.score}/{grade.maxScore || 20}
                             </Badge>
-                            <div
-                              className={`text-sm font-medium mt-1 ${getGradeColor(
-                                grade.score || 0,
-                                grade.maxScore || 20
-                              )}`}
-                            >
-                              {(
-                                ((grade.score || 0) /
-                                  (grade.maxScore || 20)) *
-                                100
-                              ).toFixed(1)}
-                              %
-                            </div>
                           </div>
                         ) : (
                           <Badge variant="outline" className="text-gray-500">
                             Non noté
                           </Badge>
                         )}
-                      </div>
-                    </div>
-
-                    {/* Commentaire */}
-                    {grade.comment && (
-                      <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                        <p className="text-sm font-medium text-blue-800 mb-1">
-                          Commentaire :
-                        </p>
-                        <p className="text-sm text-blue-700">{grade.comment}</p>
-                      </div>
-                    )}
-
-                    {/* Métadonnées */}
-                    <div className="flex items-center justify-between mt-4 text-xs text-muted-foreground">
-                      <div className="flex items-center space-x-4">
-                        <span>Statut: {grade.status || 'PRESENT'}</span>
-                        <div className="flex items-center">
-                          <EyeIcon className="h-3 w-3 mr-1" />
-                          <span>Note visible</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                      </TableCell>
+                      
+                      <TableCell className="text-right">
+                        {grade.score !== null && grade.score !== undefined ? (
+                          <div className={`font-semibold ${getGradeColor(grade.score, grade.maxScore || 20)}`}>
+                            {percentage.toFixed(1)}%
+                          </div>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </TableCell>
+                      
+                      <TableCell>
+                        <Badge 
+                          variant={grade.status === 'PRESENT' ? 'default' : 'destructive'}
+                          className="text-xs"
+                        >
+                          {grade.status || 'PRESENT'}
+                        </Badge>
+                      </TableCell>
+                      
+                      <TableCell>
+                        {grade.comment ? (
+                          <div className="max-w-xs">
+                            <p className="text-sm text-muted-foreground truncate" title={grade.comment}>
+                              {grade.comment}
+                            </p>
+                            {grade.comment.length > 50 && (
+                              <Button variant="ghost" size="sm" className="text-xs h-auto p-0 mt-1">
+                                <EyeIcon className="w-3 h-3 mr-1" />
+                                Voir plus
+                              </Button>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       ) : (
         <Card className="text-center py-12">
           <CardContent>

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { Student, StudentContextType } from '../types';
 
 const defaultContext: StudentContextType = {
@@ -16,7 +16,7 @@ const StudentProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const getAllStudentsForClass = async (idClass: number) => {
+    const getAllStudentsForClass = useCallback(async (idClass: number) => {
     try {
       setLoading(true);
 
@@ -48,21 +48,14 @@ const StudentProvider = ({ children }: { children: ReactNode }) => {
       setStudents(students);
       setError(null);
     } catch (err) {
-      console.error('Erreur dans getAllStudentsForClass:', err);
+      console.error('getAllStudentsForClass::error', err);
       setError(
-        err instanceof Error
-          ? err.message
-          : 'Erreur inconnue lors du chargement des étudiants',
+        err instanceof Error ? err.message : 'Erreur lors du chargement.',
       );
-
-      if (err instanceof TypeError) {
-        // Erreur réseau
-        setError('Problème de connexion au serveur');
-      }
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const addStudent = async (newStudentData: Omit<Student, 'idStudent'>) => {
     try {

@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode, useCallback } from 'react';
 import { Subject, SubjectContextType, File } from '../types';
 // import { getAuthenticatedUser } from '../utils/session';
 
@@ -25,7 +25,7 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
 
   // const authenticatedUserFromStorage = getAuthenticatedUser();
 
-  const fetchSubject = async () => {
+  const fetchSubject = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/subject/getAll');
@@ -44,13 +44,13 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  async function fetchSubjectsByCourse(courseId: number) {
+  const fetchSubjectsByCourse = useCallback(async (courseId: number) => {
     const res = await fetch(`/api/subject/${courseId}`);
     const data = await res.json();
     setSubjects(data);
-  }
+  }, []);
 
   const createSubject = async (newCourse: Omit<Subject, 'idSubject'>) => {
     try {
@@ -83,7 +83,7 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const fetchAllFile = async () => {
+  const fetchAllFile = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/file/getAll`);
@@ -102,9 +102,9 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const toggleFileVisibility = async (
+  const toggleFileVisibility = useCallback(async (
     fileId: number,
     currentVisibility: boolean,
   ) => {
@@ -123,7 +123,7 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
       console.error(error);
       alert('Une erreur est survenue lors de la mise à jour de la visibilité.');
     }
-  };
+  }, [fetchAllFile]);
 
   // Alias for fetchSubject to match the interface
   const fetchAllSubjects = fetchSubject;

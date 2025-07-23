@@ -1,5 +1,8 @@
 @baseUrl = http://localhost:3000
 
+### Get all bulletin periods (active and inactive)
+GET {{baseUrl}}/bulletin-periods/all
+
 ### Get all active bulletin periods
 GET {{baseUrl}}/bulletin-periods/active
 

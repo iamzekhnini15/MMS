@@ -20,6 +20,15 @@ public class BulletinPeriodService {
   private final BulletinPeriodRepository bulletinPeriodRepository;
 
   /**
+   * Get all bulletin periods (active and inactive).
+   *
+   * @return list of all periods
+   */
+  public List<BulletinPeriod> getAllPeriods() {
+    return bulletinPeriodRepository.findAll();
+  }
+
+  /**
    * Get all active bulletin periods.
    *
    * @return list of active periods

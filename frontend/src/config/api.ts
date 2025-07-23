@@ -1,5 +1,5 @@
 // Configuration API centralisée
-export const API_BASE_URL = 'http://localhost:3000';
+export const API_BASE_URL = '/api'; // Utiliser le proxy Vite
 
 // Helper function pour construire les URLs d'API
 export const buildApiUrl = (path: string): string => {

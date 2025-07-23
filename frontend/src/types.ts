@@ -283,6 +283,7 @@ interface BulletinPeriodContextType {
   loading: boolean;
   error: string | null;
   fetchActivePeriods: () => Promise<void>;
+  fetchAllPeriods: () => Promise<void>;
   fetchCurrentPeriod: () => Promise<void>;
   createPeriod: (period: BulletinPeriod) => Promise<void>;
   updatePeriod: (id: number, period: BulletinPeriod) => Promise<void>;

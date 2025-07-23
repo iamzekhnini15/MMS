@@ -36,6 +36,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
     error,
     fetchTeacherEvaluations,
     createEvaluation,
+    updateEvaluation,
     deleteEvaluation,
   } = useContext(EvaluationContext);
   const { currentPeriod, fetchActivePeriods, fetchCurrentPeriod } = useContext(
@@ -45,6 +46,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
   const { subjects, fetchAllSubjects } = useContext(SubjectContext);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingEvaluation, setEditingEvaluation] = useState<Evaluation | null>(null);
   const [newEvaluation, setNewEvaluation] = useState<Partial<Evaluation>>({
     title: '',
     description: '',
@@ -75,15 +77,52 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
       return;
 
     try {
-      await createEvaluation({
-        ...newEvaluation,
-        teacherId,
-        periodId: newEvaluation.periodId || currentPeriod?.idPeriod,
-      } as Evaluation);
+      if (editingEvaluation) {
+        // Mode édition
+        await updateEvaluation(editingEvaluation.idEvaluation!, {
+          ...newEvaluation,
+          teacherId,
+          periodId: newEvaluation.periodId || currentPeriod?.idPeriod,
+        } as Evaluation);
+      } else {
+        // Mode création
+        await createEvaluation({
+          ...newEvaluation,
+          teacherId,
+          periodId: newEvaluation.periodId || currentPeriod?.idPeriod,
+        } as Evaluation);
+      }
       setShowCreateForm(false);
+      setEditingEvaluation(null);
       resetForm();
     } catch (err) {
-      console.error('Failed to create evaluation:', err);
+      console.error('Failed to save evaluation:', err);
+    }
+  };
+
+  const handleEditEvaluation = (evaluation: Evaluation) => {
+    setEditingEvaluation(evaluation);
+    setNewEvaluation({
+      title: evaluation.title,
+      description: evaluation.description,
+      evaluationDate: evaluation.evaluationDate.split('T')[0], // Format for input date
+      maxScore: evaluation.maxScore,
+      isVisible: evaluation.isVisible,
+      classId: evaluation.classId,
+      subjectId: evaluation.subjectId,
+      periodId: evaluation.periodId,
+    });
+    setShowCreateForm(true);
+  };
+
+  const handleToggleVisibility = async (evaluation: Evaluation) => {
+    try {
+      await updateEvaluation(evaluation.idEvaluation!, {
+        ...evaluation,
+        isVisible: !evaluation.isVisible,
+      });
+    } catch (err) {
+      console.error('Failed to toggle visibility:', err);
     }
   };
 
@@ -108,6 +147,13 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
       subjectId: undefined,
       periodId: undefined,
     });
+    setEditingEvaluation(null);
+  };
+
+  const handleCancelEdit = () => {
+    setShowCreateForm(false);
+    setEditingEvaluation(null);
+    resetForm();
   };
 
   if (loading) {
@@ -164,7 +210,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
         <Card className="border-green-200 bg-green-50">
           <CardHeader>
             <CardTitle className="text-green-800">
-              Créer une nouvelle évaluation
+              {editingEvaluation ? 'Modifier l\'évaluation' : 'Créer une nouvelle évaluation'}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -310,15 +356,12 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                   type="submit"
                   className="bg-green-600 hover:bg-green-700"
                 >
-                  Créer l'évaluation
+                  {editingEvaluation ? 'Modifier l\'évaluation' : 'Créer l\'évaluation'}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => {
-                    setShowCreateForm(false);
-                    resetForm();
-                  }}
+                  onClick={handleCancelEdit}
                 >
                   Annuler
                 </Button>
@@ -377,8 +420,18 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                 <div className="flex gap-2">
                   <Button
                     size="sm"
+                    variant={evaluation.isVisible ? "default" : "outline"}
+                    className={evaluation.isVisible ? "bg-green-600 hover:bg-green-700" : ""}
+                    onClick={() => handleToggleVisibility(evaluation)}
+                    title={evaluation.isVisible ? "Masquer aux étudiants" : "Rendre visible aux étudiants"}
+                  >
+                    {evaluation.isVisible ? '👁️ Visible' : '👁️‍🗨️ Masqué'}
+                  </Button>
+                  <Button
+                    size="sm"
                     variant="outline"
-                    onClick={() => setNewEvaluation(evaluation)}
+                    onClick={() => handleEditEvaluation(evaluation)}
+                    title="Modifier l'évaluation"
                   >
                     <EditIcon className="w-4 h-4" />
                   </Button>
@@ -389,6 +442,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                     onClick={() =>
                       handleDeleteEvaluation(evaluation.idEvaluation!)
                     }
+                    title="Supprimer l'évaluation"
                   >
                     <TrashIcon className="w-4 h-4" />
                   </Button>

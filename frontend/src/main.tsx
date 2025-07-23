@@ -18,6 +18,7 @@ import ManageTeacher from './components/pages/admin/ManageTeacher';
 import ManageClassroom from './components/pages/admin/ManageClassroom';
 import ClassDetailPage from './components/pages/admin/ClassDetailsPage';
 import CourseDetailPage from './components/pages/admin/CourseDetailsPage';
+import NetworkDebugPage from './components/pages/debug/NetworkDebugPage';
 import {
   TeacherDashboard,
   EvaluationsManagement,
@@ -28,6 +29,7 @@ import {
   TeacherClassesPage,
   TeacherBulletinsPage,
 } from './components/pages/teacher';
+import DetailedBulletinPage from './components/pages/teacher/DetailedBulletinPage';
 import { MyGradesPage, StudentDashboard, StudentSchedule, StudentBulletins, StudentResources } from './components/pages/student';
 import { LoginForm } from './components/login-form';
 import ProtectedRoute from './components/ProtectedRoutes';
@@ -41,7 +43,11 @@ import { ClassesProvider } from './contexts/ClassesContext';
 import { StudentProvider } from './contexts/StudentContext';
 import { SubjectProvider } from './contexts/SubjectContext';
 import { BulletinPeriodProvider } from './contexts/BulletinPeriodContext';
+import { BulletinProvider } from './contexts/BulletinContext';
+import { BulletinCalculationProvider } from './contexts/BulletinCalculationContext';
+import { StudentBulletinProvider } from './contexts/StudentBulletinContext';
 import { EvaluationProvider } from './contexts/EvaluationContext';
+import { StatsProvider } from './contexts/StatsContext';
 
 import theme from './themes';
 
@@ -55,6 +61,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <HomePage /> },
+      { path: 'debug', element: <NetworkDebugPage /> },
       {
         path: 'dashboard',
         element: (
@@ -270,7 +277,9 @@ const router = createBrowserRouter([
             element={
               <ClassesProvider>
                 <StudentProvider>
-                  <TeacherClassesPage />
+                  <StatsProvider>
+                    <TeacherClassesPage />
+                  </StatsProvider>
                 </StudentProvider>
               </ClassesProvider>
             }
@@ -284,8 +293,33 @@ const router = createBrowserRouter([
             requiredRoles={['TEACHER', 'ADMIN']}
             element={
               <BulletinPeriodProvider>
-                <TeacherBulletinsPage />
+                <ClassesProvider>
+                  <StudentProvider>
+                    <SubjectProvider>
+                      <BulletinProvider>
+                        <BulletinCalculationProvider>
+                          <StudentBulletinProvider>
+                            <TeacherBulletinsPage />
+                          </StudentBulletinProvider>
+                        </BulletinCalculationProvider>
+                      </BulletinProvider>
+                    </SubjectProvider>
+                  </StudentProvider>
+                </ClassesProvider>
               </BulletinPeriodProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'teacher/bulletins/detail/:studentId/:periodId',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER', 'ADMIN']}
+            element={
+              <StudentBulletinProvider>
+                <DetailedBulletinPage />
+              </StudentBulletinProvider>
             }
           />
         ),
@@ -331,6 +365,19 @@ const router = createBrowserRouter([
           <ProtectedRoute
             requiredRoles={['STUDENT', 'ADMIN']}
             element={<StudentBulletins />}
+          />
+        ),
+      },
+      {
+        path: 'student/bulletins/detail/:studentId/:periodId',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['STUDENT', 'ADMIN']}
+            element={
+              <StudentBulletinProvider>
+                <DetailedBulletinPage />
+              </StudentBulletinProvider>
+            }
           />
         ),
       },

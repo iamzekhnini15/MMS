@@ -1,11 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { AcademicCapIcon } from '@heroicons/react/24/outline';
+import { AcademicCapIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+import { UserContext } from '../../../contexts/UserContext';
 
 const StudentDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { authenticatedUser } = useContext(UserContext);
+  const [hasBulletins, setHasBulletins] = useState(false);
+  const [loadingBulletins, setLoadingBulletins] = useState(true);
+
+  useEffect(() => {
+    checkAvailableBulletins();
+  }, [authenticatedUser]);
+
+  const checkAvailableBulletins = async () => {
+    if (!authenticatedUser?.user?.idUser) return;
+
+    try {
+      const response = await fetch(`/api/bulletins/student/user/${authenticatedUser.user.idUser}/visible`, {
+        headers: {
+          'Authorization': authenticatedUser.token,
+        },
+      });
+
+      if (response.ok) {
+        const bulletins = await response.json();
+        setHasBulletins(bulletins.length > 0);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la vérification des bulletins:', error);
+    } finally {
+      setLoadingBulletins(false);
+    }
+  };
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -55,21 +84,47 @@ const StudentDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="opacity-50">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              Bulletins
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Téléchargez vos bulletins scolaires
-            </p>
-            <Button className="mt-4 w-full" disabled>
-              Bientôt disponible
-            </Button>
-          </CardContent>
-        </Card>
+        {/* Afficher la card des bulletins seulement si aucun bulletin n'est disponible */}
+        {!loadingBulletins && !hasBulletins && (
+          <Card className="opacity-50">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                Bulletins
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Aucun bulletin disponible pour le moment
+              </p>
+              <Button className="mt-4 w-full" disabled>
+                En attente
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Afficher un message informatif si des bulletins sont disponibles */}
+        {!loadingBulletins && hasBulletins && (
+          <Card className="bg-green-50 border-green-200">
+            <CardHeader>
+              <CardTitle className="flex items-center text-green-800">
+                <DocumentTextIcon className="h-5 w-5 mr-2" />
+                Bulletins disponibles
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-green-700 mb-4">
+                Vos bulletins scolaires sont maintenant disponibles !
+              </p>
+              <Button 
+                className="w-full bg-green-600 hover:bg-green-700"
+                onClick={() => navigate('/student/bulletins')}
+              >
+                Consulter mes bulletins
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

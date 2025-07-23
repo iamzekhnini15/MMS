@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,20 +10,50 @@ import {
   EyeIcon,
 } from '@heroicons/react/24/outline';
 import { ClassesContext } from '../../../contexts/ClassesContext';
+import StatsContext from '../../../contexts/StatsContext';
+import { UserContext } from '../../../contexts/UserContext';
+import StudentsListModal from './StudentsListModal';
 import type { Classes } from '../../../types';
 
 const TeacherClassesPage: React.FC = () => {
   const navigate = useNavigate();
   const { classes, loading, error, fetchClasses } = useContext(ClassesContext);
+  const { 
+    teacherStats, 
+    fetchClassStats, 
+    fetchTeacherStats,
+    getStudentCountForClass 
+  } = useContext(StatsContext);
+  const { authenticatedUser } = useContext(UserContext);
+  
+  const [selectedClass, setSelectedClass] = useState<Classes | null>(null);
+  const [showStudentsModal, setShowStudentsModal] = useState(false);
 
   useEffect(() => {
     fetchClasses();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (classes && classes.length > 0 && authenticatedUser) {
+      // Fetch class stats
+      const classIds = classes.map((classe: Classes) => classe.idClass);
+      fetchClassStats(classIds);
+      
+      // Fetch teacher stats
+      if (authenticatedUser.user.idUser) {
+        fetchTeacherStats(authenticatedUser.user.idUser);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [classes, authenticatedUser]);
+
   const handleViewClass = (classId: number) => {
-    // Could navigate to a detailed class view
-    console.log('Viewing class:', classId);
+    const classe = classes?.find((c: Classes) => c.idClass === classId);
+    if (classe) {
+      setSelectedClass(classe);
+      setShowStudentsModal(true);
+    }
   };
 
   const handleViewGrades = (classId: number) => {
@@ -32,13 +62,6 @@ const TeacherClassesPage: React.FC = () => {
 
   const handleViewEvaluations = (classId: number) => {
     navigate(`/teacher/evaluations?classId=${classId}`);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const getStudentCount = (_: number) => {
-    // This would typically come from an API call or context
-    // For now, return a placeholder
-    return 25; // Placeholder
   };
 
   if (loading) {
@@ -112,7 +135,7 @@ const TeacherClassesPage: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div className="bg-blue-50 rounded-lg p-3">
                       <div className="text-2xl font-bold text-blue-600">
-                        {getStudentCount(classe.idClass)}
+                        {getStudentCountForClass(classe.idClass)}
                       </div>
                       <div className="text-sm text-blue-600">Étudiants</div>
                     </div>
@@ -183,27 +206,43 @@ const TeacherClassesPage: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600">
-                  {classes.length}
+                  {teacherStats?.totalClasses || classes?.length || 0}
                 </div>
                 <div className="text-sm text-gray-600">Classes totales</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">
-                  {classes.length * 25} {/* Placeholder calculation */}
+                  {teacherStats?.totalStudents || 0}
                 </div>
                 <div className="text-sm text-gray-600">Étudiants totaux</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">12</div>
+                <div className="text-3xl font-bold text-purple-600">
+                  {teacherStats?.monthlyEvaluations || 0}
+                </div>
                 <div className="text-sm text-gray-600">Évaluations ce mois</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600">87%</div>
+                <div className="text-3xl font-bold text-orange-600">
+                  {teacherStats?.averageGrade || 0}%
+                </div>
                 <div className="text-sm text-gray-600">Moyenne générale</div>
               </div>
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Modal des étudiants */}
+      {selectedClass && (
+        <StudentsListModal
+          classData={selectedClass}
+          isOpen={showStudentsModal}
+          onClose={() => {
+            setShowStudentsModal(false);
+            setSelectedClass(null);
+          }}
+        />
       )}
     </div>
   );

@@ -22,6 +22,17 @@ public class BulletinPeriodController {
   private final BulletinPeriodService bulletinPeriodService;
 
   /**
+   * Get all bulletin periods (active and inactive).
+   *
+   * @return list of all periods
+   */
+  @GetMapping("/all")
+  public ResponseEntity<List<BulletinPeriod>> getAllPeriods() {
+    List<BulletinPeriod> periods = bulletinPeriodService.getAllPeriods();
+    return ResponseEntity.ok(periods);
+  }
+
+  /**
    * Get all active bulletin periods.
    *
    * @return list of active periods

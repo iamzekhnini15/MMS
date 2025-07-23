@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode, useCallback } from 'react';
 import { BulletinPeriod, BulletinPeriodContextType } from '../types';
 
 const defaultBulletinPeriodContext: BulletinPeriodContextType = {
@@ -7,6 +7,7 @@ const defaultBulletinPeriodContext: BulletinPeriodContextType = {
   loading: false,
   error: null,
   fetchActivePeriods: async () => {},
+  fetchAllPeriods: async () => {},
   fetchCurrentPeriod: async () => {},
   createPeriod: async () => {},
   updatePeriod: async () => {},
@@ -29,24 +30,49 @@ export const BulletinPeriodProvider = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchActivePeriods = async () => {
+  const fetchAllPeriods = useCallback(async () => {
+    console.log('fetchAllPeriods called');
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/bulletin-periods/active');
+      const response = await fetch('/api/bulletin-periods/all');
+      console.log('fetchAllPeriods response:', response);
       if (!response.ok) {
-        throw new Error('Failed to fetch periods');
+        throw new Error('Failed to fetch all periods');
       }
       const data = await response.json();
+      console.log('fetchAllPeriods data:', data);
       setPeriods(data);
     } catch (err) {
+      console.error('fetchAllPeriods error:', err);
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchCurrentPeriod = async () => {
+  const fetchActivePeriods = useCallback(async () => {
+    console.log('fetchActivePeriods called');
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/bulletin-periods/active');
+      console.log('fetchActivePeriods response:', response);
+      if (!response.ok) {
+        throw new Error('Failed to fetch periods');
+      }
+      const data = await response.json();
+      console.log('fetchActivePeriods data:', data);
+      setPeriods(data);
+    } catch (err) {
+      console.error('fetchActivePeriods error:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchCurrentPeriod = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -62,9 +88,9 @@ export const BulletinPeriodProvider = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const createPeriod = async (period: BulletinPeriod) => {
+  const createPeriod = useCallback(async (period: BulletinPeriod) => {
     setLoading(true);
     setError(null);
     try {
@@ -86,9 +112,9 @@ export const BulletinPeriodProvider = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchActivePeriods]);
 
-  const updatePeriod = async (id: number, period: BulletinPeriod) => {
+  const updatePeriod = useCallback(async (id: number, period: BulletinPeriod) => {
     setLoading(true);
     setError(null);
     try {
@@ -110,9 +136,9 @@ export const BulletinPeriodProvider = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchActivePeriods]);
 
-  const deletePeriod = async (id: number) => {
+  const deletePeriod = useCallback(async (id: number) => {
     setLoading(true);
     setError(null);
     try {
@@ -130,7 +156,7 @@ export const BulletinPeriodProvider = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchActivePeriods]);
 
   const value: BulletinPeriodContextType = {
     periods,
@@ -138,6 +164,7 @@ export const BulletinPeriodProvider = ({
     loading,
     error,
     fetchActivePeriods,
+    fetchAllPeriods,
     fetchCurrentPeriod,
     createPeriod,
     updatePeriod,
