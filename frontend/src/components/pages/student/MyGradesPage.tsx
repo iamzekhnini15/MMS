@@ -403,10 +403,6 @@ const MyGradesPage: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {filteredGrades.map((grade: EvaluationGrade) => {
-                  const percentage = grade.score && grade.maxScore 
-                    ? ((grade.score / grade.maxScore) * 100) 
-                    : 0;
-                  
                   return (
                     <TableRow key={grade.idGrade} className="hover:bg-muted/50">
                       <TableCell>
@@ -427,8 +423,7 @@ const MyGradesPage: React.FC = () => {
                       
                       <TableCell>
                         <Badge variant="secondary" className="text-xs">
-                          {/* Temporaire : sera remplacé par les vraies données */}
-                          Matière
+                          {grade.subjectName || `Matière ${grade.evaluationId}`}
                         </Badge>
                       </TableCell>
                       
@@ -454,7 +449,12 @@ const MyGradesPage: React.FC = () => {
                       <TableCell className="text-right">
                         {grade.score !== null && grade.score !== undefined ? (
                           <div className={`font-semibold ${getGradeColor(grade.score, grade.maxScore || 20)}`}>
-                            {percentage.toFixed(1)}%
+                            {grade.percentage ? grade.percentage.toFixed(1) : 
+                             (() => {
+                               const maxScore = grade.maxScore || 20;
+                               const percentage = (grade.score / maxScore) * 100;
+                               return percentage.toFixed(1);
+                             })()}%
                           </div>
                         ) : (
                           <span className="text-gray-400">-</span>

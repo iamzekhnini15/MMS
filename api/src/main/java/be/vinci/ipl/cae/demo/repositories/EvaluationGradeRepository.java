@@ -48,7 +48,12 @@ public interface EvaluationGradeRepository extends JpaRepository<EvaluationGrade
    * @param student the student
    * @return list of visible grades
    */
-  @Query("SELECT eg FROM EvaluationGrade eg JOIN eg.evaluation e WHERE eg.student = :student AND e.isGradesVisible = true")
+  @Query("SELECT eg FROM EvaluationGrade eg " +
+         "JOIN FETCH eg.evaluation e " +
+         "JOIN FETCH e.subject s " +
+         "JOIN FETCH eg.gradedBy gb " +
+         "WHERE eg.student = :student AND e.isGradesVisible = true " +
+         "ORDER BY eg.gradedAt DESC")
   List<EvaluationGrade> findVisibleGradesByStudent(@Param("student") Student student);
 
   /**

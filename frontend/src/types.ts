@@ -225,6 +225,10 @@ interface EvaluationGrade {
   gradedById?: number;
   gradedByName?: string;
   percentage?: number; // Computed field
+  // Nouvelles propriétés de l'API améliorée
+  subjectName?: string;
+  evaluationDate?: string;
+  periodName?: string;
 }
 
 interface SubjectCoefficient {

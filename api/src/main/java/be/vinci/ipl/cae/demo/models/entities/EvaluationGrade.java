@@ -1,6 +1,7 @@
 package be.vinci.ipl.cae.demo.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -70,5 +71,53 @@ public class EvaluationGrade {
     ABSENT,       // Student was absent
     EXCUSED,      // Student was excused
     LATE_SUBMISSION // Late submission (if applicable)
+  }
+
+  // JSON helper methods for frontend
+  @JsonProperty("evaluationTitle")
+  public String getEvaluationTitle() {
+    return evaluation != null ? evaluation.getTitle() : null;
+  }
+
+  @JsonProperty("subjectName")
+  public String getSubjectName() {
+    return evaluation != null && evaluation.getSubject() != null ? 
+           evaluation.getSubject().getName() : null;
+  }
+
+  @JsonProperty("maxScore")
+  public Double getMaxScore() {
+    return evaluation != null ? evaluation.getMaxScore() : null;
+  }
+
+  @JsonProperty("evaluationDate")
+  public Date getEvaluationDate() {
+    return evaluation != null ? evaluation.getEvaluationDate() : null;
+  }
+
+  @JsonProperty("periodName")
+  public String getPeriodName() {
+    return evaluation != null && evaluation.getBulletinPeriod() != null ? 
+           evaluation.getBulletinPeriod().getName() : null;
+  }
+
+  @JsonProperty("studentName")
+  public String getStudentName() {
+    return student != null && student.getUser() != null ? 
+           student.getUser().getFirstname() + " " + student.getUser().getLastname() : null;
+  }
+
+  @JsonProperty("gradedByName")
+  public String getGradedByName() {
+    return gradedBy != null && gradedBy.getUser() != null ? 
+           gradedBy.getUser().getFirstname() + " " + gradedBy.getUser().getLastname() : null;
+  }
+
+  @JsonProperty("percentage")
+  public Double getPercentage() {
+    if (score != null && evaluation != null && evaluation.getMaxScore() != null) {
+      return (score / evaluation.getMaxScore()) * 100;
+    }
+    return null;
   }
 }
