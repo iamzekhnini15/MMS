@@ -99,6 +99,13 @@ const TeacherBulletinsPage: React.FC = () => {
     }
   }, [currentPeriod]);
 
+  // Auto-select first class if none selected
+  useEffect(() => {
+    if (classes && classes.length > 0 && !selectedClass) {
+      setSelectedClass(classes[0]);
+    }
+  }, [classes, selectedClass]);
+
   // Load bulletins when class and period are selected
   useEffect(() => {
     if (selectedClass && selectedPeriod) {

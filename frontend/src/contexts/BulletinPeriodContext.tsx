@@ -64,13 +64,21 @@ export const BulletinPeriodProvider = ({
       const data = await response.json();
       console.log('fetchActivePeriods data:', data);
       setPeriods(data);
+      
+      // Automatically set current period to the first active period if not already set
+      if (data && data.length > 0 && !currentPeriod) {
+        // Try to find the period marked as current, or use the first one
+        const currentPeriodFromAPI = data.find((period: BulletinPeriod) => period.isActive) || data[0];
+        setCurrentPeriod(currentPeriodFromAPI);
+        console.log('Auto-selected current period:', currentPeriodFromAPI);
+      }
     } catch (err) {
       console.error('fetchActivePeriods error:', err);
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [currentPeriod]);
 
   const fetchCurrentPeriod = useCallback(async () => {
     setLoading(true);
