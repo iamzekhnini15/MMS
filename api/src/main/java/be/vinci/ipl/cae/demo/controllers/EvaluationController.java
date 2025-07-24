@@ -3,13 +3,21 @@ package be.vinci.ipl.cae.demo.controllers;
 import be.vinci.ipl.cae.demo.models.dtos.EvaluationDto;
 import be.vinci.ipl.cae.demo.models.entities.Evaluation;
 import be.vinci.ipl.cae.demo.services.EvaluationService;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing evaluations.
@@ -48,7 +56,9 @@ public class EvaluationController {
   public ResponseEntity<List<Evaluation>> getEvaluationsBySubjectAndClass(
       @PathVariable Long subjectId, @PathVariable Long classId) {
     try {
-      List<Evaluation> evaluations = evaluationService.getEvaluationsBySubjectAndClass(subjectId, classId);
+      List<Evaluation> evaluations = evaluationService.getEvaluationsBySubjectAndClass(
+          subjectId, classId
+      );
       return ResponseEntity.ok(evaluations);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.notFound().build();
@@ -65,9 +75,13 @@ public class EvaluationController {
    */
   @GetMapping("/subject/{subjectId}/class/{classId}/period/{periodId}")
   public ResponseEntity<List<Evaluation>> getEvaluationsBySubjectClassAndPeriod(
-      @PathVariable Long subjectId, @PathVariable Long classId, @PathVariable Long periodId) {
+      @PathVariable Long subjectId,
+      @PathVariable Long classId,
+      @PathVariable Long periodId) {
     try {
-      List<Evaluation> evaluations = evaluationService.getEvaluationsBySubjectClassAndPeriod(subjectId, classId, periodId);
+      List<Evaluation> evaluations = evaluationService.getEvaluationsBySubjectClassAndPeriod(
+          subjectId, classId, periodId
+      );
       return ResponseEntity.ok(evaluations);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.notFound().build();
@@ -83,9 +97,12 @@ public class EvaluationController {
    */
   @GetMapping("/visible/class/{classId}/period/{periodId}")
   public ResponseEntity<List<Evaluation>> getVisibleEvaluationsForStudents(
-      @PathVariable Long classId, @PathVariable Long periodId) {
+      @PathVariable Long classId,
+      @PathVariable Long periodId) {
     try {
-      List<Evaluation> evaluations = evaluationService.getVisibleEvaluationsForStudents(classId, periodId);
+      List<Evaluation> evaluations = evaluationService.getVisibleEvaluationsForStudents(
+          classId, periodId
+      );
       return ResponseEntity.ok(evaluations);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.notFound().build();
@@ -129,7 +146,9 @@ public class EvaluationController {
    * @return the updated evaluation
    */
   @PutMapping("/{id}")
-  public ResponseEntity<Evaluation> updateEvaluation(@PathVariable Long id, @RequestBody EvaluationDto dto) {
+  public ResponseEntity<Evaluation> updateEvaluation(
+      @PathVariable Long id,
+      @RequestBody EvaluationDto dto) {
     try {
       Optional<Evaluation> updatedEvaluation = evaluationService.updateEvaluation(id, dto);
       return updatedEvaluation.map(ResponseEntity::ok)

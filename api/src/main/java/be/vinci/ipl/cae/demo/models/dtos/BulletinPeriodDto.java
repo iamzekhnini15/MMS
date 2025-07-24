@@ -1,7 +1,7 @@
 package be.vinci.ipl.cae.demo.models.dtos;
 
-import lombok.Data;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * DTO for BulletinPeriod entity.

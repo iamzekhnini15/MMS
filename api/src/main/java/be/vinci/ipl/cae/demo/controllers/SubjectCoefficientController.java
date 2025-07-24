@@ -3,13 +3,19 @@ package be.vinci.ipl.cae.demo.controllers;
 import be.vinci.ipl.cae.demo.models.dtos.SubjectCoefficientDto;
 import be.vinci.ipl.cae.demo.models.entities.SubjectCoefficient;
 import be.vinci.ipl.cae.demo.services.SubjectCoefficientService;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST controller for managing subject coefficients.
@@ -28,7 +34,8 @@ public class SubjectCoefficientController {
    * @return list of coefficients
    */
   @GetMapping("/class/{classId}")
-  public ResponseEntity<List<SubjectCoefficient>> getCoefficientsByClass(@PathVariable Long classId) {
+  public ResponseEntity<List<SubjectCoefficient>> getCoefficientsByClass(
+      @PathVariable Long classId) {
     try {
       List<SubjectCoefficient> coefficients = coefficientService.getCoefficientsByClass(classId);
       return ResponseEntity.ok(coefficients);
@@ -44,9 +51,12 @@ public class SubjectCoefficientController {
    * @return list of coefficients
    */
   @GetMapping("/subject/{subjectId}")
-  public ResponseEntity<List<SubjectCoefficient>> getCoefficientsBySubject(@PathVariable Long subjectId) {
+  public ResponseEntity<List<SubjectCoefficient>> getCoefficientsBySubject(
+      @PathVariable Long subjectId) {
     try {
-      List<SubjectCoefficient> coefficients = coefficientService.getCoefficientsBySubject(subjectId);
+      List<SubjectCoefficient> coefficients = coefficientService.getCoefficientsBySubject(
+          subjectId
+      );
       return ResponseEntity.ok(coefficients);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.notFound().build();
@@ -64,7 +74,8 @@ public class SubjectCoefficientController {
   public ResponseEntity<SubjectCoefficient> getCoefficientBySubjectAndClass(
       @PathVariable Long subjectId, @PathVariable Long classId) {
     try {
-      Optional<SubjectCoefficient> coefficient = coefficientService.getCoefficientBySubjectAndClass(subjectId, classId);
+      Optional<SubjectCoefficient> coefficient = 
+          coefficientService.getCoefficientBySubjectAndClass(subjectId, classId);
       return coefficient.map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
     } catch (IllegalArgumentException e) {
@@ -80,7 +91,8 @@ public class SubjectCoefficientController {
    * @return the coefficient value
    */
   @GetMapping("/value/subject/{subjectId}/class/{classId}")
-  public ResponseEntity<Double> getCoefficientValue(@PathVariable Long subjectId, @PathVariable Long classId) {
+  public ResponseEntity<Double> getCoefficientValue(
+      @PathVariable Long subjectId, @PathVariable Long classId) {
     Double coefficientValue = coefficientService.getCoefficientValue(subjectId, classId);
     return ResponseEntity.ok(coefficientValue);
   }
@@ -103,7 +115,8 @@ public class SubjectCoefficientController {
    * @return the created or updated coefficient
    */
   @PostMapping("/save")
-  public ResponseEntity<SubjectCoefficient> saveCoefficient(@RequestBody SubjectCoefficientDto dto) {
+  public ResponseEntity<SubjectCoefficient> saveCoefficient(
+      @RequestBody SubjectCoefficientDto dto) {
     try {
       SubjectCoefficient savedCoefficient = coefficientService.saveCoefficient(dto);
       return ResponseEntity.status(HttpStatus.CREATED).body(savedCoefficient);
@@ -121,9 +134,14 @@ public class SubjectCoefficientController {
    */
   @PostMapping("/bulk-save/class/{classId}")
   public ResponseEntity<List<SubjectCoefficient>> saveBulkCoefficients(
-      @PathVariable Long classId, @RequestBody List<SubjectCoefficientDto> coefficients) {
+      @PathVariable Long classId,
+      @RequestBody List<SubjectCoefficientDto> coefficients
+  ) {
     try {
-      List<SubjectCoefficient> savedCoefficients = coefficientService.saveBulkCoefficients(classId, coefficients);
+      List<SubjectCoefficient> savedCoefficients = coefficientService.saveBulkCoefficients(
+          classId,
+          coefficients
+      );
       return ResponseEntity.status(HttpStatus.CREATED).body(savedCoefficients);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().build();

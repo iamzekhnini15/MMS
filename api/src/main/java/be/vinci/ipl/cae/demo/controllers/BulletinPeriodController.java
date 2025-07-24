@@ -1,15 +1,22 @@
 package be.vinci.ipl.cae.demo.controllers;
 
+
 import be.vinci.ipl.cae.demo.models.dtos.BulletinPeriodDto;
 import be.vinci.ipl.cae.demo.models.entities.BulletinPeriod;
 import be.vinci.ipl.cae.demo.services.BulletinPeriodService;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST controller for managing bulletin periods.
@@ -99,12 +106,14 @@ public class BulletinPeriodController {
   /**
    * Update a bulletin period.
    *
-   * @param id the period ID
+   * @param id  the period ID
    * @param dto the updated period data
    * @return the updated period
    */
   @PutMapping("/{id}")
-  public ResponseEntity<BulletinPeriod> updatePeriod(@PathVariable Long id, @RequestBody BulletinPeriodDto dto) {
+  public ResponseEntity<BulletinPeriod> updatePeriod(
+      @PathVariable Long id,
+      @RequestBody BulletinPeriodDto dto) {
     try {
       Optional<BulletinPeriod> updatedPeriod = bulletinPeriodService.updatePeriod(id, dto);
       return updatedPeriod.map(ResponseEntity::ok)

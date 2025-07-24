@@ -1,8 +1,8 @@
 package be.vinci.ipl.cae.demo.models.dtos;
 
-import lombok.Data;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
 
 /**
  * DTO for student bulletin.
@@ -25,6 +25,9 @@ public class StudentBulletinDto {
   private Date generatedAt;
   private List<SubjectGradeDto> subjectGrades;
   
+  /**
+   * DTO for subject grade details.
+   */
   @Data
   public static class SubjectGradeDto {
     private String subjectName;

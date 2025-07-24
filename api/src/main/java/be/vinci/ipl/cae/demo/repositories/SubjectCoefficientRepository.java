@@ -1,13 +1,12 @@
 package be.vinci.ipl.cae.demo.repositories;
 
-import be.vinci.ipl.cae.demo.models.entities.SubjectCoefficient;
-import be.vinci.ipl.cae.demo.models.entities.Subject;
 import be.vinci.ipl.cae.demo.models.entities.ClassEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
+import be.vinci.ipl.cae.demo.models.entities.Subject;
+import be.vinci.ipl.cae.demo.models.entities.SubjectCoefficient;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository interface for SubjectCoefficient entities.
@@ -22,7 +21,10 @@ public interface SubjectCoefficientRepository extends JpaRepository<SubjectCoeff
    * @param classEntity the class
    * @return the coefficient if found
    */
-  Optional<SubjectCoefficient> findBySubjectAndClassEntityAndIsActiveTrue(Subject subject, ClassEntity classEntity);
+  Optional<SubjectCoefficient> findBySubjectAndClassEntityAndIsActiveTrue(
+      Subject subject,
+      ClassEntity classEntity
+  );
 
   /**
    * Find all coefficients for a class.

@@ -30,6 +30,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class EvaluationGrade {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idGrade;
@@ -81,8 +82,9 @@ public class EvaluationGrade {
 
   @JsonProperty("subjectName")
   public String getSubjectName() {
-    return evaluation != null && evaluation.getSubject() != null ? 
-           evaluation.getSubject().getName() : null;
+    return evaluation != null && evaluation.getSubject() != null
+      ?
+      evaluation.getSubject().getName() : null;
   }
 
   @JsonProperty("maxScore")
@@ -97,22 +99,30 @@ public class EvaluationGrade {
 
   @JsonProperty("periodName")
   public String getPeriodName() {
-    return evaluation != null && evaluation.getBulletinPeriod() != null ? 
-           evaluation.getBulletinPeriod().getName() : null;
+    return evaluation != null && evaluation.getBulletinPeriod() != null
+      ?
+      evaluation.getBulletinPeriod().getName() : null;
   }
 
   @JsonProperty("studentName")
   public String getStudentName() {
-    return student != null && student.getUser() != null ? 
-           student.getUser().getFirstname() + " " + student.getUser().getLastname() : null;
+    return student != null && student.getUser() != null
+      ?
+      student.getUser().getFirstname() + " " + student.getUser().getLastname() : null;
   }
 
   @JsonProperty("gradedByName")
   public String getGradedByName() {
-    return gradedBy != null && gradedBy.getUser() != null ? 
-           gradedBy.getUser().getFirstname() + " " + gradedBy.getUser().getLastname() : null;
+    return gradedBy != null && gradedBy.getUser() != null
+      ?
+      gradedBy.getUser().getFirstname() + " " + gradedBy.getUser().getLastname() : null;
   }
 
+  /**
+   * Get the percentage score of this evaluation grade.
+   *
+   * @return the percentage score or null if score/evaluation/maxScore is null
+   */
   @JsonProperty("percentage")
   public Double getPercentage() {
     if (score != null && evaluation != null && evaluation.getMaxScore() != null) {

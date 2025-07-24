@@ -7,12 +7,12 @@ import be.vinci.ipl.cae.demo.models.entities.SubjectCoefficient;
 import be.vinci.ipl.cae.demo.repositories.ClassesRepository;
 import be.vinci.ipl.cae.demo.repositories.SubjectCoefficientRepository;
 import be.vinci.ipl.cae.demo.repositories.SubjectRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Service handling operations related to subject coefficients.
@@ -33,7 +33,7 @@ public class SubjectCoefficientService {
    */
   public List<SubjectCoefficient> getCoefficientsByClass(Long classId) {
     ClassEntity classEntity = classesRepository.findById(classId)
-      .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
     
     return coefficientRepository.findByClassEntityAndIsActiveTrue(classEntity);
   }
@@ -46,7 +46,7 @@ public class SubjectCoefficientService {
    */
   public List<SubjectCoefficient> getCoefficientsBySubject(Long subjectId) {
     Subject subject = subjectRepository.findById(subjectId)
-      .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
     
     return coefficientRepository.findBySubjectAndIsActiveTrue(subject);
   }
@@ -58,11 +58,14 @@ public class SubjectCoefficientService {
    * @param classId the class ID
    * @return the coefficient if found
    */
-  public Optional<SubjectCoefficient> getCoefficientBySubjectAndClass(Long subjectId, Long classId) {
+  public Optional<SubjectCoefficient> getCoefficientBySubjectAndClass(
+      Long subjectId,
+      Long classId
+  ) {
     Subject subject = subjectRepository.findById(subjectId)
-      .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
     ClassEntity classEntity = classesRepository.findById(classId)
-      .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
     
     return coefficientRepository.findBySubjectAndClassEntityAndIsActiveTrue(subject, classEntity);
   }
@@ -76,13 +79,13 @@ public class SubjectCoefficientService {
   @Transactional
   public SubjectCoefficient saveCoefficient(SubjectCoefficientDto dto) {
     Subject subject = subjectRepository.findById(dto.getSubjectId())
-      .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
     ClassEntity classEntity = classesRepository.findById(dto.getClassId())
-      .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
     // Check if coefficient already exists
     Optional<SubjectCoefficient> existingCoefficient = coefficientRepository
-      .findBySubjectAndClassEntityAndIsActiveTrue(subject, classEntity);
+        .findBySubjectAndClassEntityAndIsActiveTrue(subject, classEntity);
     
     SubjectCoefficient coefficient;
     if (existingCoefficient.isPresent()) {
@@ -107,9 +110,12 @@ public class SubjectCoefficientService {
    * @return list of created coefficients
    */
   @Transactional
-  public List<SubjectCoefficient> saveBulkCoefficients(Long classId, List<SubjectCoefficientDto> coefficients) {
+  public List<SubjectCoefficient> saveBulkCoefficients(
+      Long classId,
+      List<SubjectCoefficientDto> coefficients
+  ) {
     ClassEntity classEntity = classesRepository.findById(classId)
-      .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
 
     return coefficients.stream().map(dto -> {
       dto.setClassId(classId); // Ensure class ID is set
@@ -137,7 +143,9 @@ public class SubjectCoefficientService {
    */
   @Transactional
   public void deactivateCoefficient(Long coefficientId) {
-    Optional<SubjectCoefficient> optionalCoefficient = coefficientRepository.findById(coefficientId);
+    Optional<SubjectCoefficient> optionalCoefficient = coefficientRepository.findById(
+        coefficientId
+    );
     
     if (optionalCoefficient.isPresent()) {
       SubjectCoefficient coefficient = optionalCoefficient.get();

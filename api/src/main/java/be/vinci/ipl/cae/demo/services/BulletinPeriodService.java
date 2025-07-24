@@ -3,12 +3,12 @@ package be.vinci.ipl.cae.demo.services;
 import be.vinci.ipl.cae.demo.models.dtos.BulletinPeriodDto;
 import be.vinci.ipl.cae.demo.models.entities.BulletinPeriod;
 import be.vinci.ipl.cae.demo.repositories.BulletinPeriodRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 
 /**
  * Service handling operations related to bulletin periods.

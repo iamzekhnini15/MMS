@@ -1,7 +1,7 @@
 package be.vinci.ipl.cae.demo.models.dtos;
 
-import lombok.Data;
 import java.util.List;
+import lombok.Data;
 
 /**
  * DTO for bulk grade input by evaluation.
@@ -11,6 +11,9 @@ public class BulkGradeInputDto {
   private Long evaluationId;
   private List<StudentGradeDto> grades;
   
+  /**
+   * DTO for individual student grade.
+   */
   @Data
   public static class StudentGradeDto {
     private Long studentId;

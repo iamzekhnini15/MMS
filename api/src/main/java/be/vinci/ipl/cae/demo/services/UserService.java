@@ -194,6 +194,13 @@ public class UserService {
     return user;
   }
 
+  /**
+   * Create a user with address for teacher.
+   *
+   * @param existingUser the user data to copy from
+   * @param savedAddress the address to associate with the user
+   * @return the created user with address
+   */
   @Transactional
   public User createUserWithAddress(User existingUser, Address savedAddress) {
     User newUser = createOneUserForTeacher(existingUser.getEmail(), existingUser.getPassword());

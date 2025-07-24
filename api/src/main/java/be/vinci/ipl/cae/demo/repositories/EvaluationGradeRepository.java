@@ -1,15 +1,15 @@
 package be.vinci.ipl.cae.demo.repositories;
 
-import be.vinci.ipl.cae.demo.models.entities.EvaluationGrade;
 import be.vinci.ipl.cae.demo.models.entities.Evaluation;
+import be.vinci.ipl.cae.demo.models.entities.EvaluationGrade;
 import be.vinci.ipl.cae.demo.models.entities.Student;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository interface for EvaluationGrade entities.
@@ -48,12 +48,13 @@ public interface EvaluationGradeRepository extends JpaRepository<EvaluationGrade
    * @param student the student
    * @return list of visible grades
    */
-  @Query("SELECT eg FROM EvaluationGrade eg " +
-         "JOIN FETCH eg.evaluation e " +
-         "JOIN FETCH e.subject s " +
-         "JOIN FETCH eg.gradedBy gb " +
-         "WHERE eg.student = :student AND e.isGradesVisible = true " +
-         "ORDER BY eg.gradedAt DESC")
+  @Query("SELECT eg FROM EvaluationGrade eg "
+      + "JOIN FETCH eg.evaluation e "
+      + "JOIN FETCH e.subject s "
+      + "JOIN FETCH eg.gradedBy gb "
+      + "WHERE eg.student = :student AND e.isGradesVisible = true "
+      + "ORDER BY eg.gradedAt DESC"
+  )
   List<EvaluationGrade> findVisibleGradesByStudent(@Param("student") Student student);
 
   /**
@@ -64,6 +65,13 @@ public interface EvaluationGradeRepository extends JpaRepository<EvaluationGrade
    * @param periodId the period ID
    * @return list of grades to include in calculation
    */
-  @Query("SELECT eg FROM EvaluationGrade eg JOIN eg.evaluation e WHERE eg.student = :student AND e.subject.idSubject = :subjectId AND e.bulletinPeriod.idPeriod = :periodId AND eg.includeInCalculation = true")
-  List<EvaluationGrade> findGradesForCalculation(@Param("student") Student student, @Param("subjectId") Long subjectId, @Param("periodId") Long periodId);
+  @Query("SELECT eg FROM EvaluationGrade eg JOIN eg.evaluation e WHERE eg.student = :student "
+      + "AND e.subject.idSubject = :subjectId "
+      + "AND e.bulletinPeriod.idPeriod = :periodId "
+      + "AND eg.includeInCalculation = true")
+  List<EvaluationGrade> findGradesForCalculation(
+      @Param("student") Student student,
+      @Param("subjectId") Long subjectId,
+      @Param("periodId") Long periodId
+  );
 }

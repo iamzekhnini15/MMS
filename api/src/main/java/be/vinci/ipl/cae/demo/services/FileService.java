@@ -73,11 +73,13 @@ public class FileService {
    * @param filename  The custom filename (optional).
    * @return The saved file as a DTO.
    * @throws IllegalArgumentException If the subject is not found.
-   * @throws IOException If file upload fails.
+   * @throws IOException              If file upload fails.
    */
-  public FileDto uploadFileToSubject(Long subjectId, MultipartFile file, String filename) throws IOException {
-    Subject subject = subjectRepository.findById(subjectId)
-        .orElseThrow(() -> new IllegalArgumentException("Subject not found with id " + subjectId));
+  public FileDto uploadFileToSubject(
+      Long subjectId,
+      MultipartFile file,
+      String filename
+  ) throws IOException {
 
     // Validation du fichier
     if (file.isEmpty()) {
@@ -105,6 +107,9 @@ public class FileService {
     Path filePath = uploadPath.resolve(uniqueFilename);
     Files.copy(file.getInputStream(), filePath);
 
+    Subject subject = subjectRepository.findById(subjectId)
+        .orElseThrow(() -> new IllegalArgumentException("Subject not found with id " + subjectId));
+
     // Sauvegarde en base de données
     File fileEntity = new File();
     fileEntity.setName(filename != null ? filename : originalFilename);
@@ -129,18 +134,21 @@ public class FileService {
    */
   private boolean isValidFileType(String contentType) {
     return contentType != null && (
-        contentType.equals("application/pdf") ||
-        contentType.equals("application/msword") ||
-        contentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document") ||
-        contentType.equals("application/vnd.ms-powerpoint") ||
-        contentType.equals("application/vnd.openxmlformats-officedocument.presentationml.presentation") ||
-        contentType.equals("application/vnd.ms-excel") ||
-        contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") ||
-        contentType.equals("image/jpeg") ||
-        contentType.equals("image/png") ||
-        contentType.equals("image/gif") ||
-        contentType.equals("text/plain")
-    );
+      contentType.equals("application/pdf")
+        || contentType.equals("application/msword")
+        || contentType.equals(
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+        || contentType.equals("application/vnd.ms-powerpoint")
+        || contentType.equals(
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+        || contentType.equals("application/vnd.ms-excel")
+        || contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        || contentType.equals("image/jpeg")
+        || contentType.equals("image/png")
+        || contentType.equals("image/gif")
+        || contentType.equals("text/plain")
+      );
   }
 
   /**

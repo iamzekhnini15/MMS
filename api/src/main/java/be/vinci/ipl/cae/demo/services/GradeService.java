@@ -1,17 +1,22 @@
 package be.vinci.ipl.cae.demo.services;
 
 import be.vinci.ipl.cae.demo.models.dtos.BulkGradeInputDto;
-import be.vinci.ipl.cae.demo.models.dtos.EvaluationGradeDto;
-import be.vinci.ipl.cae.demo.models.entities.*;
-import be.vinci.ipl.cae.demo.repositories.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import be.vinci.ipl.cae.demo.models.entities.BulletinConfig;
+import be.vinci.ipl.cae.demo.models.entities.Evaluation;
+import be.vinci.ipl.cae.demo.models.entities.EvaluationGrade;
+import be.vinci.ipl.cae.demo.models.entities.Student;
+import be.vinci.ipl.cae.demo.models.entities.Teacher;
+import be.vinci.ipl.cae.demo.repositories.EvaluationGradeRepository;
+import be.vinci.ipl.cae.demo.repositories.EvaluationRepository;
+import be.vinci.ipl.cae.demo.repositories.StudentRepository;
+import be.vinci.ipl.cae.demo.repositories.TeacherRepository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service handling operations related to evaluation grades.
@@ -33,7 +38,7 @@ public class GradeService {
    */
   public List<EvaluationGrade> getGradesByEvaluation(Long evaluationId) {
     Evaluation evaluation = evaluationRepository.findById(evaluationId)
-      .orElseThrow(() -> new IllegalArgumentException("Evaluation not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Evaluation not found"));
     
     return gradeRepository.findByEvaluation(evaluation);
   }
@@ -46,7 +51,7 @@ public class GradeService {
    */
   public List<EvaluationGrade> getVisibleGradesByStudent(Long studentId) {
     Student student = studentRepository.findById(studentId)
-      .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Student not found"));
     
     return gradeRepository.findVisibleGradesByStudent(student);
   }
@@ -59,9 +64,15 @@ public class GradeService {
    * @param periodId the period ID
    * @return list of grades to include in calculation
    */
-  public List<EvaluationGrade> getGradesForCalculation(Long studentId, Long subjectId, Long periodId) {
+  public List<EvaluationGrade> getGradesForCalculation(
+      Long studentId,
+      Long subjectId,
+      Long periodId
+  ) {
     return gradeRepository.findGradesForCalculation(
-      studentRepository.findById(studentId).orElseThrow(() -> new IllegalArgumentException("Student not found")),
+      studentRepository.findById(studentId).orElseThrow(
+         () -> new IllegalArgumentException("Student not found")
+      ),
       subjectId,
       periodId
     );
@@ -80,18 +91,28 @@ public class GradeService {
    * @return the created or updated grade
    */
   @Transactional
-  public EvaluationGrade saveGrade(Long evaluationId, Long studentId, Double score, Long teacherId, 
-                                  Boolean includeInCalculation, String status, String comment) {
+  public EvaluationGrade saveGrade(
+      Long evaluationId,
+      Long studentId,
+      Double score,
+      Long teacherId,
+      Boolean includeInCalculation,
+      String status,
+      String comment
+  ) {
     
     Evaluation evaluation = evaluationRepository.findById(evaluationId)
-      .orElseThrow(() -> new IllegalArgumentException("Evaluation not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Evaluation not found"));
     Student student = studentRepository.findById(studentId)
-      .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Student not found"));
     Teacher teacher = teacherRepository.findById(teacherId)
-      .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
 
     // Check if grade already exists
-    Optional<EvaluationGrade> existingGrade = gradeRepository.findByEvaluationAndStudent(evaluation, student);
+    Optional<EvaluationGrade> existingGrade = gradeRepository.findByEvaluationAndStudent(
+        evaluation,
+        student
+    );
     
     EvaluationGrade grade;
     if (existingGrade.isPresent()) {
@@ -105,7 +126,10 @@ public class GradeService {
 
     grade.setScore(score);
     grade.setIncludeInCalculation(includeInCalculation != null ? includeInCalculation : true);
-    grade.setStatus(EvaluationGrade.GradeStatus.valueOf(status != null ? status.toUpperCase() : "PRESENT"));
+    grade.setStatus(EvaluationGrade.GradeStatus.valueOf(
+        status != null ? status.toUpperCase() : "PRESENT"
+      )
+    );
     grade.setComment(comment);
     grade.setGradedAt(new Date());
 
@@ -122,18 +146,23 @@ public class GradeService {
   @Transactional
   public List<EvaluationGrade> saveBulkGrades(BulkGradeInputDto bulkGradeDto, Long teacherId) {
     Evaluation evaluation = evaluationRepository.findById(bulkGradeDto.getEvaluationId())
-      .orElseThrow(() -> new IllegalArgumentException("Evaluation not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Evaluation not found"));
     Teacher teacher = teacherRepository.findById(teacherId)
-      .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
 
     List<EvaluationGrade> savedGrades = new ArrayList<>();
 
     for (BulkGradeInputDto.StudentGradeDto gradeDto : bulkGradeDto.getGrades()) {
       Student student = studentRepository.findById(gradeDto.getStudentId())
-        .orElseThrow(() -> new IllegalArgumentException("Student not found: " + gradeDto.getStudentId()));
+          .orElseThrow(() -> new IllegalArgumentException(
+              "Student not found: " + gradeDto.getStudentId()
+          ));
 
       // Check if grade already exists
-      Optional<EvaluationGrade> existingGrade = gradeRepository.findByEvaluationAndStudent(evaluation, student);
+      Optional<EvaluationGrade> existingGrade = gradeRepository.findByEvaluationAndStudent(
+          evaluation,
+          student
+      );
       
       EvaluationGrade grade;
       if (existingGrade.isPresent()) {

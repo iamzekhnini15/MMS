@@ -1,8 +1,8 @@
 package be.vinci.ipl.cae.demo.models.dtos;
 
 import be.vinci.ipl.cae.demo.models.entities.Evaluation;
-import lombok.Data;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * DTO for Evaluation entity.

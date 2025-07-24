@@ -1,13 +1,12 @@
 package be.vinci.ipl.cae.demo.repositories;
 
 import be.vinci.ipl.cae.demo.models.entities.BulletinConfig;
-import be.vinci.ipl.cae.demo.models.entities.ClassEntity;
 import be.vinci.ipl.cae.demo.models.entities.BulletinPeriod;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
+import be.vinci.ipl.cae.demo.models.entities.ClassEntity;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository interface for BulletinConfig entities.
@@ -22,7 +21,9 @@ public interface BulletinConfigRepository extends JpaRepository<BulletinConfig, 
    * @param period the bulletin period
    * @return the config if found
    */
-  Optional<BulletinConfig> findByClassEntityAndBulletinPeriod(ClassEntity classEntity, BulletinPeriod period);
+  Optional<BulletinConfig> findByClassEntityAndBulletinPeriod(
+      ClassEntity classEntity, BulletinPeriod period
+  );
 
   /**
    * Find all configs for a class.

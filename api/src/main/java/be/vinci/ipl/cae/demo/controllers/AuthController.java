@@ -48,6 +48,12 @@ public class AuthController {
     this.userService = userService;
   }
 
+  /**
+   * Validates register request credentials.
+   *
+   * @param registerRequest the register request to validate
+   * @return true if credentials are invalid, false otherwise
+   */
   private boolean isInvalidRegisterCredentials(RegisterRequest registerRequest) {
     return registerRequest.getEmail() == null || registerRequest.getPassword() == null
       || registerRequest.getPasswordConfirmation() == null
@@ -64,6 +70,12 @@ public class AuthController {
       || !isNumeric(registerRequest.getAddress().getNumber());
   }
 
+  /**
+   * Check if a string contains only numeric characters.
+   *
+   * @param str the string to check
+   * @return true if the string is numeric, false otherwise
+   */
   private boolean isNumeric(String str) {
     if (str == null || str.isEmpty()) {
       return false;
