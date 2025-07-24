@@ -89,72 +89,73 @@ const TeacherGradesPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+    <div className="container mx-auto p-4 sm:p-6">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
           Saisie des Notes
         </h1>
-        <p className="text-gray-600">
+        <p className="text-sm sm:text-base text-gray-600">
           Sélectionnez une évaluation pour saisir ou modifier les notes des
           étudiants
         </p>
       </div>
 
       {!evaluations || evaluations.length === 0 ? (
-        <Card className="text-center py-12">
-          <CardContent>
-            <AcademicCapIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+        <Card className="text-center py-8 sm:py-12">
+          <CardContent className="px-4 sm:px-6">
+            <AcademicCapIcon className="h-12 w-12 sm:h-16 sm:w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
               Aucune évaluation trouvée
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-sm sm:text-base text-gray-600 mb-4">
               Vous n'avez pas encore créé d'évaluations. Créez votre première
               évaluation pour pouvoir saisir des notes.
             </p>
-            <Button onClick={() => navigate('/teacher/evaluations')}>
+            <Button 
+              onClick={() => navigate('/teacher/evaluations')}
+              className="text-sm sm:text-base"
+            >
               Créer une évaluation
             </Button>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-3 sm:gap-4">
           {evaluations.map((evaluation: Evaluation) => (
             <Card
               key={evaluation.idEvaluation}
               className="hover:shadow-md transition-shadow"
             >
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-lg font-semibold text-gray-900">
+              <CardHeader className="px-4 sm:px-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0">
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                       {evaluation.title}
                     </CardTitle>
-                    <div className="mt-2 space-y-1">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <CalendarIcon className="h-4 w-4 mr-2" />
+                    <div className="space-y-2">
+                      <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                        <CalendarIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
                         {formatDate(evaluation.evaluationDate)}
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <span>
-                          <strong>Classe:</strong>{' '}
-                          {getClassname(evaluation.classId)}
-                        </span>
-                        <span>
-                          <strong>Matière:</strong>{' '}
-                          {getSubjectName(evaluation.subjectId)}
-                        </span>
+                      <div className="space-y-1 text-xs sm:text-sm text-gray-600">
+                        <div>
+                          <strong>Classe:</strong> {getClassname(evaluation.classId)}
+                        </div>
+                        <div>
+                          <strong>Matière:</strong> {getSubjectName(evaluation.subjectId)}
+                        </div>
                         {evaluation.periodId && (
-                          <span>
-                            <strong>Période:</strong>{' '}
-                            {getPeriodName(evaluation.periodId)}
-                          </span>
+                          <div>
+                            <strong>Période:</strong> {getPeriodName(evaluation.periodId)}
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 sm:flex-col sm:items-end">
                     <Badge
                       variant={evaluation.isVisible ? 'default' : 'secondary'}
+                      className="text-xs"
                     >
                       {evaluation.isVisible ? (
                         <>
@@ -172,23 +173,21 @@ const TeacherGradesPage: React.FC = () => {
                       variant={
                         evaluation.isGradesVisible ? 'default' : 'outline'
                       }
+                      className="text-xs"
                     >
-                      Notes{' '}
-                      {evaluation.isGradesVisible ? 'visibles' : 'masquées'}
+                      Notes {evaluation.isGradesVisible ? 'visibles' : 'masquées'}
                     </Badge>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600">
+              <CardContent className="px-4 sm:px-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                  <div className="text-xs sm:text-sm text-gray-600">
                     {evaluation.description && (
-                      <p className="mb-2">{evaluation.description}</p>
+                      <p className="mb-2 line-clamp-2">{evaluation.description}</p>
                     )}
-                    <div className="flex gap-4">
-                      <span>
-                        <strong>Note max:</strong> {evaluation.maxScore} pts
-                      </span>
+                    <div>
+                      <strong>Note max:</strong> {evaluation.maxScore} pts
                     </div>
                   </div>
                   <Button
@@ -196,11 +195,12 @@ const TeacherGradesPage: React.FC = () => {
                       evaluation.idEvaluation &&
                       handleGradeEvaluation(evaluation.idEvaluation)
                     }
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 text-xs sm:text-sm h-8 sm:h-9 px-3 sm:px-4 w-full sm:w-auto"
                     disabled={!evaluation.idEvaluation}
                   >
-                    <PencilSquareIcon className="h-4 w-4" />
-                    Saisir les notes
+                    <PencilSquareIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Saisir les notes</span>
+                    <span className="sm:hidden">Saisir notes</span>
                   </Button>
                 </div>
               </CardContent>

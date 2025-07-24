@@ -220,26 +220,26 @@ const TeacherCoefficientsPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+    <div className="container mx-auto p-4 sm:p-6">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
           Gestion des Coefficients
         </h1>
-        <p className="text-gray-600">
+        <p className="text-sm sm:text-base text-gray-600">
           Configurez les coefficients pour chaque matière par classe
         </p>
       </div>
 
-      {/* Class Selector */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ChartBarIcon className="h-5 w-5" />
+      {/* Class Selector responsive */}
+      <Card className="mb-4 sm:mb-6">
+        <CardHeader className="px-4 sm:px-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <ChartBarIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             Sélection de la classe
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
+        <CardContent className="px-4 sm:px-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
             {classes?.map((classe: Classes) => (
               <Button
                 key={classe.idClass}
@@ -247,7 +247,7 @@ const TeacherCoefficientsPage: React.FC = () => {
                   selectedClass === classe.idClass ? 'default' : 'outline'
                 }
                 onClick={() => setSelectedClass(classe.idClass)}
-                className="mb-2"
+                className="text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
               >
                 {classe.name}
               </Button>
@@ -257,23 +257,23 @@ const TeacherCoefficientsPage: React.FC = () => {
       </Card>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-          <h3 className="text-red-800 font-medium">Erreur</h3>
-          <p className="text-red-600">{error}</p>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+          <h3 className="text-red-800 font-medium text-sm sm:text-base">Erreur</h3>
+          <p className="text-red-600 text-sm">{error}</p>
         </div>
       )}
 
       {selectedClass && (
         <Card>
-          <CardHeader>
-            <CardTitle>
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-base sm:text-lg">
               Coefficients pour {getClassName(selectedClass)}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             {subjectsLoading || coefficientsLoading ? (
-              <div className="text-center py-8">
-                <div className="text-gray-600">
+              <div className="text-center py-6 sm:py-8">
+                <div className="text-gray-600 text-sm sm:text-base">
                   Chargement des coefficients...
                 </div>
               </div>

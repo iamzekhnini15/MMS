@@ -229,23 +229,23 @@ const DetailedBulletinPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-4xl">
-      {/* Header avec navigation */}
-      <div className="flex items-center justify-between mb-6">
-        <Button onClick={goBack} variant="outline" size="sm">
-          <ArrowLeftIcon className="w-4 h-4 mr-2" />
+    <div className="container mx-auto px-4 py-4 sm:py-6 max-w-4xl">
+      {/* Header avec navigation responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <Button onClick={goBack} variant="outline" size="sm" className="text-sm h-9 self-start sm:self-auto">
+          <ArrowLeftIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
           Retour aux bulletins
         </Button>
-        <Button onClick={generatePDF} className="bg-green-600 hover:bg-green-700">
-          <DocumentArrowDownIcon className="w-4 h-4 mr-2" />
+        <Button onClick={generatePDF} className="bg-green-600 hover:bg-green-700 text-sm h-9 self-start sm:self-auto">
+          <DocumentArrowDownIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
           📥 Télécharger PDF
         </Button>
       </div>
 
-      {/* Titre de la page */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-light text-gray-900 mb-2">Bulletin Détaillé</h1>
-        <p className="text-gray-600">
+      {/* Titre de la page responsive */}
+      <div className="text-center mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-light text-gray-900 mb-2">Bulletin Détaillé</h1>
+        <p className="text-gray-600 text-sm sm:text-base">
           {bulletinData.studentName} • {bulletinData.className}
         </p>
         <p className="text-sm text-gray-500">
@@ -253,51 +253,51 @@ const DetailedBulletinPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Carte principale */}
-      <Card className="mb-6">
-        <CardHeader className="text-center">
-          <CardTitle className="text-4xl font-light mb-2">
+      {/* Carte principale responsive */}
+      <Card className="mb-4 sm:mb-6">
+        <CardHeader className="text-center px-4 sm:px-6">
+          <CardTitle className="text-3xl sm:text-4xl font-light mb-2">
             <span className={`${bulletinData.generalAverage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
               {bulletinData.generalAverage.toFixed(1)}%
             </span>
           </CardTitle>
-          <p className="text-gray-600">Moyenne générale</p>
+          <p className="text-gray-600 text-sm sm:text-base">Moyenne générale</p>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="text-center">
+        <CardContent className="px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="text-center p-3 sm:p-0">
               <p className="text-sm text-gray-600">Rang dans la classe</p>
-              <p className="text-2xl font-semibold">{bulletinData.classRank}</p>
+              <p className="text-xl sm:text-2xl font-semibold">{bulletinData.classRank}</p>
               <p className="text-sm text-gray-500">sur {bulletinData.totalStudents}</p>
             </div>
-            <div className="text-center">
+            <div className="text-center p-3 sm:p-0">
               <p className="text-sm text-gray-600">Moyenne de classe</p>
-              <p className="text-2xl font-semibold">{bulletinData.classAverage.toFixed(1)}%</p>
+              <p className="text-xl sm:text-2xl font-semibold">{bulletinData.classAverage.toFixed(1)}%</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Matières */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Détail par matière</CardTitle>
+      {/* Matières responsive */}
+      <Card className="mb-4 sm:mb-6">
+        <CardHeader className="px-4 sm:px-6">
+          <CardTitle className="text-lg sm:text-xl">Détail par matière</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className="px-4 sm:px-6">
+          <div className="space-y-3 sm:space-y-4">
             {bulletinData.subjectGrades.map((subject, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-lg gap-3 sm:gap-0">
                 <div className="flex-1">
-                  <h3 className="font-medium text-gray-900">{subject.subjectName}</h3>
+                  <h3 className="font-medium text-gray-900 text-sm sm:text-base">{subject.subjectName}</h3>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center justify-between sm:justify-end space-x-3 sm:space-x-4">
                   <div className="text-center">
                     <p className="text-xs text-gray-500">Coefficient</p>
-                    <Badge variant="outline">×{subject.coefficient}</Badge>
+                    <Badge variant="outline" className="text-xs">×{subject.coefficient}</Badge>
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500">Moyenne</p>
-                    <Badge className={`${subject.average >= 50 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    <Badge className={`text-xs ${subject.average >= 50 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                       {subject.average.toFixed(1)}%
                     </Badge>
                   </div>
@@ -306,10 +306,10 @@ const DetailedBulletinPage: React.FC = () => {
             ))}
           </div>
           
-          <div className="mt-6 pt-4 border-t border-gray-200">
-            <div className="flex justify-between items-center">
-              <span className="font-medium text-gray-900">Total des points</span>
-              <span className="text-lg font-semibold">
+          <div className="mt-4 sm:mt-6 pt-4 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
+              <span className="font-medium text-gray-900 text-sm sm:text-base">Total des points</span>
+              <span className="text-base sm:text-lg font-semibold">
                 {bulletinData.subjectGrades.reduce((sum, subject) => sum + (subject.average * subject.coefficient / 100), 0).toFixed(1)} / {bulletinData.subjectGrades.reduce((sum, subject) => sum + subject.coefficient, 0)}
               </span>
             </div>
@@ -317,15 +317,15 @@ const DetailedBulletinPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Commentaire */}
+      {/* Commentaire responsive */}
       {bulletinData.generalComment && bulletinData.generalComment.trim() && (
         <Card>
-          <CardHeader>
-            <CardTitle>Commentaire</CardTitle>
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-lg sm:text-xl">Commentaire</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-gray-700 leading-relaxed">{bulletinData.generalComment}</p>
+          <CardContent className="px-4 sm:px-6">
+            <div className="bg-blue-50 p-3 sm:p-4 rounded-lg">
+              <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{bulletinData.generalComment}</p>
             </div>
           </CardContent>
         </Card>

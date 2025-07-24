@@ -117,82 +117,99 @@ const ManageClass: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen p-8 space-y-8 bg-gray-50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gray-50">
       {/* Header */}
-      <div className="flex justify-between items-start max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-0 max-w-7xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
           Gestion des classes
         </h1>
         <Button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 text-lg"
+          className="flex items-center gap-2 text-sm sm:text-base lg:text-lg self-start sm:self-auto"
         >
-          + Nouvelle classe
+          <span className="text-lg">+</span>
+          <span className="hidden sm:inline">Nouvelle classe</span>
+          <span className="sm:hidden">Nouvelle</span>
         </Button>
       </div>
 
       {/* Classes Table */}
       <div className="max-w-7xl mx-auto">
         {classes && classes.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nom</TableHead>
-                <TableHead>Niveau</TableHead>
-                <TableHead>Département</TableHead>
-                <TableHead>Responsable</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {classes.map((classe) => (
-                <TableRow
-                  key={classe.idClass}
-                  className="cursor-pointer hover:bg-gray-100"
-                  onClick={() => navigate(`/manage-classes/${classe.idClass}`)}
-                >
-                  <TableCell>{classe.name}</TableCell>
-                  <TableCell>{classe.level}</TableCell>
-                  <TableCell>{classe.department}</TableCell>
-                  <TableCell>
-                    {classe.responsibleTeacher?.user?.firstname}{' '}
-                    {classe.responsibleTeacher?.user?.lastname}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        alert('Modifier non implémenté');
-                      }}
-                    >
-                      Modifier
-                    </Button>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table className="min-w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-xs sm:text-sm">Nom</TableHead>
+                  <TableHead className="text-xs sm:text-sm">Niveau</TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Département</TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden md:table-cell">Responsable</TableHead>
+                  <TableHead className="text-xs sm:text-sm">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {classes.map((classe) => (
+                  <TableRow
+                    key={classe.idClass}
+                    className="cursor-pointer hover:bg-gray-100"
+                    onClick={() => navigate(`/manage-classes/${classe.idClass}`)}
+                  >
+                    <TableCell className="text-xs sm:text-sm font-medium">
+                      <div>
+                        <div>{classe.name}</div>
+                        <div className="text-xs text-gray-500 sm:hidden">
+                          Niv. {classe.level} • {classe.department}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-xs sm:text-sm">{classe.level}</TableCell>
+                    <TableCell className="text-xs sm:text-sm hidden sm:table-cell">{classe.department}</TableCell>
+                    <TableCell className="text-xs sm:text-sm hidden md:table-cell">
+                      <div className="truncate max-w-32">
+                        {classe.responsibleTeacher?.user?.firstname}{' '}
+                        {classe.responsibleTeacher?.user?.lastname}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs h-8 px-2 sm:px-3"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          alert('Modifier non implémenté');
+                        }}
+                      >
+                        <span className="hidden sm:inline">Modifier</span>
+                        <span className="sm:hidden">✏️</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         ) : (
-          <p className="text-center text-gray-500">Aucune classe disponible.</p>
+          <div className="text-center py-8 sm:py-12">
+            <p className="text-sm sm:text-base text-gray-500">Aucune classe disponible.</p>
+          </div>
         )}
       </div>
 
       {/* Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-3xl bg-black/30">
-          <DialogHeader>
-            <DialogTitle>Ajouter une classe</DialogTitle>
+        <DialogContent className="max-w-3xl mx-2 sm:mx-auto max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="pb-4">
+            <DialogTitle className="text-lg sm:text-xl">Ajouter une classe</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {error && (
-              <div className="text-red-600 bg-red-100 p-2 rounded">{error}</div>
+              <div className="text-red-600 bg-red-100 p-2 sm:p-3 rounded text-sm">{error}</div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label htmlFor="name" className="block mb-1 font-medium">
+                <label htmlFor="name" className="block mb-1 font-medium text-sm">
                   Nom
                 </label>
                 <Input
@@ -200,10 +217,11 @@ const ManageClass: React.FC = () => {
                   name="name"
                   value={form.name}
                   onChange={handleChange}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="level" className="block mb-1 font-medium">
+                <label htmlFor="level" className="block mb-1 font-medium text-sm">
                   Niveau
                 </label>
                 <Input
@@ -212,10 +230,11 @@ const ManageClass: React.FC = () => {
                   type="number"
                   value={form.level}
                   onChange={handleChange}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="department" className="block mb-1 font-medium">
+                <label htmlFor="department" className="block mb-1 font-medium text-sm">
                   Département
                 </label>
                 <Input
@@ -223,12 +242,13 @@ const ManageClass: React.FC = () => {
                   name="department"
                   value={form.department}
                   onChange={handleChange}
+                  className="text-sm"
                 />
               </div>
               <div>
                 <label
                   htmlFor="responsibleTeacherId"
-                  className="block mb-1 font-medium"
+                  className="block mb-1 font-medium text-sm"
                 >
                   Responsable
                 </label>
@@ -236,7 +256,7 @@ const ManageClass: React.FC = () => {
                   onValueChange={handleTeacherSelect}
                   value={form.responsibleTeacherId}
                 >
-                  <SelectTrigger id="responsibleTeacherId" className="w-full">
+                  <SelectTrigger id="responsibleTeacherId" className="w-full text-sm">
                     <SelectValue placeholder="Sélectionnez un responsable" />
                   </SelectTrigger>
                   <SelectContent>
@@ -244,6 +264,7 @@ const ManageClass: React.FC = () => {
                       <SelectItem
                         key={teacher.idTeacher}
                         value={String(teacher.idTeacher)}
+                        className="text-sm"
                       >
                         {teacher.user.firstname} {teacher.user.lastname}
                       </SelectItem>
@@ -253,10 +274,18 @@ const ManageClass: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-end pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowModal(false)}
+                className="text-sm sm:mr-2"
+              >
+                Annuler
+              </Button>
               <Button
                 type="submit"
-                className="px-8 py-3 text-lg"
+                className="text-sm sm:px-8"
                 disabled={loading}
               >
                 {loading ? 'Enregistrement...' : 'Enregistrer'}

@@ -138,12 +138,12 @@ const ClassDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen p-8 space-y-8 bg-gray-50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50">
       {/* Header */}
-      <div className="flex justify-between items-start max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900">{classe.name}</h1>
-          <div className="text-gray-700 text-lg">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{classe.name}</h1>
+          <div className="text-gray-700 text-sm sm:text-base lg:text-lg space-y-1">
             <p>
               <strong>Niveau:</strong> {classe.level}
             </p>
@@ -159,9 +159,9 @@ const ClassDetailPage: React.FC = () => {
         </div>
         <Button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 text-lg"
+          className="flex items-center justify-center gap-2 text-sm sm:text-base lg:text-lg w-full sm:w-auto"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
           Ajouter un élève
         </Button>
       </div>
@@ -169,39 +169,85 @@ const ClassDetailPage: React.FC = () => {
       {/* Student Table */}
       <div className="max-w-7xl mx-auto">
         {students && students.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Prénom</TableHead>
-                <TableHead>Nom</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Téléphone</TableHead>
-                <TableHead>Date de naissance</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <>
+            {/* Desktop/Tablet Table */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Prénom</TableHead>
+                    <TableHead>Nom</TableHead>
+                    <TableHead className="hidden lg:table-cell">Email</TableHead>
+                    <TableHead className="hidden lg:table-cell">Téléphone</TableHead>
+                    <TableHead className="hidden lg:table-cell">Date de naissance</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {students.map((student) => (
+                    <TableRow key={student.user.idUser}>
+                      <TableCell>{student.user.firstname}</TableCell>
+                      <TableCell>{student.user.lastname}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{student.user.email}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{student.user.phone || '-'}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{student.dateOfBirth}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <button className="text-blue-600 hover:underline text-sm">
+                            Modifier
+                          </button>
+                          <button className="text-red-600 hover:underline text-sm">
+                            Supprimer
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-4">
               {students.map((student) => (
-                <TableRow key={student.user.idUser}>
-                  <TableCell>{student.user.firstname}</TableCell>
-                  <TableCell>{student.user.lastname}</TableCell>
-                  <TableCell>{student.user.email}</TableCell>
-                  <TableCell>{student.user.phone || '-'}</TableCell>
-                  <TableCell>{student.dateOfBirth}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <button className="text-blue-600 hover:underline">
-                        Modifier
+                <div
+                  key={student.user.idUser}
+                  className="bg-white p-4 rounded-lg shadow-sm border"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg text-gray-900">
+                        {student.user.firstname} {student.user.lastname}
+                      </h3>
+                    </div>
+                    <div className="flex gap-2 ml-2">
+                      <button className="text-blue-600 hover:underline text-sm">
+                        ✏️
                       </button>
-                      <button className="text-red-600 hover:underline">
-                        Supprimer
+                      <button className="text-red-600 hover:underline text-sm">
+                        🗑️
                       </button>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                  
+                  <div className="space-y-2 text-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center text-gray-600">
+                      <span className="font-medium w-full sm:w-24">Email:</span>
+                      <span className="break-all">{student.user.email}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <span className="font-medium w-24">Téléphone:</span>
+                      <span>{student.user.phone || '-'}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <span className="font-medium w-24">Naissance:</span>
+                      <span>{student.dateOfBirth}</span>
+                    </div>
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          </>
         ) : (
           <p className="text-center text-gray-500">
             Aucun élève inscrit pour cette classe.
@@ -211,14 +257,14 @@ const ClassDetailPage: React.FC = () => {
 
       {/* Modal Form */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-3xl backdrop-blur-sm">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto backdrop-blur-sm mx-4">
           <DialogHeader>
-            <DialogTitle>Ajouter un élève</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">Ajouter un élève</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {userFields.map(({ label, field }) => (
-                <div key={field}>
+                <div key={field} className={field === 'email' ? 'sm:col-span-2' : ''}>
                   <label className="block text-sm font-medium mb-1">
                     {label}
                   </label>
@@ -232,10 +278,11 @@ const ClassDetailPage: React.FC = () => {
                       'email',
                       'password',
                     ].includes(field)}
+                    className="text-sm sm:text-base"
                   />
                 </div>
               ))}
-              <div>
+              <div className="sm:col-span-2">
                 <label className="block text-sm font-medium mb-1">
                   Date de naissance
                 </label>
@@ -249,12 +296,13 @@ const ClassDetailPage: React.FC = () => {
                     }))
                   }
                   required
+                  className="text-sm sm:text-base"
                 />
               </div>
             </div>
 
-            <h3 className="text-2xl font-semibold mt-6 mb-4">Adresse</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mt-6 mb-4">Adresse</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { label: 'Rue', field: 'street' },
                 { label: 'Numéro', field: 'number' },
@@ -273,13 +321,14 @@ const ClassDetailPage: React.FC = () => {
                     onChange={(e) =>
                       handleChange(e, field as keyof Address, 'address')
                     }
+                    className="text-sm sm:text-base"
                   />
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-end mt-6">
-              <Button type="submit" className="px-8 py-3 text-lg">
+            <div className="flex justify-end mt-6 pt-4">
+              <Button type="submit" className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg w-full sm:w-auto">
                 Enregistrer
               </Button>
             </div>

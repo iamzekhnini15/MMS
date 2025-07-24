@@ -108,10 +108,10 @@ const StudentBulletins: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">Chargement de vos bulletins...</span>
+      <div className="container mx-auto p-4 sm:p-6 max-w-7xl">
+        <div className="flex items-center justify-center h-48 sm:h-64">
+          <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600"></div>
+          <span className="ml-3 text-gray-600 text-sm sm:text-base">Chargement de vos bulletins...</span>
         </div>
       </div>
     );
@@ -119,10 +119,10 @@ const StudentBulletins: React.FC = () => {
 
   if (error) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-4 sm:p-6 max-w-7xl">
         <Card className="border-red-200 bg-red-50">
-          <CardContent className="pt-6">
-            <p className="text-red-600">{error}</p>
+          <CardContent className="pt-4 sm:pt-6">
+            <p className="text-red-600 text-sm sm:text-base">{error}</p>
           </CardContent>
         </Card>
       </div>
@@ -130,97 +130,97 @@ const StudentBulletins: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* En-tête */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Mes Bulletins</h1>
-        <p className="text-gray-600">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl">
+      {/* En-tête responsive */}
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Mes Bulletins</h1>
+        <p className="text-gray-600 text-sm sm:text-base">
           Consultez vos bulletins scolaires rendus disponibles par vos professeurs
         </p>
       </div>
 
-      {/* Liste des bulletins */}
+      {/* Liste des bulletins responsive */}
       {bulletins.length === 0 ? (
-        <Card className="text-center py-12">
+        <Card className="text-center py-8 sm:py-12">
           <CardContent>
-            <DocumentTextIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <DocumentTextIcon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
               Aucun bulletin disponible
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 text-sm sm:text-base mb-4">
               Vos professeurs n'ont pas encore rendu de bulletins visibles pour vous.
             </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {bulletins.map((bulletin) => (
-            <Card key={bulletin.idBulletin} className="hover:shadow-lg transition-shadow duration-200">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
+            <Card key={bulletin.idBulletin} className="hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+              <CardHeader className="pb-3 sm:pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <DocumentTextIcon className="w-5 h-5 text-blue-600" />
-                    <CardTitle className="text-lg">{bulletin.bulletinPeriod.name}</CardTitle>
+                    <DocumentTextIcon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+                    <CardTitle className="text-base sm:text-lg truncate">{bulletin.bulletinPeriod.name}</CardTitle>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-xs self-start sm:self-center">
                     {bulletin.bulletinPeriod.academicYear}
                   </Badge>
                 </div>
               </CardHeader>
               
-              <CardContent className="space-y-4">
-                {/* Moyenne générale - mise en valeur */}
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className={`text-3xl font-bold mb-1 ${getGradeColor(bulletin.generalAverage).split(' ')[0]}`}>
+              <CardContent className="space-y-3 sm:space-y-4">
+                {/* Moyenne générale - mise en valeur responsive */}
+                <div className="text-center p-3 sm:p-4 bg-gray-50 rounded-lg">
+                  <div className={`text-2xl sm:text-3xl font-bold mb-1 ${getGradeColor(bulletin.generalAverage).split(' ')[0]}`}>
                     {bulletin.generalAverage.toFixed(1)}%
                   </div>
-                  <div className="text-sm text-gray-600">Moyenne générale</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Moyenne générale</div>
                 </div>
 
-                {/* Statistiques */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                {/* Statistiques responsive */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 text-sm">
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
-                      <ChartBarIcon className="w-4 h-4" />
-                      <span>Rang</span>
+                      <ChartBarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="text-xs sm:text-sm">Rang</span>
                     </div>
-                    <div className="font-semibold">
+                    <div className="font-semibold text-sm sm:text-base">
                       {bulletin.classRank}ème / {bulletin.totalStudents}
                     </div>
                   </div>
                   
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
-                      <AcademicCapIcon className="w-4 h-4" />
-                      <span>Moy. Classe</span>
+                      <AcademicCapIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="text-xs sm:text-sm">Moy. Classe</span>
                     </div>
-                    <div className="font-semibold">
+                    <div className="font-semibold text-sm sm:text-base">
                       {bulletin.classAverage.toFixed(1)}%
                     </div>
                   </div>
                 </div>
 
-                {/* Date de génération */}
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CalendarIcon className="w-4 h-4" />
-                  <span>Publié le {formatDate(bulletin.generatedAt)}</span>
+                {/* Date de génération responsive */}
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                  <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="truncate">Publié le {formatDate(bulletin.generatedAt)}</span>
                 </div>
 
-                {/* Commentaire s'il existe */}
+                {/* Commentaire s'il existe - responsive */}
                 {bulletin.generalComment && (
                   <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-sm text-blue-800 font-medium mb-1">Commentaire :</p>
-                    <p className="text-sm text-blue-700">{bulletin.generalComment}</p>
+                    <p className="text-xs sm:text-sm text-blue-800 font-medium mb-1">Commentaire :</p>
+                    <p className="text-xs sm:text-sm text-blue-700 leading-relaxed">{bulletin.generalComment}</p>
                   </div>
                 )}
 
-                {/* Bouton d'action */}
+                {/* Bouton d'action responsive */}
                 <div className="pt-2">
                   <Button 
                     onClick={() => handleViewDetailedBulletin(bulletin)}
-                    className="w-full flex items-center gap-2"
+                    className="w-full flex items-center justify-center gap-2 text-sm sm:text-base h-9 sm:h-10"
                   >
-                    <EyeIcon className="w-4 h-4" />
+                    <EyeIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                     Voir le détail
                   </Button>
                 </div>

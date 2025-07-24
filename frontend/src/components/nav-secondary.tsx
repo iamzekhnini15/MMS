@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 
 export function NavSecondary({
@@ -21,6 +22,17 @@ export function NavSecondary({
   }[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const navigate = useNavigate();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleNavigation = (url: string) => {
+    if (url !== '#') {
+      navigate(url);
+      // Fermer la sidebar sur mobile après navigation
+      if (isMobile) {
+        setOpenMobile(false);
+      }
+    }
+  };
 
   return (
     <SidebarGroup {...props}>
@@ -30,7 +42,7 @@ export function NavSecondary({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">
                 <button
-                  onClick={() => item.url !== '#' && navigate(item.url)}
+                  onClick={() => handleNavigation(item.url)}
                   className="w-full flex items-center cursor-pointer"
                 >
                   <item.icon />

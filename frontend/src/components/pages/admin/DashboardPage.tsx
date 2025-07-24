@@ -1,5 +1,6 @@
 import React, { useContext, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { KpiContext } from '../../../contexts/DashboardContext';
 import { CoursesContext } from '../../../contexts/CoursesContext';
 import { TeacherContext } from '../../../contexts/TeacherContext';
@@ -41,6 +42,7 @@ import {
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { error } = useContext(KpiContext);
   const { courses } = useContext(CoursesContext);
   const { teachers } = useContext(TeacherContext);
@@ -356,7 +358,7 @@ const Dashboard: React.FC = () => {
       icon: Calendar,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
-      action: () => console.log('Voir emploi du temps'),
+      action: () => navigate('/schedule'),
     },
     {
       title: 'Rapports',
@@ -385,10 +387,10 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* En-tête */}
       <motion.div
-        className="flex justify-between items-center"
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -398,33 +400,34 @@ const Dashboard: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <h1 className="text-3xl font-bold">Tableau de bord</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold">Tableau de bord</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">
             Bienvenue dans votre espace de gestion scolaire
           </p>
         </motion.div>
         <motion.div
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 self-start sm:self-auto"
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
-              Export
+            <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9">
+              <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Export</span>
+              <span className="sm:hidden">↓</span>
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <Button variant="outline" size="sm">
-              <Bell className="w-4 h-4" />
+            <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3">
+              <Bell className="w-3 h-3 sm:w-4 sm:h-4" />
             </Button>
           </motion.div>
         </motion.div>
       </motion.div>
 
       {/* Statistiques principales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {stats.map((stat, index) => (
           <motion.div
             key={index}
@@ -437,34 +440,35 @@ const Dashboard: React.FC = () => {
             }}
           >
             <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
+                <CardTitle className="text-xs sm:text-sm font-medium truncate">
                   {stat.title}
                 </CardTitle>
                 <motion.div
-                  className={`${stat.bgColor} p-2 rounded-lg`}
+                  className={`${stat.bgColor} p-1.5 sm:p-2 rounded-lg flex-shrink-0`}
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                  <stat.icon className={`h-3 w-3 sm:h-4 sm:w-4 ${stat.color}`} />
                 </motion.div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
                 <motion.div
-                  className="text-2xl font-bold"
+                  className="text-lg sm:text-2xl font-bold"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, delay: index * 0.05 + 0.2 }}
                 >
                   {stat.value}
                 </motion.div>
-                <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                <div className="flex items-center space-x-1 sm:space-x-2 text-xs text-muted-foreground">
                   <span
                     className={`${stat.changeType === 'increase' ? 'text-green-600' : 'text-gray-600'}`}
                   >
                     {stat.change}
                   </span>
-                  <span>cette semaine</span>
+                  <span className="hidden sm:inline">cette semaine</span>
+                  <span className="sm:hidden">sem.</span>
                 </div>
               </CardContent>
             </Card>
@@ -479,19 +483,32 @@ const Dashboard: React.FC = () => {
         transition={{ duration: 0.6, delay: 0.8 }}
       >
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-            <TabsTrigger value="analytics">Analyses</TabsTrigger>
-            <TabsTrigger value="performance">Performance</TabsTrigger>
-            <TabsTrigger value="alerts">Alertes</TabsTrigger>
-            <TabsTrigger value="settings">Paramètres</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-4 py-2">
+              <span className="hidden sm:inline">Vue d'ensemble</span>
+              <span className="sm:hidden">Vue</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="text-xs sm:text-sm px-2 sm:px-4 py-2">
+              <span className="hidden sm:inline">Analyses</span>
+              <span className="sm:hidden">📊</span>
+            </TabsTrigger>
+            <TabsTrigger value="performance" className="text-xs sm:text-sm px-2 sm:px-4 py-2 hidden sm:flex">
+              Performance
+            </TabsTrigger>
+            <TabsTrigger value="alerts" className="text-xs sm:text-sm px-2 sm:px-4 py-2">
+              <span className="hidden sm:inline">Alertes</span>
+              <span className="sm:hidden">⚠️</span>
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="text-xs sm:text-sm px-2 sm:px-4 py-2 hidden lg:flex">
+              Paramètres
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
+          <TabsContent value="overview" className="space-y-4 sm:space-y-6">
             {/* Alertes intelligentes en haut */}
             {smartAlerts.length > 0 && (
               <motion.div
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
@@ -507,18 +524,18 @@ const Dashboard: React.FC = () => {
                     <Card
                       className={`border-l-4 ${alert.type === 'error' ? 'border-l-red-500' : alert.type === 'warning' ? 'border-l-orange-500' : 'border-l-blue-500'}`}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-center space-x-3">
+                      <CardContent className="p-3 sm:p-4">
+                        <div className="flex items-center space-x-2 sm:space-x-3">
                           <motion.div
-                            className={`${alert.bgColor} p-2 rounded-lg`}
+                            className={`${alert.bgColor} p-1.5 sm:p-2 rounded-lg flex-shrink-0`}
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <alert.icon className={`h-4 w-4 ${alert.color}`} />
+                            <alert.icon className={`h-3 w-3 sm:h-4 sm:w-4 ${alert.color}`} />
                           </motion.div>
-                          <div>
-                            <p className="font-medium text-sm">{alert.title}</p>
-                            <p className="text-xs text-muted-foreground">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-xs sm:text-sm truncate">{alert.title}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-2">
                               {alert.message}
                             </p>
                           </div>
@@ -530,7 +547,7 @@ const Dashboard: React.FC = () => {
               </motion.div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
               {/* Activités récentes */}
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
@@ -538,46 +555,46 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
+                  <CardHeader className="px-4 sm:px-6 py-3 sm:py-6">
+                    <CardTitle className="flex items-center justify-between text-base sm:text-lg">
                       <span>Activités récentes</span>
                       <motion.div
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
-                        <Button variant="ghost" size="sm">
-                          <Eye className="w-4 h-4" />
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </motion.div>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
+                  <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                    <div className="space-y-3 sm:space-y-4">
                       {recentActivities.map((activity, index) => (
                         <motion.div
                           key={activity.id}
-                          className="flex items-start space-x-3"
+                          className="flex items-start space-x-2 sm:space-x-3"
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.3, delay: index * 0.05 }}
                           whileHover={{ x: 2 }}
                         >
-                          <div className="mt-1">
+                          <div className="mt-0.5 sm:mt-1 flex-shrink-0">
                             <motion.div
-                              className="p-2 bg-muted rounded-lg"
+                              className="p-1.5 sm:p-2 bg-muted rounded-lg"
                               whileHover={{ scale: 1.05 }}
                               transition={{ duration: 0.2 }}
                             >
                               <activity.icon
-                                className={`h-4 w-4 ${activity.color}`}
+                                className={`h-3 w-3 sm:h-4 sm:w-4 ${activity.color}`}
                               />
                             </motion.div>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium">
+                            <p className="text-xs sm:text-sm font-medium truncate">
                               {activity.title}
                             </p>
-                            <p className="text-sm text-muted-foreground truncate">
+                            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
                               {activity.description}
                             </p>
                             <p className="text-xs text-muted-foreground mt-1">
@@ -598,26 +615,26 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
+                  <CardHeader className="px-4 sm:px-6 py-3 sm:py-6">
+                    <CardTitle className="flex items-center justify-between text-base sm:text-lg">
                       <span>Événements à venir</span>
                       <motion.div
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
-                        <Button variant="ghost" size="sm">
-                          <Calendar className="w-4 h-4" />
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </motion.div>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
+                  <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+                    <div className="space-y-3 sm:space-y-4">
                       {upcomingEvents.length > 0 ? (
                         upcomingEvents.map((event, index) => (
                           <motion.div
                             key={event.id}
-                            className="flex items-center space-x-3"
+                            className="flex items-center space-x-2 sm:space-x-3"
                             initial={{ opacity: 0, x: 10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -625,11 +642,11 @@ const Dashboard: React.FC = () => {
                           >
                             <div className="flex-shrink-0">
                               <motion.div
-                                className="text-center"
+                                className="text-center bg-muted rounded p-1 sm:p-2"
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ duration: 0.2 }}
                               >
-                                <div className="text-sm font-medium">
+                                <div className="text-xs sm:text-sm font-medium">
                                   {new Date(event.date).getDate()}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
@@ -641,17 +658,17 @@ const Dashboard: React.FC = () => {
                               </motion.div>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center space-x-2">
-                                <p className="text-sm font-medium truncate">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                <p className="text-xs sm:text-sm font-medium truncate">
                                   {event.title}
                                 </p>
-                                <Badge variant="secondary">{event.type}</Badge>
+                                <Badge variant="secondary" className="self-start text-xs">{event.type}</Badge>
                               </div>
-                              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                              <div className="flex items-center space-x-1 sm:space-x-2 text-xs text-muted-foreground">
                                 <Clock className="w-3 h-3" />
                                 <span>{event.time}</span>
                               </div>
-                              <div className="text-xs text-muted-foreground">
+                              <div className="text-xs text-muted-foreground truncate">
                                 <span>
                                   {event.teacher} • {event.classroom}
                                 </span>
@@ -660,9 +677,9 @@ const Dashboard: React.FC = () => {
                           </motion.div>
                         ))
                       ) : (
-                        <div className="text-center py-6">
-                          <Calendar className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                          <p className="text-sm text-muted-foreground">
+                        <div className="text-center py-4 sm:py-6">
+                          <Calendar className="h-6 w-6 sm:h-8 sm:w-8 mx-auto text-muted-foreground mb-2" />
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Aucun cours à venir
                           </p>
                         </div>

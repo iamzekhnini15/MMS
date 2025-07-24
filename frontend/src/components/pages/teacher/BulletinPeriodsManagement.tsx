@@ -151,39 +151,40 @@ const BulletinPeriodsManagement: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
           Gestion des Périodes de Bulletin
         </h1>
-        <div className="flex gap-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center">
           <div className="flex items-center gap-2">
             <Switch 
               checked={showAllPeriods}
               onCheckedChange={setShowAllPeriods}
             />
-            <span className="text-sm">Afficher toutes les périodes</span>
+            <span className="text-xs sm:text-sm">Afficher toutes les périodes</span>
           </div>
           <Button
             onClick={() => setShowCreateForm(true)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-sm h-9"
           >
-            <PlusIcon className="w-5 h-5" />
-            Nouvelle Période
+            <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Nouvelle Période</span>
+            <span className="sm:hidden">Nouvelle</span>
           </Button>
         </div>
       </div>
 
-      {/* Période actuelle */}
+      {/* Période actuelle responsive */}
       {currentPeriod && (
         <Card className="bg-green-50 border-green-200">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <CalendarIcon className="w-5 h-5 text-green-600" />
-              <span className="font-medium text-green-900">
+          <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+              <span className="font-medium text-green-900 text-sm sm:text-base">
                 Période actuelle: {currentPeriod.name}
               </span>
-              <Badge className="bg-green-100 text-green-800">
+              <Badge className="bg-green-100 text-green-800 text-xs self-start sm:self-auto">
                 {new Date(currentPeriod.startDate).toLocaleDateString()} -{' '}
                 {new Date(currentPeriod.endDate).toLocaleDateString()}
               </Badge>
@@ -192,18 +193,18 @@ const BulletinPeriodsManagement: React.FC = () => {
         </Card>
       )}
 
-      {/* Formulaire de création */}
+      {/* Formulaire de création responsive */}
       {showCreateForm && (
         <Card className="border-green-200 bg-green-50">
-          <CardHeader>
-            <CardTitle className="text-green-800">
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-green-800 text-base sm:text-lg">
               {editingPeriod ? 'Modifier la période' : 'Créer une nouvelle période'}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleCreatePeriod} className="space-y-4">
+          <CardContent className="px-4 sm:px-6">
+            <form onSubmit={handleCreatePeriod} className="space-y-3 sm:space-y-4">
               <div>
-                <Label htmlFor="name">Nom de la période *</Label>
+                <Label htmlFor="name" className="text-sm">Nom de la période *</Label>
                 <Input
                   id="name"
                   value={newPeriod.name || ''}
@@ -211,12 +212,13 @@ const BulletinPeriodsManagement: React.FC = () => {
                     setNewPeriod({ ...newPeriod, name: e.target.value })
                   }
                   placeholder="Ex: Trimestre 1, Semestre 2..."
+                  className="text-sm h-9"
                   required
                 />
               </div>
 
               <div>
-                <Label htmlFor="academicYear">Année académique *</Label>
+                <Label htmlFor="academicYear" className="text-sm">Année académique *</Label>
                 <Input
                   id="academicYear"
                   value={newPeriod.academicYear || ''}
@@ -224,13 +226,14 @@ const BulletinPeriodsManagement: React.FC = () => {
                     setNewPeriod({ ...newPeriod, academicYear: e.target.value })
                   }
                   placeholder="Ex: 2024-2025"
+                  className="text-sm h-9"
                   required
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label htmlFor="startDate">Date de début *</Label>
+                  <Label htmlFor="startDate" className="text-sm">Date de début *</Label>
                   <Input
                     id="startDate"
                     type="date"
@@ -238,11 +241,12 @@ const BulletinPeriodsManagement: React.FC = () => {
                     onChange={(e) =>
                       setNewPeriod({ ...newPeriod, startDate: e.target.value })
                     }
+                    className="text-sm h-9"
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="endDate">Date de fin *</Label>
+                  <Label htmlFor="endDate" className="text-sm">Date de fin *</Label>
                   <Input
                     id="endDate"
                     type="date"
@@ -250,6 +254,7 @@ const BulletinPeriodsManagement: React.FC = () => {
                     onChange={(e) =>
                       setNewPeriod({ ...newPeriod, endDate: e.target.value })
                     }
+                    className="text-sm h-9"
                     required
                   />
                 </div>
@@ -265,20 +270,26 @@ const BulletinPeriodsManagement: React.FC = () => {
                   }
                   className="rounded"
                 />
-                <Label htmlFor="active">Période active</Label>
+                <Label htmlFor="active" className="text-sm">Période active</Label>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-green-600 hover:bg-green-700 text-sm h-9"
                 >
-                  {editingPeriod ? 'Modifier la période' : 'Créer la période'}
+                  <span className="hidden sm:inline">
+                    {editingPeriod ? 'Modifier la période' : 'Créer la période'}
+                  </span>
+                  <span className="sm:hidden">
+                    {editingPeriod ? 'Modifier' : 'Créer'}
+                  </span>
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handleCancelEdit}
+                  className="text-sm h-9"
                 >
                   Annuler
                 </Button>
@@ -288,10 +299,8 @@ const BulletinPeriodsManagement: React.FC = () => {
         </Card>
       )}
 
-
-
-      {/* Liste des périodes */}
-      <div className="grid gap-4">
+      {/* Liste des périodes responsive */}
+      <div className="grid gap-3 sm:gap-4">
         {(showAllPeriods ? periods : periods?.filter(p => p.isActive))?.map((period: BulletinPeriod) => (
           <Card
             key={period.idPeriod}
@@ -299,34 +308,36 @@ const BulletinPeriodsManagement: React.FC = () => {
               isCurrentPeriod(period) ? 'border-green-300 bg-green-50' : ''
             }`}
           >
-            <CardContent className="pt-6">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-lg">{period.name}</h3>
-                    {isCurrentPeriod(period) && (
-                      <Badge className="bg-green-100 text-green-800">
-                        Période actuelle
+            <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                    <h3 className="font-semibold text-base sm:text-lg truncate">{period.name}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {isCurrentPeriod(period) && (
+                        <Badge className="bg-green-100 text-green-800 text-xs">
+                          Période actuelle
+                        </Badge>
+                      )}
+                      <Badge
+                        variant={
+                          period.isActive || false ? 'default' : 'secondary'
+                        }
+                        className="text-xs"
+                      >
+                        {period.isActive || false ? 'Active' : 'Inactive'}
                       </Badge>
-                    )}
-                    <Badge
-                      variant={
-                        period.isActive || false ? 'default' : 'secondary'
-                      }
-                    >
-                      {period.isActive || false ? 'Active' : 'Inactive'}
-                    </Badge>
+                    </div>
                   </div>
 
-                  <div className="flex gap-4 text-sm text-gray-500">
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-1 text-xs sm:text-sm text-gray-500">
                     <span>
-                      📅 Début:{' '}
-                      {new Date(period.startDate).toLocaleDateString()}
+                      📅 Début: {new Date(period.startDate).toLocaleDateString()}
                     </span>
                     <span>
                       📅 Fin: {new Date(period.endDate).toLocaleDateString()}
                     </span>
-                    <span>
+                    <span className="hidden sm:inline">
                       ⏱️{' '}
                       {Math.ceil(
                         (new Date(period.endDate).getTime() -
@@ -338,33 +349,34 @@ const BulletinPeriodsManagement: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 self-start sm:self-auto">
                   <Button
                     size="sm"
                     variant={period.isActive ? "default" : "outline"}
-                    className={period.isActive ? "bg-green-600 hover:bg-green-700" : ""}
+                    className={`text-xs h-8 px-3 ${period.isActive ? "bg-green-600 hover:bg-green-700" : ""}`}
                     onClick={() => handleToggleActive(period)}
                     title={period.isActive ? "Désactiver" : "Activer"}
                   >
-                    {period.isActive ? <EyeIcon className="w-4 h-4" /> : <EyeSlashIcon className="w-4 h-4" />}
+                    {period.isActive ? <EyeIcon className="w-3 h-3" /> : <EyeSlashIcon className="w-3 h-3" />}
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleEditPeriod(period)}
                     title="Modifier la période"
+                    className="text-xs h-8 px-3"
                   >
-                    <EditIcon className="w-4 h-4" />
+                    <EditIcon className="w-3 h-3" />
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
-                    className="text-red-600 hover:text-red-800"
+                    className="text-red-600 hover:text-red-800 text-xs h-8 px-3"
                     onClick={() => handleDeletePeriod(period.idPeriod!)}
                     disabled={isCurrentPeriod(period)}
                     title="Supprimer la période"
                   >
-                    <TrashIcon className="w-4 h-4" />
+                    <TrashIcon className="w-3 h-3" />
                   </Button>
                 </div>
               </div>
@@ -373,10 +385,14 @@ const BulletinPeriodsManagement: React.FC = () => {
         ))}
 
         {(!periods || periods.length === 0) && (
-          <Card className="text-center py-12">
-            <CardContent>
-              <p className="text-gray-500 mb-4">Aucune période trouvée</p>
-              <Button onClick={() => setShowCreateForm(true)} variant="outline">
+          <Card className="text-center py-8 sm:py-12">
+            <CardContent className="px-4 sm:px-6">
+              <p className="text-sm sm:text-base text-gray-500 mb-4">Aucune période trouvée</p>
+              <Button 
+                onClick={() => setShowCreateForm(true)} 
+                variant="outline"
+                className="text-sm"
+              >
                 Créer votre première période
               </Button>
             </CardContent>

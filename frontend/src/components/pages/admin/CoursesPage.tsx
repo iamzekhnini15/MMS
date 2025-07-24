@@ -94,20 +94,20 @@ const Courses: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-8 space-y-8 bg-gray-50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50">
       {/* Header */}
-      <div className="flex justify-between items-start max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
             Gestion des cours
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             Créez, modifiez et suivez les matières enseignées
           </p>
         </div>
         <Button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 text-lg"
+          className="flex items-center justify-center gap-2 text-sm sm:text-base lg:text-lg w-full sm:w-auto"
         >
           + Nouveau cours
         </Button>
@@ -115,47 +115,110 @@ const Courses: React.FC = () => {
 
       <div className="max-w-7xl mx-auto">
         {courses ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nom du cours</TableHead>
-                <TableHead>Salle de cours</TableHead>
-                <TableHead>Date de début</TableHead>
-                <TableHead>Date de fin</TableHead>
-                <TableHead>Enseignant</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
+          <>
+            {/* Table Desktop/Tablet */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nom du cours</TableHead>
+                    <TableHead className="hidden lg:table-cell">Salle de cours</TableHead>
+                    <TableHead className="hidden lg:table-cell">Date de début</TableHead>
+                    <TableHead className="hidden lg:table-cell">Date de fin</TableHead>
+                    <TableHead>Enseignant</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
 
-            <TableBody>
+                <TableBody>
+                  {courses.map((course) => (
+                    <TableRow
+                      key={course.idCourse}
+                      className="cursor-pointer hover:bg-gray-100"
+                      onClick={() => navigate(`/manage-courses/${course.idCourse}`)}
+                    >
+                      <TableCell className="font-medium">{course.name}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{course.classroom.name}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{course.startDateTime}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{course.endDateTime}</TableCell>
+                      <TableCell>
+                        <div className="lg:hidden">
+                          <div className="font-medium">
+                            {course.teacher.user.firstname} {course.teacher.user.lastname}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            Salle: {course.classroom.name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {course.startDateTime} - {course.endDateTime}
+                          </div>
+                        </div>
+                        <div className="hidden lg:block">
+                          {course.teacher.user.firstname} {course.teacher.user.lastname}
+                        </div>
+                      </TableCell>
+                      <TableCell className="space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-[#0071e3] hover:bg-[#0071e3]/10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(course.idCourse);
+                          }}
+                        >
+                          Supprimer
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile Cards */}
+            <div className="md:hidden space-y-4">
               {courses.map((course) => (
-                <TableRow
+                <div
                   key={course.idCourse}
-                  className="cursor-pointer hover:bg-gray-100"
+                  className="bg-white p-4 rounded-lg shadow-sm border cursor-pointer hover:shadow-md transition-shadow"
                   onClick={() => navigate(`/manage-courses/${course.idCourse}`)}
                 >
-                  <TableCell className="font-medium">{course.name}</TableCell>
-                  <TableCell>{course.classroom.name}</TableCell>
-                  <TableCell>{course.startDateTime}</TableCell>
-                  <TableCell>{course.endDateTime}</TableCell>
-                  <TableCell>
-                    {course.teacher.user.firstname}{' '}
-                    {course.teacher.user.lastname}
-                  </TableCell>
-                  <TableCell className="space-x-2">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-lg text-gray-900 flex-1">
+                      {course.name}
+                    </h3>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-[#0071e3] hover:bg-[#0071e3]/10"
-                      onClick={() => handleDelete(course.idCourse)}
+                      className="text-red-600 hover:bg-red-50 ml-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(course.idCourse);
+                      }}
                     >
-                      Supprimer
+                      ✕
                     </Button>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                  
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center text-gray-600">
+                      <span className="font-medium w-20">Enseignant:</span>
+                      <span>{course.teacher.user.firstname} {course.teacher.user.lastname}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <span className="font-medium w-20">Salle:</span>
+                      <span>{course.classroom.name}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <span className="font-medium w-20">Période:</span>
+                      <span>{course.startDateTime} - {course.endDateTime}</span>
+                    </div>
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          </>
         ) : (
           <p className="text-center text-gray-500">Aucun cours disponible.</p>
         )}
@@ -163,16 +226,16 @@ const Courses: React.FC = () => {
 
       {/* Modal création/modification */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-xl">
+        <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
                 Nouveau cours
               </h2>
               <button
                 style={{ cursor: 'pointer' }}
                 onClick={() => setShowModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 p-1"
                 aria-label="Fermer"
               >
                 <i className="fa-solid fa-times"></i>
@@ -193,7 +256,7 @@ const Courses: React.FC = () => {
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Ex: Mathématiques"
-                  className="w-full border border-gray-300 rounded-lg p-2"
+                  className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
                 />
               </div>
 
@@ -209,7 +272,7 @@ const Courses: React.FC = () => {
                   id="classroomId"
                   value={form.classroom.idClassroom || ''}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-2"
+                  className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
                 >
                   <option value="">-- Choisir une salle --</option>
                   {classrooms?.map((c) => (
@@ -220,7 +283,7 @@ const Courses: React.FC = () => {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label
                     className="block text-sm text-gray-700 mb-1"
@@ -234,7 +297,7 @@ const Courses: React.FC = () => {
                     id="startDateTime"
                     value={form.startDateTime}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg p-2"
+                    className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
                   />
                 </div>
                 <div>
@@ -250,7 +313,7 @@ const Courses: React.FC = () => {
                     id="endDateTime"
                     value={form.endDateTime}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg p-2"
+                    className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
                   />
                 </div>
               </div>
@@ -267,7 +330,7 @@ const Courses: React.FC = () => {
                   id="teacherId"
                   value={form.teacher.idTeacher || ''}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-2"
+                  className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
                 >
                   <option value="">-- Choisir un enseignant --</option>
                   {teachers?.map((t) => (
@@ -278,17 +341,17 @@ const Courses: React.FC = () => {
                 </select>
               </div>
 
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-0 sm:space-x-2 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-sm sm:text-base order-2 sm:order-1"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                  className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 text-sm sm:text-base order-1 sm:order-2"
                 >
                   Enregistrer
                 </button>

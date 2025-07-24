@@ -290,11 +290,11 @@ const SchedulePage = () => {
 
   if (!courses || courses.length === 0) {
     return (
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
+      <div className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold">Emploi du temps</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold">Emploi du temps</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Gestion complète des plannings et des créneaux
             </p>
           </div>
@@ -305,23 +305,23 @@ const SchedulePage = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* En-tête */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Emploi du temps</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold">Emploi du temps</h1>
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">
             Gestion complète des plannings et des créneaux
           </p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <Button variant="outline" size="sm" className="w-full sm:w-auto">
             <Download className="w-4 h-4 mr-2" />
             Exporter
           </Button>
           <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
             <DialogTrigger asChild>
-              <Button>
+              <Button className="w-full sm:w-auto">
                 <Plus className="w-4 h-4 mr-2" />
                 Nouveau créneau
               </Button>
@@ -331,16 +331,16 @@ const SchedulePage = () => {
       </div>
 
       {/* Statistiques rapides */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-xs sm:text-sm font-medium">
               Cours aujourd'hui
             </CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
+            <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-xl sm:text-2xl font-bold">
               {courses?.filter(
                 (c) =>
                   new Date(c.startDateTime).toDateString() ===
@@ -352,35 +352,35 @@ const SchedulePage = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-xs sm:text-sm font-medium">
               Enseignants actifs
             </CardTitle>
-            <User className="h-4 w-4 text-muted-foreground" />
+            <User className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{teachers?.length || 0}</div>
+            <div className="text-xl sm:text-2xl font-bold">{teachers?.length || 0}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-xs sm:text-sm font-medium">
               Salles utilisées
             </CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
+            <Building className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{classrooms?.length || 0}</div>
+            <div className="text-xl sm:text-2xl font-bold">{classrooms?.length || 0}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total cours</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs sm:text-sm font-medium">Total cours</CardTitle>
+            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{courses?.length || 0}</div>
+            <div className="text-xl sm:text-2xl font-bold">{courses?.length || 0}</div>
           </CardContent>
         </Card>
       </div>
@@ -388,7 +388,7 @@ const SchedulePage = () => {
       {/* Contrôles et filtres */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
             <div className="flex items-center space-x-2">
               <Tabs
                 value={selectedView}
@@ -404,19 +404,19 @@ const SchedulePage = () => {
               </Tabs>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Rechercher un cours..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-64"
+                  className="pl-10 w-full sm:w-64"
                 />
               </div>
 
               <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-full sm:w-40">
                   <Filter className="w-4 h-4 mr-2" />
                   <SelectValue />
                 </SelectTrigger>
@@ -454,8 +454,9 @@ const SchedulePage = () => {
 
       {/* Grille horaire */}
       <Card>
-        <CardContent className="p-6">
-          <div className="overflow-x-auto">
+        <CardContent className="p-4 sm:p-6">
+          {/* Vue Desktop/Tablet - Grille complète */}
+          <div className="hidden md:block overflow-x-auto">
             <div className="min-w-[800px]">
               {/* En-têtes des jours */}
               <div className="grid grid-cols-6 gap-2 mb-4">
@@ -507,61 +508,133 @@ const SchedulePage = () => {
               </div>
             </div>
           </div>
+
+          {/* Vue Mobile - Liste par jour */}
+          <div className="md:hidden space-y-4">
+            {days.map((day, dayIndex) => {
+              const daysCourses = filteredCourses.filter((course) => {
+                const courseDay = getDayOfWeek(course.startDateTime);
+                return courseDay === dayIndex;
+              });
+
+              return (
+                <div key={day} className="border rounded-lg">
+                  <div className="bg-muted p-3 rounded-t-lg">
+                    <h3 className="font-medium text-center">{day}</h3>
+                  </div>
+                  <div className="p-3 space-y-2">
+                    {daysCourses.length > 0 ? (
+                      daysCourses.map((course) => (
+                        <div
+                          key={course.idCourse}
+                          className="bg-background border rounded-lg p-3"
+                        >
+                          <h4 className="font-medium text-sm">{course.name}</h4>
+                          <div className="text-xs text-muted-foreground mt-1 space-y-1">
+                            <div className="flex items-center">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {formatTime(course.startDateTime)} - {formatTime(course.endDateTime)}
+                            </div>
+                            <div className="flex items-center">
+                              <User className="w-3 h-3 mr-1" />
+                              {course.teacher.user.firstname} {course.teacher.user.lastname}
+                            </div>
+                            <div className="flex items-center">
+                              <MapPin className="w-3 h-3 mr-1" />
+                              {course.classroom.name}
+                            </div>
+                          </div>
+                          <div className="flex justify-end gap-1 mt-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEdit(course)}
+                              className="h-6 w-6 p-0"
+                            >
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(course.idCourse)}
+                              className="h-6 w-6 p-0"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-center text-muted-foreground text-sm py-4">
+                        Aucun cours
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
 
       {/* Liste des cours */}
       <Card>
         <CardHeader>
-          <CardTitle>Cours à venir</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">Cours à venir</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {filteredCourses.slice(0, 5).map((course) => (
               <div
                 key={course.idCourse}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg hover:bg-muted/50 transition-colors gap-3 sm:gap-4"
               >
-                <div className="flex items-center space-x-4">
-                  <div className="w-2 h-12 bg-blue-500 rounded-full"></div>
-                  <div>
-                    <h3 className="font-medium">{course.name}</h3>
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
+                <div className="flex items-start sm:items-center space-x-3 sm:space-x-4 flex-1">
+                  <div className="w-2 h-12 bg-blue-500 rounded-full flex-shrink-0"></div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-sm sm:text-base">{course.name}</h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-xs sm:text-sm text-muted-foreground mt-1 gap-1 sm:gap-0">
                       <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
+                        <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                         {formatTime(course.startDateTime)} -{' '}
                         {formatTime(course.endDateTime)}
                       </div>
                       <div className="flex items-center">
-                        <User className="w-4 h-4 mr-1" />
-                        {course.teacher.user.firstname}{' '}
-                        {course.teacher.user.lastname}
+                        <User className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                        <span className="truncate">
+                          {course.teacher.user.firstname}{' '}
+                          {course.teacher.user.lastname}
+                        </span>
                       </div>
                       <div className="flex items-center">
-                        <MapPin className="w-4 h-4 mr-1" />
+                        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                         {course.classroom.name}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Badge variant="secondary">
+                <div className="flex items-center justify-between sm:justify-end space-x-2">
+                  <Badge variant="secondary" className="text-xs">
                     {formatDate(course.startDateTime)}
                   </Badge>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleEdit(course)}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(course.idCourse)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEdit(course)}
+                      className="h-7 w-7 p-0 sm:h-8 sm:w-8"
+                    >
+                      <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(course.idCourse)}
+                      className="h-7 w-7 p-0 sm:h-8 sm:w-8"
+                    >
+                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -580,16 +653,16 @@ const SchedulePage = () => {
           }
         }}
       >
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] mx-4 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">
               {selectedCourse ? 'Modifier le créneau' : 'Nouveau créneau'}
             </DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2 sm:col-span-1">
                 <Label htmlFor="name">Nom du cours</Label>
                 <Input
                   id="name"
@@ -599,10 +672,11 @@ const SchedulePage = () => {
                   }
                   placeholder="Ex: Mathématiques"
                   required
+                  className="text-sm sm:text-base"
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 sm:col-span-1">
                 <Label htmlFor="teacher">Enseignant</Label>
                 <Select
                   value={formData.teacher}
@@ -610,7 +684,7 @@ const SchedulePage = () => {
                     setFormData({ ...formData, teacher: value })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="text-sm sm:text-base">
                     <SelectValue placeholder="Sélectionner un enseignant" />
                   </SelectTrigger>
                   <SelectContent>
@@ -627,7 +701,7 @@ const SchedulePage = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="startDateTime">Date et heure de début</Label>
                 <Input
@@ -638,6 +712,7 @@ const SchedulePage = () => {
                     setFormData({ ...formData, startDateTime: e.target.value })
                   }
                   required
+                  className="text-sm sm:text-base"
                 />
               </div>
 
@@ -651,6 +726,7 @@ const SchedulePage = () => {
                     setFormData({ ...formData, endDateTime: e.target.value })
                   }
                   required
+                  className="text-sm sm:text-base"
                 />
               </div>
             </div>
@@ -663,7 +739,7 @@ const SchedulePage = () => {
                   setFormData({ ...formData, classroom: value })
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-sm sm:text-base">
                   <SelectValue placeholder="Sélectionner une salle" />
                 </SelectTrigger>
                 <SelectContent>
@@ -689,10 +765,11 @@ const SchedulePage = () => {
                 }
                 placeholder="Description du cours ou informations supplémentaires..."
                 rows={3}
+                className="text-sm sm:text-base"
               />
             </div>
 
-            <div className="flex justify-end space-x-2 pt-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-0 sm:space-x-2 pt-4">
               <Button
                 type="button"
                 variant="outline"
@@ -701,10 +778,11 @@ const SchedulePage = () => {
                   setShowEditModal(false);
                   resetForm();
                 }}
+                className="order-2 sm:order-1 text-sm sm:text-base"
               >
                 Annuler
               </Button>
-              <Button type="submit">
+              <Button type="submit" className="order-1 sm:order-2 text-sm sm:text-base">
                 {selectedCourse ? 'Modifier' : 'Créer'}
               </Button>
             </div>

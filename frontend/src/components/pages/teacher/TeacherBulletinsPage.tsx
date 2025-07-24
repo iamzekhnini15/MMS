@@ -220,31 +220,31 @@ const TeacherBulletinsPage: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestion des Bulletins</h1>
-          <p className="text-gray-600 mt-1">Consultez et modifiez les bulletins scolaires</p>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Gestion des Bulletins</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">Consultez et modifiez les bulletins scolaires</p>
         </div>
       </div>
 
-      {/* Sélecteurs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Sélecteurs responsive */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Sélectionner une classe</CardTitle>
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-base sm:text-lg">Sélectionner une classe</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             <div className="space-y-2">
               {classes?.map((classe: Classes) => (
                 <Button
                   key={classe.idClass}
                   variant={selectedClass?.idClass === classe.idClass ? "default" : "outline"}
-                  className="w-full justify-start"
+                  className="w-full justify-start text-sm h-9"
                   onClick={() => handleClassChange(classe)}
                 >
-                  <UserGroupIcon className="w-4 h-4 mr-2" />
-                  {classe.name} - Niveau {classe.level}
+                  <UserGroupIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">{classe.name} - Niveau {classe.level}</span>
                 </Button>
               ))}
             </div>
@@ -252,23 +252,23 @@ const TeacherBulletinsPage: React.FC = () => {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle>Période sélectionnée</CardTitle>
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-base sm:text-lg">Période sélectionnée</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             {periodsLoading && (
-              <p className="text-blue-500">Chargement des périodes...</p>
+              <p className="text-sm text-blue-500">Chargement des périodes...</p>
             )}
             {periodsError && (
-              <p className="text-red-500">Erreur: {periodsError}</p>
+              <p className="text-sm text-red-500">Erreur: {periodsError}</p>
             )}
             {periods && periods.length > 0 ? (
               <div className="space-y-2">
-                <p className="text-sm text-gray-600">Périodes disponibles ({periods.length}):</p>
+                <p className="text-xs sm:text-sm text-gray-600">Périodes disponibles ({periods.length}):</p>
                 {periods.map((period: any) => (
-                  <div key={period.idPeriod} className="flex items-center gap-2">
+                  <div key={period.idPeriod} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                     <Badge 
-                      className={period.active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
+                      className={`text-xs cursor-pointer self-start ${period.active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}
                       onClick={() => setSelectedPeriod(period)}
                     >
                       {period.name}
@@ -317,48 +317,48 @@ const TeacherBulletinsPage: React.FC = () => {
               </div>
             ) : classStatistics ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{classStatistics.totalStudents}</div>
-                    <div className="text-sm text-gray-600">Étudiants avec notes</div>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                    <div className="text-lg sm:text-2xl font-bold text-blue-600">{classStatistics.totalStudents}</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Étudiants avec notes</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
+                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                    <div className="text-lg sm:text-2xl font-bold text-green-600">
                       {classStatistics.passCount}
                     </div>
-                    <div className="text-sm text-gray-600">Réussite (≥50)</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Réussite (≥50)</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-600">
+                  <div className="text-center p-3 bg-orange-50 rounded-lg">
+                    <div className="text-lg sm:text-2xl font-bold text-orange-600">
                       {Math.round(classStatistics.classAverage * 100) / 100}/100
                     </div>
-                    <div className="text-sm text-gray-600">Moyenne classe</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Moyenne classe</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600">
+                  <div className="text-center p-3 bg-purple-50 rounded-lg">
+                    <div className="text-lg sm:text-2xl font-bold text-purple-600">
                       {Math.round(classStatistics.passRate)}%
                     </div>
-                    <div className="text-sm text-gray-600">Taux de réussite</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Taux de réussite</div>
                   </div>
                 </div>
                 
                 {/* Statistiques supplémentaires */}
                 <div className="mt-4 pt-4 border-t">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-3">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-4 text-sm mb-3">
                     <div className="text-center">
-                      <div className="font-medium text-gray-700">
+                      <div className="font-medium text-gray-700 text-xs sm:text-sm">
                         {Math.round(classStatistics.classAverage * 100) / 100}/100
                       </div>
                       <div className="text-xs text-gray-500">Moyenne réelle calculée</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-medium text-gray-700">
+                      <div className="font-medium text-gray-700 text-xs sm:text-sm">
                         {Math.round(classStatistics.maxGrade * 100) / 100}/100
                       </div>
                       <div className="text-xs text-gray-500">Meilleure note</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-medium text-gray-700">
+                      <div className="font-medium text-gray-700 text-xs sm:text-sm">
                         {Math.round(classStatistics.minGrade * 100) / 100}/100
                       </div>
                       <div className="text-xs text-gray-500">Note la plus faible</div>
@@ -386,19 +386,22 @@ const TeacherBulletinsPage: React.FC = () => {
       {/* Liste des bulletins */}
       {selectedClass && selectedPeriod && (
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">
-              Bulletins - {selectedClass.name} - {selectedPeriod.name}
-            </h2>
-            <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-2">
+            <div>
+              <h2 className="text-lg sm:text-xl font-semibold">
+                Bulletins - {selectedClass.name} - {selectedPeriod.name}
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
               {!bulletinsGenerated && (
                 <Button
                   onClick={handleGenerateBulletins}
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-green-600 hover:bg-green-700 text-sm h-9"
                   disabled={bulletinLoading}
                 >
-                  <PlusIcon className="w-4 h-4 mr-2" />
-                  {bulletinLoading ? 'Génération...' : 'Générer les bulletins'}
+                  <PlusIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                  <span className="hidden sm:inline">Générer les bulletins</span>
+                  <span className="sm:hidden">Générer</span>
                 </Button>
               )}
               {bulletinsGenerated && (
@@ -406,20 +409,22 @@ const TeacherBulletinsPage: React.FC = () => {
                   <Button
                     variant="outline"
                     onClick={handleMakeAllVisible}
-                    className="text-green-600 hover:text-green-700"
+                    className="text-green-600 hover:text-green-700 text-sm h-9"
                     disabled={bulletinLoading}
                   >
-                    <CheckCircleIcon className="w-4 h-4 mr-2" />
-                    Rendre tous visibles
+                    <CheckCircleIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Rendre tous visibles</span>
+                    <span className="sm:hidden">Visibles</span>
                   </Button>
                   <Button
                     variant="outline"
                     onClick={handleHideAll}
-                    className="text-red-600 hover:text-red-700"
+                    className="text-red-600 hover:text-red-700 text-sm h-9"
                     disabled={bulletinLoading}
                   >
-                    <XCircleIcon className="w-4 h-4 mr-2" />
-                    Masquer tous
+                    <XCircleIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Masquer tous</span>
+                    <span className="sm:hidden">Masquer</span>
                   </Button>
                 </>
               )}
@@ -427,13 +432,16 @@ const TeacherBulletinsPage: React.FC = () => {
                 onClick={() => window.location.reload()}
                 variant="outline"
                 disabled={bulletinLoading}
+                className="text-sm h-9"
               >
-                <ArrowPathIcon className="w-4 h-4 mr-2" />
-                Actualiser
+                <ArrowPathIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Actualiser</span>
+                <span className="sm:hidden">↻</span>
               </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <DocumentTextIcon className="w-4 h-4 mr-2" />
-                Générer PDF
+              <Button className="bg-blue-600 hover:bg-blue-700 text-sm h-9">
+                <DocumentTextIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Générer PDF</span>
+                <span className="sm:hidden">PDF</span>
               </Button>
             </div>
           </div>
@@ -445,16 +453,16 @@ const TeacherBulletinsPage: React.FC = () => {
           )}
 
           {realBulletins.length === 0 && !bulletinLoading && (
-            <Card className="text-center py-8">
-              <CardContent>
-                <DocumentTextIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500 mb-4">Aucun bulletin trouvé pour cette classe</p>
+            <Card className="text-center py-6 sm:py-8">
+              <CardContent className="px-4 sm:px-6">
+                <DocumentTextIcon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-sm sm:text-base text-gray-500 mb-4">Aucun bulletin trouvé pour cette classe</p>
                 {selectedClass && selectedPeriod && (
                   <Button
                     onClick={handleGenerateBulletins}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-green-600 hover:bg-green-700 text-sm"
                   >
-                    <PlusIcon className="w-4 h-4 mr-2" />
+                    <PlusIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                     Générer les bulletins
                   </Button>
                 )}
@@ -464,78 +472,84 @@ const TeacherBulletinsPage: React.FC = () => {
 
           {realBulletins.map((bulletin) => (
             <Card key={bulletin.idBulletin} className="hover:shadow-md transition-shadow">
-              <CardContent className="pt-6">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-semibold text-lg">
+              <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-0">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+                      <h3 className="font-semibold text-base sm:text-lg truncate">
                         {bulletin.student.user.firstname} {bulletin.student.user.lastname}
                       </h3>
-                      <div className={`px-3 py-1 rounded-full text-sm font-medium ${getGradeColor(getDisplayAverage(bulletin))}`}>
-                        {Math.round(getDisplayAverage(bulletin) * 100) / 100}/100
+                      <div className="flex flex-wrap gap-2">
+                        <div className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getGradeColor(getDisplayAverage(bulletin))}`}>
+                          {Math.round(getDisplayAverage(bulletin) * 100) / 100}/100
+                        </div>
+                        <Badge variant={bulletin.isVisible ? "default" : "secondary"} className="text-xs">
+                          {bulletin.isVisible ? (
+                            <>
+                              <CheckCircleIcon className="w-3 h-3 mr-1" />
+                              <span className="hidden sm:inline">Visible</span>
+                              <span className="sm:hidden">✓</span>
+                            </>
+                          ) : (
+                            <>
+                              <XCircleIcon className="w-3 h-3 mr-1" />
+                              <span className="hidden sm:inline">Masqué</span>
+                              <span className="sm:hidden">✗</span>
+                            </>
+                          )}
+                        </Badge>
                       </div>
-                      <Badge variant={bulletin.isVisible ? "default" : "secondary"}>
-                        {bulletin.isVisible ? (
-                          <>
-                            <CheckCircleIcon className="w-4 h-4 mr-1" />
-                            Visible
-                          </>
-                        ) : (
-                          <>
-                            <XCircleIcon className="w-4 h-4 mr-1" />
-                            Masqué
-                          </>
-                        )}
-                      </Badge>
                     </div>
 
-                    <div className="text-sm text-gray-600 mb-3 grid grid-cols-2 gap-4">
+                    <div className="text-xs sm:text-sm text-gray-600 mb-3 grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-4">
                       <div>
-                        <span className="font-medium">ID Étudiant:</span> {bulletin.student.idStudent}
+                        <span className="font-medium">ID:</span> {bulletin.student.idStudent}
                       </div>
                       <div>
                         <span className="font-medium">Rang:</span> {bulletin.classRank}/{bulletin.totalStudents}
                       </div>
                       <div>
-                        <span className="font-medium">Moyenne classe:</span> {Math.round(bulletin.classAverage * 100) / 100}/100
+                        <span className="font-medium">Moy. classe:</span> {Math.round(bulletin.classAverage * 100) / 100}/100
                       </div>
                       <div>
-                        <span className="font-medium">Généré le:</span> {new Date(bulletin.generatedAt).toLocaleDateString()}
+                        <span className="font-medium">Généré:</span> {new Date(bulletin.generatedAt).toLocaleDateString()}
                       </div>
                     </div>
 
                     {bulletin.generalComment && (
-                      <div className="bg-gray-50 p-3 rounded-lg mb-3">
-                        <h4 className="font-medium text-sm mb-1">Commentaire général:</h4>
-                        <p className="text-sm text-gray-700">{bulletin.generalComment}</p>
+                      <div className="bg-gray-50 p-2 sm:p-3 rounded-lg mb-3">
+                        <h4 className="font-medium text-xs sm:text-sm mb-1">Commentaire général:</h4>
+                        <p className="text-xs sm:text-sm text-gray-700 line-clamp-2 sm:line-clamp-none">{bulletin.generalComment}</p>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 self-start sm:self-auto">
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => handleEditBulletin(bulletin)}
                       title="Modifier le bulletin"
+                      className="text-xs h-8 px-2 sm:px-3"
                     >
-                      <PencilSquareIcon className="w-4 h-4" />
+                      <PencilSquareIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
                     <Button
                       size="sm"
                       variant={bulletin.isVisible ? "default" : "outline"}
                       onClick={() => handleToggleValidation(bulletin)}
                       title={bulletin.isVisible ? "Masquer" : "Rendre visible"}
+                      className="text-xs h-8 px-2 sm:px-3"
                     >
-                      {bulletin.isVisible ? <CheckCircleIcon className="w-4 h-4" /> : <XCircleIcon className="w-4 h-4" />}
+                      {bulletin.isVisible ? <CheckCircleIcon className="w-3 h-3 sm:w-4 sm:h-4" /> : <XCircleIcon className="w-3 h-3 sm:w-4 sm:h-4" />}
                     </Button>
                     <Button
                       size="sm"
-                      className="bg-blue-600 hover:bg-blue-700"
+                      className="bg-blue-600 hover:bg-blue-700 text-xs h-8 px-2 sm:px-3"
                       title="Voir le bulletin complet"
                       onClick={() => handleViewDetailedBulletin(bulletin)}
                     >
-                      <EyeIcon className="w-4 h-4" />
+                      <EyeIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                     </Button>
                   </div>
                 </div>
@@ -547,24 +561,25 @@ const TeacherBulletinsPage: React.FC = () => {
 
       {/* Modal d'édition */}
       {editingBulletin && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-xl font-bold">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] sm:max-h-[80vh] overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 border-b gap-2 sm:gap-0">
+              <h2 className="text-lg sm:text-xl font-bold truncate">
                 Modifier le bulletin - {editingBulletin.student.user.firstname} {editingBulletin.student.user.lastname}
               </h2>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setEditingBulletin(null)}
+                className="self-end sm:self-auto"
               >
                 Fermer
               </Button>
             </div>
 
-            <div className="p-6 space-y-4">
+            <div className="p-4 sm:p-6 space-y-4 overflow-y-auto">
               <div>
-                <Label htmlFor="generalComment">Commentaire général</Label>
+                <Label htmlFor="generalComment" className="text-sm">Commentaire général</Label>
                 <Textarea
                   id="generalComment"
                   value={editingBulletin.generalComment || ''}
@@ -573,15 +588,15 @@ const TeacherBulletinsPage: React.FC = () => {
                     generalComment: e.target.value
                   })}
                   placeholder="Saisir un commentaire général sur l'élève..."
-                  className="mt-1"
+                  className="mt-1 text-sm"
                   rows={4}
                 />
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t gap-3 sm:gap-0">
                 <div className="flex items-center gap-2">
-                  <Label>Statut:</Label>
-                  <Badge variant={editingBulletin.isVisible ? "default" : "secondary"}>
+                  <Label className="text-sm">Statut:</Label>
+                  <Badge variant={editingBulletin.isVisible ? "default" : "secondary"} className="text-xs">
                     {editingBulletin.isVisible ? "Visible" : "Masqué"}
                   </Badge>
                 </div>
@@ -590,12 +605,13 @@ const TeacherBulletinsPage: React.FC = () => {
                   <Button
                     variant="outline"
                     onClick={() => setEditingBulletin(null)}
+                    className="text-sm flex-1 sm:flex-none"
                   >
                     Annuler
                   </Button>
                   <Button
                     onClick={handleSaveBulletin}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-green-600 hover:bg-green-700 text-sm flex-1 sm:flex-none"
                   >
                     Sauvegarder
                   </Button>

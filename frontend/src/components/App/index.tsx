@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import Navbar from '../Navbar';
 import { AppSidebar } from '../app-sidebar';
 import { UserContext } from '@/contexts/UserContext';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 
 const App = () => {
@@ -21,6 +21,19 @@ const App = () => {
 
         {/* Contenu principal */}
         <div className="flex-1 flex flex-col">
+          {/* Header avec bouton hamburger mobile pour les utilisateurs connectés */}
+          {isAuthenticated && (
+            <div className="lg:hidden bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
+              <div className="flex items-center">
+                <SidebarTrigger className="mr-3" />
+                <span className="font-bold text-lg text-blue-600">MMS</span>
+              </div>
+              <div className="text-sm text-gray-500">
+                {authenticatedUser?.user?.firstname} {authenticatedUser?.user?.lastname}
+              </div>
+            </div>
+          )}
+          
           {/* Navbar uniquement pour les utilisateurs non-connectés */}
           {!isAuthenticated && (
             <>
@@ -33,7 +46,7 @@ const App = () => {
           )}
 
           <main className={`flex-1 overflow-y-auto bg-gray-50 ${
-            isAuthenticated ? 'p-6' : 'p-6'
+            isAuthenticated ? 'p-4 sm:p-6' : 'p-6'
           }`}>
             <Outlet />
           </main>

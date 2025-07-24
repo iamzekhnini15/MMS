@@ -86,72 +86,72 @@ const TeacherClassesPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Mes Classes</h1>
-        <p className="text-gray-600">
+    <div className="container mx-auto p-4 sm:p-6">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Mes Classes</h1>
+        <p className="text-sm sm:text-base text-gray-600">
           Vue d'ensemble de vos classes et étudiants
         </p>
       </div>
 
       {!classes || classes.length === 0 ? (
-        <Card className="text-center py-12">
-          <CardContent>
-            <UserGroupIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+        <Card className="text-center py-8 sm:py-12">
+          <CardContent className="px-4 sm:px-6">
+            <UserGroupIcon className="h-12 w-12 sm:h-16 sm:w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
               Aucune classe trouvée
             </h3>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               Vous n'êtes assigné à aucune classe pour le moment.
             </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {classes.map((classe: Classes) => (
             <Card
               key={classe.idClass}
               className="hover:shadow-lg transition-shadow"
             >
-              <CardHeader>
+              <CardHeader className="px-4 sm:px-6">
                 <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-xl font-bold text-gray-900">
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 truncate">
                       {classe.name}
                     </CardTitle>
                     <div className="mt-2 space-y-1">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Badge variant="outline">Niveau {classe.level}</Badge>
-                        <Badge variant="secondary">{classe.department}</Badge>
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+                        <Badge variant="outline" className="text-xs">Niveau {classe.level}</Badge>
+                        <Badge variant="secondary" className="text-xs">{classe.department}</Badge>
                       </div>
                     </div>
                   </div>
-                  <UserGroupIcon className="h-8 w-8 text-blue-500" />
+                  <UserGroupIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500 flex-shrink-0 ml-2" />
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
+              <CardContent className="px-4 sm:px-6">
+                <div className="space-y-3 sm:space-y-4">
                   {/* Stats */}
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div className="bg-blue-50 rounded-lg p-3">
-                      <div className="text-2xl font-bold text-blue-600">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 text-center">
+                    <div className="bg-blue-50 rounded-lg p-2 sm:p-3">
+                      <div className="text-xl sm:text-2xl font-bold text-blue-600">
                         {getStudentCountForClass(classe.idClass)}
                       </div>
-                      <div className="text-sm text-blue-600">Étudiants</div>
+                      <div className="text-xs sm:text-sm text-blue-600">Étudiants</div>
                     </div>
-                    <div className="bg-green-50 rounded-lg p-3">
-                      <div className="text-2xl font-bold text-green-600">5</div>
-                      <div className="text-sm text-green-600">Matières</div>
+                    <div className="bg-green-50 rounded-lg p-2 sm:p-3">
+                      <div className="text-xl sm:text-2xl font-bold text-green-600">5</div>
+                      <div className="text-xs sm:text-sm text-green-600">Matières</div>
                     </div>
                   </div>
 
                   {/* Teacher Info */}
                   {classe.responsibleTeacher && (
                     <div className="border-t pt-3">
-                      <h4 className="text-sm font-medium text-gray-700 mb-1">
+                      <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-1">
                         Professeur responsable
                       </h4>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600 truncate">
                         {classe.responsibleTeacher.user?.firstname}{' '}
                         {classe.responsibleTeacher.user?.lastname}
                       </p>
@@ -162,10 +162,11 @@ const TeacherClassesPage: React.FC = () => {
                   <div className="grid grid-cols-1 gap-2 pt-3 border-t">
                     <Button
                       variant="outline"
+                      size="sm"
                       onClick={() => handleViewClass(classe.idClass)}
-                      className="flex items-center justify-center gap-2"
+                      className="flex items-center justify-center gap-2 h-8 sm:h-9 text-xs sm:text-sm"
                     >
-                      <EyeIcon className="h-4 w-4" />
+                      <EyeIcon className="h-3 w-3 sm:h-4 sm:w-4" />
                       Voir les étudiants
                     </Button>
                     <div className="grid grid-cols-2 gap-2">
@@ -173,18 +174,19 @@ const TeacherClassesPage: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleViewEvaluations(classe.idClass)}
-                        className="flex items-center justify-center gap-1"
+                        className="flex items-center justify-center gap-1 h-8 text-xs"
                       >
-                        <AcademicCapIcon className="h-4 w-4" />
-                        Évaluations
+                        <AcademicCapIcon className="h-3 w-3" />
+                        <span className="hidden sm:inline">Évaluations</span>
+                        <span className="sm:hidden">Eval.</span>
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleViewGrades(classe.idClass)}
-                        className="flex items-center justify-center gap-1"
+                        className="flex items-center justify-center gap-1 h-8 text-xs"
                       >
-                        <ChartBarIcon className="h-4 w-4" />
+                        <ChartBarIcon className="h-3 w-3" />
                         Notes
                       </Button>
                     </div>
@@ -196,37 +198,40 @@ const TeacherClassesPage: React.FC = () => {
         </div>
       )}
 
-      {/* Quick Stats */}
+      {/* Quick Stats responsive */}
       {classes && classes.length > 0 && (
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Statistiques générales</CardTitle>
+        <Card className="mt-6 sm:mt-8">
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-base sm:text-lg">Statistiques générales</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <CardContent className="px-4 sm:px-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">
+                <div className="text-xl sm:text-3xl font-bold text-blue-600">
                   {teacherStats?.totalClasses || classes?.length || 0}
                 </div>
-                <div className="text-sm text-gray-600">Classes totales</div>
+                <div className="text-xs sm:text-sm text-gray-600">Classes totales</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">
+                <div className="text-xl sm:text-3xl font-bold text-green-600">
                   {teacherStats?.totalStudents || 0}
                 </div>
-                <div className="text-sm text-gray-600">Étudiants totaux</div>
+                <div className="text-xs sm:text-sm text-gray-600">Étudiants totaux</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">
+                <div className="text-xl sm:text-3xl font-bold text-purple-600">
                   {teacherStats?.monthlyEvaluations || 0}
                 </div>
-                <div className="text-sm text-gray-600">Évaluations ce mois</div>
+                <div className="text-xs sm:text-sm text-gray-600">
+                  <span className="hidden sm:inline">Évaluations ce mois</span>
+                  <span className="sm:hidden">Eval. ce mois</span>
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600">
+                <div className="text-xl sm:text-3xl font-bold text-orange-600">
                   {teacherStats?.averageGrade || 0}%
                 </div>
-                <div className="text-sm text-gray-600">Moyenne générale</div>
+                <div className="text-xs sm:text-sm text-gray-600">Moyenne générale</div>
               </div>
             </div>
           </CardContent>

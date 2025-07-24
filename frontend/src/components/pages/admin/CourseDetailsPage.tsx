@@ -117,22 +117,22 @@ const CourseDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen p-8 space-y-8 bg-gray-50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50">
       {/* Header */}
-      <div className="flex justify-between items-start max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900">{course.name}</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{course.name}</h1>
         </div>
         <Button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 text-lg"
+          className="flex items-center justify-center gap-2 text-sm sm:text-base lg:text-lg w-full sm:w-auto"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
           Ajouter une matière
         </Button>
       </div>
 
-      {/* Subject Bubbles */}
+      {/* Subject Accordions */}
       <div className="flex flex-col gap-4 max-w-7xl mx-auto">
         {subjects && subjects.length > 0 ? (
           <Accordion type="multiple" className="w-full space-y-2">
@@ -140,73 +140,79 @@ const CourseDetailPage: React.FC = () => {
               <AccordionItem
                 key={subject.idSubject}
                 value={`item-${subject.idSubject}`}
-                className="group"
+                className="group bg-white rounded-lg border shadow-sm"
               >
-                <AccordionTrigger className="h-12 px-6 flex items-center justify-between text-left text-lg font-medium rounded-full cursor-pointer transition-all">
-                  {subject.name}
+                <AccordionTrigger className="h-auto sm:h-12 px-4 sm:px-6 py-3 sm:py-0 flex items-center justify-between text-left text-base sm:text-lg font-medium cursor-pointer transition-all hover:bg-gray-50 rounded-lg">
+                  <span className="pr-2">{subject.name}</span>
                 </AccordionTrigger>
-                <AccordionContent className="px-6 py-4 space-y-2">
-                  <p className="text-gray-700 mb-2">{subject.description}</p>
-                  <span className="text-sm text-gray-500">
+                <AccordionContent className="px-4 sm:px-6 py-4 space-y-3">
+                  <p className="text-gray-700 text-sm sm:text-base">{subject.description}</p>
+                  <span className="text-xs sm:text-sm text-gray-500 block">
                     Coefficient : {subject.coefficient}
                   </span>
-                  <div className="mt-4 space-y-2">
+                  
+                  <div className="mt-4 space-y-3">
                     {/* Bouton d'ajout de fichier - visible seulement pour les admins */}
                     {isAdmin && (
                       <Button
                         onClick={() => openFileUpload(subject.idSubject!)}
+                        size="sm"
+                        className="w-full sm:w-auto text-sm"
                       >
                         <Plus className="w-4 h-4 mr-1" /> Ajouter un fichier
                       </Button>
                     )}
 
                     {/* Liste des fichiers */}
-                    {files
-                      ?.filter(
-                        (file) => file.subject.idSubject === subject.idSubject,
-                      )
-                      .map((file) => (
-                        <div
-                          key={file.idFile}
-                          className="flex items-center space-x-2"
-                        >
-                          {/* Bouton de visibilité - visible seulement pour les admins */}
-                          {isAdmin && (
-                            <button
-                              onClick={() =>
-                                toggleFileVisibility(file.idFile, file.visible)
-                              }
-                            >
-                              {file.visible ? (
-                                <Eye className="w-5 h-5 text-green-500 hover:text-green-700 cursor-pointer" />
-                              ) : (
-                                <EyeOff className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
-                              )}
-                            </button>
-                          )}
-                          {file.visible ? (
-                            <a
-                              href={file.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-500 hover:underline"
-                            >
-                              {file.name}
-                            </a>
-                          ) : (
-                            <span className="text-gray-400 line-through">
-                              {file.name}
-                            </span>
-                          )}
-                        </div>
-                      ))}
+                    <div className="space-y-2">
+                      {files
+                        ?.filter(
+                          (file) => file.subject.idSubject === subject.idSubject,
+                        )
+                        .map((file) => (
+                          <div
+                            key={file.idFile}
+                            className="flex items-center space-x-2 p-2 bg-gray-50 rounded-md"
+                          >
+                            {/* Bouton de visibilité - visible seulement pour les admins */}
+                            {isAdmin && (
+                              <button
+                                onClick={() =>
+                                  toggleFileVisibility(file.idFile, file.visible)
+                                }
+                                className="flex-shrink-0"
+                              >
+                                {file.visible ? (
+                                  <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 hover:text-green-700 cursor-pointer" />
+                                ) : (
+                                  <EyeOff className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
+                                )}
+                              </button>
+                            )}
+                            {file.visible ? (
+                              <a
+                                href={file.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 hover:underline text-sm sm:text-base flex-1 break-all"
+                              >
+                                {file.name}
+                              </a>
+                            ) : (
+                              <span className="text-gray-400 line-through text-sm sm:text-base flex-1 break-all">
+                                {file.name}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         ) : (
-          <p className="text-center text-gray-500">
+          <p className="text-center text-gray-500 py-8">
             Aucune matière disponible pour ce cours.
           </p>
         )}
@@ -214,9 +220,9 @@ const CourseDetailPage: React.FC = () => {
 
       {/* Modal pour ajouter une matière */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] mx-4 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Ajouter une matière</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">Ajouter une matière</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -230,6 +236,7 @@ const CourseDetailPage: React.FC = () => {
                 onChange={handleChange}
                 placeholder="Entrez le nom de la matière"
                 required
+                className="text-sm sm:text-base"
               />
             </div>
 
@@ -244,6 +251,7 @@ const CourseDetailPage: React.FC = () => {
                 onChange={handleChange}
                 placeholder="Entrez la description"
                 required
+                className="text-sm sm:text-base"
               />
             </div>
 
@@ -259,18 +267,22 @@ const CourseDetailPage: React.FC = () => {
                 onChange={handleChange}
                 placeholder="Entrez le coefficient"
                 required
+                className="text-sm sm:text-base"
               />
             </div>
 
-            <div className="flex justify-end space-x-2">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-0 sm:space-x-2 pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setShowForm(false)}
+                className="order-2 sm:order-1 text-sm sm:text-base"
               >
                 Annuler
               </Button>
-              <Button type="submit">Ajouter</Button>
+              <Button type="submit" className="order-1 sm:order-2 text-sm sm:text-base">
+                Ajouter
+              </Button>
             </div>
           </form>
         </DialogContent>
@@ -278,9 +290,9 @@ const CourseDetailPage: React.FC = () => {
 
       {/* Modal pour l'upload de fichiers */}
       <Dialog open={showFileUpload} onOpenChange={setShowFileUpload}>
-        <DialogContent className="sm:max-w-[700px]">
+        <DialogContent className="sm:max-w-[700px] mx-4 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Ajouter un fichier</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">Ajouter un fichier</DialogTitle>
           </DialogHeader>
           {currentSubjectId && (
             <FileUpload

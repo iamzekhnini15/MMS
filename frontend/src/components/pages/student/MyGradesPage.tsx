@@ -194,31 +194,31 @@ const MyGradesPage: React.FC = () => {
   );
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Mes Notes</h1>
-          <p className="text-muted-foreground mt-2">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl">
+      {/* En-tête responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mes Notes</h1>
+          <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">
             Consultez vos résultats et suivez vos progrès
           </p>
         </div>
-        <div className="flex items-center space-x-2">
-          <ChartBarIcon className="h-6 w-6 text-primary" />
-          <span className="text-lg font-medium">
+        <div className="flex items-center space-x-2 self-center sm:self-auto">
+          <ChartBarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+          <span className="text-base sm:text-lg font-medium">
             {filteredGrades.length} évaluation(s)
           </span>
         </div>
       </div>
 
-      {/* Filtres */}
+      {/* Filtres responsive */}
       <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-wrap gap-4 items-center">
-            <div className="flex items-center space-x-2">
-              <AcademicCapIcon className="h-5 w-5 text-muted-foreground" />
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-stretch sm:items-center">
+            <div className="flex items-center space-x-2 min-w-0 flex-1 sm:flex-initial">
+              <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
               <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-full sm:w-48">
                   <SelectValue placeholder="Filtrer par matière" />
                 </SelectTrigger>
                 <SelectContent>
@@ -235,10 +235,10 @@ const MyGradesPage: React.FC = () => {
               </Select>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <CalendarIcon className="h-5 w-5 text-muted-foreground" />
+            <div className="flex items-center space-x-2 min-w-0 flex-1 sm:flex-initial">
+              <CalendarIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
               <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-full sm:w-48">
                   <SelectValue placeholder="Filtrer par période" />
                 </SelectTrigger>
                 <SelectContent>
@@ -311,123 +311,211 @@ const MyGradesPage: React.FC = () => {
         </Card>
       )}
 
-      {/* Table des notes */}
+      {/* Affichage adaptatif des notes : Table sur desktop, Cards sur mobile */}
       {filteredGrades.length > 0 ? (
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div className="flex items-center">
-                <AcademicCapIcon className="h-5 w-5 mr-2" />
-                Mes Notes ({filteredGrades.length} évaluation{filteredGrades.length > 1 ? 's' : ''})
+                <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                <span className="text-base sm:text-lg">
+                  Mes Notes ({filteredGrades.length} évaluation{filteredGrades.length > 1 ? 's' : ''})
+                </span>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <span>Trier par:</span>
-                <Button
-                  variant={sortBy === 'date' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => handleSort('date')}
-                  className="flex items-center"
-                >
-                  Date
-                  {sortBy === 'date' && (
-                    sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 ml-1" /> : <ArrowUpIcon className="w-3 h-3 ml-1" />
-                  )}
-                </Button>
-                <Button
-                  variant={sortBy === 'subject' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => handleSort('subject')}
-                  className="flex items-center"
-                >
-                  Matière
-                  {sortBy === 'subject' && (
-                    sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 ml-1" /> : <ArrowUpIcon className="w-3 h-3 ml-1" />
-                  )}
-                </Button>
-                <Button
-                  variant={sortBy === 'score' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => handleSort('score')}
-                  className="flex items-center"
-                >
-                  Note
-                  {sortBy === 'score' && (
-                    sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 ml-1" /> : <ArrowUpIcon className="w-3 h-3 ml-1" />
-                  )}
-                </Button>
+              {/* Boutons de tri responsive */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                <span className="text-xs sm:text-sm text-muted-foreground">Trier par:</span>
+                <div className="flex flex-wrap gap-1 sm:gap-2">
+                  <Button
+                    variant={sortBy === 'date' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleSort('date')}
+                    className="flex items-center text-xs sm:text-sm h-7 sm:h-8 px-2 sm:px-3"
+                  >
+                    Date
+                    {sortBy === 'date' && (
+                      sortOrder === 'desc' ? <ArrowDownIcon className="w-2 h-2 sm:w-3 sm:h-3 ml-1" /> : <ArrowUpIcon className="w-2 h-2 sm:w-3 sm:h-3 ml-1" />
+                    )}
+                  </Button>
+                  <Button
+                    variant={sortBy === 'subject' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleSort('subject')}
+                    className="flex items-center text-xs sm:text-sm h-7 sm:h-8 px-2 sm:px-3"
+                  >
+                    Matière
+                    {sortBy === 'subject' && (
+                      sortOrder === 'desc' ? <ArrowDownIcon className="w-2 h-2 sm:w-3 sm:h-3 ml-1" /> : <ArrowUpIcon className="w-2 h-2 sm:w-3 sm:h-3 ml-1" />
+                    )}
+                  </Button>
+                  <Button
+                    variant={sortBy === 'score' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleSort('score')}
+                    className="flex items-center text-xs sm:text-sm h-7 sm:h-8 px-2 sm:px-3"
+                  >
+                    Note
+                    {sortBy === 'score' && (
+                      sortOrder === 'desc' ? <ArrowDownIcon className="w-2 h-2 sm:w-3 sm:h-3 ml-1" /> : <ArrowUpIcon className="w-2 h-2 sm:w-3 sm:h-3 ml-1" />
+                    )}
+                  </Button>
+                </div>
               </div>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50" 
-                    onClick={() => handleSort('date')}
-                  >
-                    <div className="flex items-center">
-                      Date
-                      {sortBy === 'date' && (
-                        sortOrder === 'desc' ? <ArrowDownIcon className="w-4 h-4 ml-1" /> : <ArrowUpIcon className="w-4 h-4 ml-1" />
+          <CardContent className="p-0">
+            {/* Affichage mobile : Cartes style Smartschool */}
+            <div className="block md:hidden p-4 space-y-3">
+              {filteredGrades.map((grade: EvaluationGrade) => (
+                <Card key={grade.idGrade} className="border border-gray-200 hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    {/* Header de la carte avec matière et date */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm text-gray-900 mb-1">
+                          {grade.evaluationTitle || `Évaluation ${grade.evaluationId}`}
+                        </h4>
+                        <Badge variant="secondary" className="text-xs">
+                          {grade.subjectName || `Matière ${grade.evaluationId}`}
+                        </Badge>
+                      </div>
+                      <div className="text-right ml-3">
+                        <div className="flex items-center text-xs text-gray-500 mb-1">
+                          <CalendarIcon className="h-3 w-3 mr-1" />
+                          {formatDate(grade.gradedAt || new Date().toISOString())}
+                        </div>
+                        <Badge 
+                          variant={grade.status === 'PRESENT' ? 'default' : 'destructive'}
+                          className="text-xs"
+                        >
+                          {grade.status || 'PRESENT'}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    {/* Score et pourcentage */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-600">Note:</span>
+                        {grade.score !== null && grade.score !== undefined ? (
+                          <Badge
+                            className={`font-bold ${getGradeBadgeColor(
+                              grade.score,
+                              grade.maxScore || 20
+                            )}`}
+                          >
+                            {grade.score}/{grade.maxScore || 20}
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-gray-500">
+                            Non noté
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      {grade.score !== null && grade.score !== undefined && (
+                        <div className={`text-lg font-bold ${getGradeColor(grade.score, grade.maxScore || 20)}`}>
+                          {grade.percentage ? grade.percentage.toFixed(1) : 
+                           (() => {
+                             const maxScore = grade.maxScore || 20;
+                             const percentage = (grade.score / maxScore) * 100;
+                             return percentage.toFixed(1);
+                           })()}%
+                        </div>
                       )}
                     </div>
-                  </TableHead>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50" 
-                    onClick={() => handleSort('subject')}
-                  >
-                    <div className="flex items-center">
-                      Évaluation
-                      {sortBy === 'subject' && (
-                        sortOrder === 'desc' ? <ArrowDownIcon className="w-4 h-4 ml-1" /> : <ArrowUpIcon className="w-4 h-4 ml-1" />
-                      )}
-                    </div>
-                  </TableHead>
-                  <TableHead>Matière</TableHead>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50 text-right" 
-                    onClick={() => handleSort('score')}
-                  >
-                    <div className="flex items-center justify-end">
-                      Note
-                      {sortBy === 'score' && (
-                        sortOrder === 'desc' ? <ArrowDownIcon className="w-4 h-4 ml-1" /> : <ArrowUpIcon className="w-4 h-4 ml-1" />
-                      )}
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-right">Pourcentage</TableHead>
-                  <TableHead>Statut</TableHead>
-                  <TableHead>Commentaire</TableHead>
-                </TableRow>
-              </TableHeader>
+
+                    {/* Commentaire si présent */}
+                    {grade.comment && (
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <div className="flex items-start space-x-2">
+                          <span className="text-xs text-gray-500 mt-0.5">💬</span>
+                          <p className="text-xs text-gray-600 flex-1">{grade.comment}</p>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Affichage desktop : Table responsive avec scroll horizontal */}
+            <div className="hidden md:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead 
+                      className="cursor-pointer hover:bg-muted/50 min-w-[100px]" 
+                      onClick={() => handleSort('date')}
+                    >
+                      <div className="flex items-center">
+                        Date
+                        {sortBy === 'date' && (
+                          sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1" /> : <ArrowUpIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+                        )}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:bg-muted/50 min-w-[150px]" 
+                      onClick={() => handleSort('subject')}
+                    >
+                      <div className="flex items-center">
+                        Évaluation
+                        {sortBy === 'subject' && (
+                          sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1" /> : <ArrowUpIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+                        )}
+                      </div>
+                    </TableHead>
+                    <TableHead className="min-w-[120px]">Matière</TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:bg-muted/50 text-right min-w-[80px]" 
+                      onClick={() => handleSort('score')}
+                    >
+                      <div className="flex items-center justify-end">
+                        Note
+                        {sortBy === 'score' && (
+                          sortOrder === 'desc' ? <ArrowDownIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1" /> : <ArrowUpIcon className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+                        )}
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-right min-w-[100px]">Pourcentage</TableHead>
+                    <TableHead className="min-w-[80px]">Statut</TableHead>
+                    <TableHead className="min-w-[100px]">Commentaire</TableHead>
+                  </TableRow>
+                </TableHeader>
               <TableBody>
                 {filteredGrades.map((grade: EvaluationGrade) => {
                   return (
                     <TableRow key={grade.idGrade} className="hover:bg-muted/50">
-                      <TableCell>
-                        <div className="flex items-center text-sm">
-                          <CalendarIcon className="h-4 w-4 mr-2 text-muted-foreground" />
-                          {formatDate(grade.gradedAt || new Date().toISOString())}
+                      {/* Date */}
+                      <TableCell className="min-w-[100px]">
+                        <div className="flex items-center text-xs sm:text-sm">
+                          <CalendarIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-muted-foreground flex-shrink-0" />
+                          <span className="truncate">
+                            {formatDate(grade.gradedAt || new Date().toISOString())}
+                          </span>
                         </div>
                       </TableCell>
                       
-                      <TableCell>
-                        <div className="font-medium">
+                      {/* Évaluation */}
+                      <TableCell className="min-w-[150px]">
+                        <div className="font-medium text-xs sm:text-sm truncate">
                           {grade.evaluationTitle || `Évaluation ${grade.evaluationId}`}
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          Max: {grade.maxScore || 20} points
+                        <div className="text-[10px] sm:text-xs text-muted-foreground">
+                          Max: {grade.maxScore || 20} pts
                         </div>
                       </TableCell>
                       
-                      <TableCell>
-                        <Badge variant="secondary" className="text-xs">
+                      {/* Matière */}
+                      <TableCell className="min-w-[120px]">
+                        <Badge variant="secondary" className="text-[10px] sm:text-xs truncate max-w-full">
                           {grade.subjectName || `Matière ${grade.evaluationId}`}
                         </Badge>
                       </TableCell>
                       
-                      <TableCell className="text-right">
+                      {/* Note */}
+                      <TableCell className="text-right min-w-[80px]">
                         {grade.score !== null && grade.score !== undefined ? (
                           <div className="flex items-center justify-end">
                             <Badge
@@ -461,19 +549,21 @@ const MyGradesPage: React.FC = () => {
                         )}
                       </TableCell>
                       
-                      <TableCell>
+                      {/* Statut */}
+                      <TableCell className="min-w-[80px]">
                         <Badge 
                           variant={grade.status === 'PRESENT' ? 'default' : 'destructive'}
-                          className="text-xs"
+                          className="text-[10px] sm:text-xs"
                         >
                           {grade.status || 'PRESENT'}
                         </Badge>
                       </TableCell>
                       
-                      <TableCell>
+                      {/* Commentaire */}
+                      <TableCell className="min-w-[100px]">
                         {grade.comment ? (
                           <div className="max-w-xs">
-                            <p className="text-sm text-muted-foreground truncate" title={grade.comment}>
+                            <p className="text-xs sm:text-sm text-muted-foreground truncate" title={grade.comment}>
                               {grade.comment}
                             </p>
                             {grade.comment.length > 50 && (
@@ -492,6 +582,7 @@ const MyGradesPage: React.FC = () => {
                 })}
               </TableBody>
             </Table>
+            </div>
           </CardContent>
         </Card>
       ) : (

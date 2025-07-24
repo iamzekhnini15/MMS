@@ -18,6 +18,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from '@/components/ui/sidebar';
 
 export function NavMain({
@@ -35,6 +36,17 @@ export function NavMain({
   }[];
 }) {
   const navigate = useNavigate();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleNavigation = (url: string) => {
+    if (url !== '#') {
+      navigate(url);
+      // Fermer la sidebar sur mobile après navigation
+      if (isMobile) {
+        setOpenMobile(false);
+      }
+    }
+  };
 
   return (
     <SidebarGroup>
@@ -45,7 +57,7 @@ export function NavMain({
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
                 <button
-                  onClick={() => item.url !== '#' && navigate(item.url)}
+                  onClick={() => handleNavigation(item.url)}
                   className="w-full flex items-center cursor-pointer"
                 >
                   <item.icon />
@@ -66,7 +78,7 @@ export function NavMain({
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
                             <button
-                              onClick={() => navigate(subItem.url)}
+                              onClick={() => handleNavigation(subItem.url)}
                               className="w-full flex items-center cursor-pointer"
                             >
                               <span>{subItem.title}</span>

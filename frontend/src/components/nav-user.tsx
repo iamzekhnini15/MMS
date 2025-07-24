@@ -32,7 +32,7 @@ export function NavUser({
     avatar: string;
   };
 }) {
-  const { isMobile } = useSidebar();
+  const { isMobile, setOpenMobile } = useSidebar();
   const navigate = useNavigate();
   const { clearUser, authenticatedUser } =
     useContext<UserContextType>(UserContext);
@@ -40,6 +40,18 @@ export function NavUser({
   const handleLogout = () => {
     clearUser();
     navigate('/login');
+    // Fermer la sidebar sur mobile après déconnexion
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
+  const handleNavigation = (url: string) => {
+    navigate(url);
+    // Fermer la sidebar sur mobile après navigation
+    if (isMobile) {
+      setOpenMobile(false);
+    }
   };
 
   // Utiliser les données de l'utilisateur authentifié si disponibles
@@ -95,7 +107,7 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => navigate('/settings')}>
+              <DropdownMenuItem onClick={() => handleNavigation('/settings')}>
                 <BadgeCheck />
                 Paramètres du compte
               </DropdownMenuItem>

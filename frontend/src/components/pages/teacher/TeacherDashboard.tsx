@@ -64,25 +64,25 @@ const TeacherDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="p-6 space-y-8">
-      {/* Header */}
+    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
+      {/* Header responsive */}
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
           Tableau de Bord Enseignant
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-base sm:text-lg text-gray-600 px-2">
           Système de Gestion des Évaluations et des Notes
         </p>
       </div>
 
-      {/* Quick stats or current period info could go here */}
+      {/* Quick stats responsive */}
       <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-        <CardContent className="pt-6">
+        <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-blue-900 mb-2">
+            <h2 className="text-lg sm:text-xl font-semibold text-blue-900 mb-2">
               🎓 Bienvenue dans votre espace enseignant
             </h2>
-            <p className="text-blue-700">
+            <p className="text-sm sm:text-base text-blue-700">
               Gérez facilement vos évaluations, notes et bulletins depuis cette
               interface unifiée.
             </p>
@@ -90,8 +90,8 @@ const TeacherDashboard: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Navigation Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Navigation Grid responsive */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {navigationCards.map((card, index) => {
           const Icon = card.icon;
           return (
@@ -100,20 +100,20 @@ const TeacherDashboard: React.FC = () => {
               className={`${card.color} transition-colors cursor-pointer group`}
               onClick={() => (window.location.href = card.href)}
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-3">
+              <CardHeader className="pb-3 px-4 sm:px-6">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <div
                     className={`p-2 rounded-lg bg-white shadow-sm ${card.iconColor}`}
                   >
-                    <Icon className="w-6 h-6" />
+                    <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <CardTitle className="text-lg group-hover:underline">
+                  <CardTitle className="text-base sm:text-lg group-hover:underline">
                     {card.title}
                   </CardTitle>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 leading-relaxed">
+              <CardContent className="px-4 sm:px-6">
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                   {card.description}
                 </p>
               </CardContent>
@@ -122,31 +122,31 @@ const TeacherDashboard: React.FC = () => {
         })}
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions responsive */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+        <CardHeader className="px-4 sm:px-6">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
             ⚡ Actions Rapides
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent className="px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <Button
-              className="h-12 bg-blue-600 hover:bg-blue-700"
+              className="h-10 sm:h-12 text-sm sm:text-base bg-blue-600 hover:bg-blue-700"
               onClick={() => (window.location.href = '/teacher/evaluations')}
             >
               ➕ Nouvelle Évaluation
             </Button>
             <Button
               variant="outline"
-              className="h-12 border-green-300 hover:bg-green-50"
+              className="h-10 sm:h-12 text-sm sm:text-base border-green-300 hover:bg-green-50"
               onClick={() => (window.location.href = '/teacher/periods')}
             >
               📅 Gérer les Périodes
             </Button>
             <Button
               variant="outline"
-              className="h-12 border-purple-300 hover:bg-purple-50"
+              className="h-10 sm:h-12 text-sm sm:text-base border-purple-300 hover:bg-purple-50"
               onClick={() => (window.location.href = '/teacher/bulletins')}
             >
               📋 Consulter Bulletins
@@ -155,21 +155,21 @@ const TeacherDashboard: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Help Section */}
+      {/* Help Section responsive */}
       <Card className="border-gray-200 bg-gray-50">
-        <CardContent className="pt-6">
+        <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
           <div className="text-center">
-            <h3 className="font-semibold text-gray-900 mb-2">
+            <h3 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">
               💡 Aide et Support
             </h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-xs sm:text-sm text-gray-600 mb-4">
               Besoin d'aide pour utiliser le système de gestion des notes ?
             </p>
-            <div className="flex justify-center gap-3">
-              <Button size="sm" variant="outline">
+            <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
+              <Button size="sm" variant="outline" className="text-xs sm:text-sm h-8 sm:h-9">
                 📖 Guide d'utilisation
               </Button>
-              <Button size="sm" variant="outline">
+              <Button size="sm" variant="outline" className="text-xs sm:text-sm h-8 sm:h-9">
                 💬 Support technique
               </Button>
             </div>

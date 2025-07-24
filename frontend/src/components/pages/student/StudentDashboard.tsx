@@ -37,87 +37,94 @@ const StudentDashboard: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Tableau de Bord Étudiant</h1>
-          <p className="text-muted-foreground mt-2">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl">
+      {/* Header Section - Responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Tableau de Bord Étudiant
+          </h1>
+          <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">
             Accédez à vos notes et suivez vos progrès
           </p>
         </div>
-        <AcademicCapIcon className="h-12 w-12 text-primary" />
+        <div className="flex-shrink-0 self-center sm:self-auto">
+          <AcademicCapIcon className="h-8 w-8 sm:h-12 sm:w-12 text-primary" />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" 
+      {/* Cards Grid - Responsive */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {/* Card Mes Notes */}
+        <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105" 
               onClick={() => navigate('/student/grades')}>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <AcademicCapIcon className="h-5 w-5 mr-2" />
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="flex items-center text-base sm:text-lg">
+              <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
               Mes Notes
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
+          <CardContent className="pt-0">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
               Consultez vos notes et évaluations par matière
             </p>
-            <Button className="mt-4 w-full">
+            <Button className="w-full text-sm sm:text-base h-9 sm:h-10">
               Voir mes notes
             </Button>
           </CardContent>
         </Card>
 
-        {/* Placeholder pour d'autres fonctionnalités futures */}
+        {/* Card Emploi du temps */}
         <Card className="opacity-50">
-          <CardHeader>
-            <CardTitle className="flex items-center">
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg">
               Emploi du temps
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
+          <CardContent className="pt-0">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
               Consultez votre emploi du temps
             </p>
-            <Button className="mt-4 w-full" disabled>
+            <Button className="w-full text-sm sm:text-base h-9 sm:h-10" disabled>
               Bientôt disponible
             </Button>
           </CardContent>
         </Card>
 
-        {/* Afficher la card des bulletins seulement si aucun bulletin n'est disponible */}
+        {/* Card Bulletins non disponibles */}
         {!loadingBulletins && !hasBulletins && (
           <Card className="opacity-50">
-            <CardHeader>
-              <CardTitle className="flex items-center">
+            <CardHeader className="pb-3 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg">
                 Bulletins
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
+            <CardContent className="pt-0">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                 Aucun bulletin disponible pour le moment
               </p>
-              <Button className="mt-4 w-full" disabled>
+              <Button className="w-full text-sm sm:text-base h-9 sm:h-10" disabled>
                 En attente
               </Button>
             </CardContent>
           </Card>
         )}
 
-        {/* Afficher un message informatif si des bulletins sont disponibles */}
+        {/* Card Bulletins disponibles */}
         {!loadingBulletins && hasBulletins && (
-          <Card className="bg-green-50 border-green-200">
-            <CardHeader>
-              <CardTitle className="flex items-center text-green-800">
-                <DocumentTextIcon className="h-5 w-5 mr-2" />
+          <Card className="bg-green-50 border-green-200 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+            <CardHeader className="pb-3 sm:pb-4">
+              <CardTitle className="flex items-center text-green-800 text-base sm:text-lg">
+                <DocumentTextIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 Bulletins disponibles
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-green-700 mb-4">
+            <CardContent className="pt-0">
+              <p className="text-xs sm:text-sm text-green-700 mb-3 sm:mb-4">
                 Vos bulletins scolaires sont maintenant disponibles !
               </p>
               <Button 
-                className="w-full bg-green-600 hover:bg-green-700"
+                className="w-full bg-green-600 hover:bg-green-700 text-sm sm:text-base h-9 sm:h-10"
                 onClick={() => navigate('/student/bulletins')}
               >
                 Consulter mes bulletins

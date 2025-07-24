@@ -175,29 +175,30 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
           Gestion des Évaluations
         </h1>
         <Button
           onClick={() => setShowCreateForm(true)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 text-sm sm:text-base h-9 sm:h-10 px-3 sm:px-4"
         >
-          <PlusIcon className="w-5 h-5" />
-          Nouvelle Évaluation
+          <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="hidden sm:inline">Nouvelle Évaluation</span>
+          <span className="sm:hidden">Nouvelle</span>
         </Button>
       </div>
 
       {currentPeriod && (
         <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <CalendarIcon className="w-5 h-5 text-blue-600" />
-              <span className="font-medium text-blue-900">
+          <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+              <span className="font-medium text-blue-900 text-sm sm:text-base">
                 Période actuelle: {currentPeriod.name}
               </span>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs sm:text-sm self-start sm:self-auto">
                 {new Date(currentPeriod.startDate).toLocaleDateString()} -{' '}
                 {new Date(currentPeriod.endDate).toLocaleDateString()}
               </Badge>
@@ -208,16 +209,16 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
 
       {showCreateForm && (
         <Card className="border-green-200 bg-green-50">
-          <CardHeader>
-            <CardTitle className="text-green-800">
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-green-800 text-base sm:text-lg">
               {editingEvaluation ? 'Modifier l\'évaluation' : 'Créer une nouvelle évaluation'}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleCreateEvaluation} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+          <CardContent className="px-4 sm:px-6">
+            <form onSubmit={handleCreateEvaluation} className="space-y-3 sm:space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label htmlFor="title">Titre *</Label>
+                  <Label htmlFor="title" className="text-sm">Titre *</Label>
                   <Input
                     id="title"
                     value={newEvaluation.title || ''}
@@ -228,11 +229,12 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                       })
                     }
                     placeholder="Ex: Contrôle chapitre 3"
+                    className="text-sm h-9"
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="evaluationDate">Date d'évaluation *</Label>
+                  <Label htmlFor="evaluationDate" className="text-sm">Date d'évaluation *</Label>
                   <Input
                     id="evaluationDate"
                     type="date"
@@ -243,13 +245,14 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                         evaluationDate: e.target.value,
                       })
                     }
+                    className="text-sm h-9"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description" className="text-sm">Description</Label>
                 <Input
                   id="description"
                   value={newEvaluation.description || ''}
@@ -260,12 +263,13 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                     })
                   }
                   placeholder="Description optionnelle"
+                  className="text-sm h-9"
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
-                  <Label htmlFor="classId">Classe *</Label>
+                  <Label htmlFor="classId" className="text-sm">Classe *</Label>
                   <Select
                     onValueChange={(value) =>
                       setNewEvaluation({
@@ -274,7 +278,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                       })
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="text-sm h-9">
                       <SelectValue placeholder="Choisir une classe" />
                     </SelectTrigger>
                     <SelectContent>
@@ -291,7 +295,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                 </div>
 
                 <div>
-                  <Label htmlFor="subjectId">Matière *</Label>
+                  <Label htmlFor="subjectId" className="text-sm">Matière *</Label>
                   <Select
                     onValueChange={(value) =>
                       setNewEvaluation({
@@ -300,7 +304,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                       })
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="text-sm h-9">
                       <SelectValue placeholder="Choisir une matière" />
                     </SelectTrigger>
                     <SelectContent>
@@ -317,7 +321,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                 </div>
 
                 <div>
-                  <Label htmlFor="maxScore">Note maximale</Label>
+                  <Label htmlFor="maxScore" className="text-sm">Note maximale</Label>
                   <Input
                     id="maxScore"
                     type="number"
@@ -331,6 +335,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                     min="1"
                     max="100"
                     step="0.5"
+                    className="text-sm h-9"
                   />
                 </div>
               </div>
@@ -348,20 +353,26 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                   }
                   className="rounded"
                 />
-                <Label htmlFor="visible">Visible aux étudiants</Label>
+                <Label htmlFor="visible" className="text-sm">Visible aux étudiants</Label>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-green-600 hover:bg-green-700 text-sm h-9"
                 >
-                  {editingEvaluation ? 'Modifier l\'évaluation' : 'Créer l\'évaluation'}
+                  <span className="hidden sm:inline">
+                    {editingEvaluation ? 'Modifier l\'évaluation' : 'Créer l\'évaluation'}
+                  </span>
+                  <span className="sm:hidden">
+                    {editingEvaluation ? 'Modifier' : 'Créer'}
+                  </span>
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handleCancelEdit}
+                  className="text-sm h-9"
                 >
                   Annuler
                 </Button>
@@ -371,35 +382,41 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
         </Card>
       )}
 
-      <div className="grid gap-4">
+      <div className="grid gap-3 sm:gap-4">
         {evaluations?.map((evaluation: Evaluation) => (
           <Card
             key={evaluation.idEvaluation}
             className="hover:shadow-md transition-shadow"
           >
-            <CardContent className="pt-6">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-lg">
+            <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                    <h3 className="font-semibold text-base sm:text-lg truncate">
                       {evaluation.title}
                     </h3>
                     <Badge
                       variant={
                         evaluation.isVisible || false ? 'default' : 'secondary'
                       }
+                      className="text-xs self-start sm:self-auto"
                     >
                       {evaluation.isVisible || false ? 'Visible' : 'Masqué'}
                     </Badge>
                   </div>
-                  <p className="text-gray-600 mb-2">{evaluation.description}</p>
-                  <div className="flex gap-4 text-sm text-gray-500">
-                    <span>
-                      📅{' '}
-                      {new Date(evaluation.evaluationDate).toLocaleDateString()}
+                  <p className="text-sm sm:text-base text-gray-600 mb-2 line-clamp-2">{evaluation.description}</p>
+                  <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <span>📅</span>
+                      <span className="hidden sm:inline">
+                        {new Date(evaluation.evaluationDate).toLocaleDateString()}
+                      </span>
+                      <span className="sm:hidden">
+                        {new Date(evaluation.evaluationDate).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
+                      </span>
                     </span>
                     <span>📊 /{evaluation.maxScore}</span>
-                    <span>
+                    <span className="hidden sm:inline">
                       🏫{' '}
                       {
                         classes?.find(
@@ -417,44 +434,51 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                     </span>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                
+                {/* Nouvelle section des boutons - une seule ligne */}
+                <div className="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-gray-100">
+                  {/* Bouton principal "Saisir les notes" à gauche */}
                   <Button
-                    size="sm"
-                    variant={evaluation.isVisible ? "default" : "outline"}
-                    className={evaluation.isVisible ? "bg-green-600 hover:bg-green-700" : ""}
-                    onClick={() => handleToggleVisibility(evaluation)}
-                    title={evaluation.isVisible ? "Masquer aux étudiants" : "Rendre visible aux étudiants"}
-                  >
-                    {evaluation.isVisible ? '👁️ Visible' : '👁️‍🗨️ Masqué'}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEditEvaluation(evaluation)}
-                    title="Modifier l'évaluation"
-                  >
-                    <EditIcon className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="text-red-600 hover:text-red-800"
-                    onClick={() =>
-                      handleDeleteEvaluation(evaluation.idEvaluation!)
-                    }
-                    title="Supprimer l'évaluation"
-                  >
-                    <TrashIcon className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-blue-600 hover:bg-blue-700 text-sm h-9 flex-1 max-w-xs"
                     onClick={() =>
                       (window.location.href = `/teacher/grades/${evaluation.idEvaluation}`)
                     }
                   >
-                    Saisir les notes
+                    📝 Saisir les notes
                   </Button>
+                  
+                  {/* Groupe de petits boutons à droite */}
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant={evaluation.isVisible ? "default" : "outline"}
+                      className={`text-xs h-8 px-3 ${evaluation.isVisible ? "bg-green-600 hover:bg-green-700" : ""}`}
+                      onClick={() => handleToggleVisibility(evaluation)}
+                      title={evaluation.isVisible ? "Masquer aux étudiants" : "Rendre visible aux étudiants"}
+                    >
+                      {evaluation.isVisible ? '👁️' : '👁️‍🗨️'}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleEditEvaluation(evaluation)}
+                      title="Modifier l'évaluation"
+                      className="text-xs h-8 px-3"
+                    >
+                      <EditIcon className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-red-600 hover:text-red-800 text-xs h-8 px-3"
+                      onClick={() =>
+                        handleDeleteEvaluation(evaluation.idEvaluation!)
+                      }
+                      title="Supprimer l'évaluation"
+                    >
+                      <TrashIcon className="w-3 h-3" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -462,10 +486,14 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
         ))}
 
         {(!evaluations || evaluations.length === 0) && (
-          <Card className="text-center py-12">
-            <CardContent>
-              <p className="text-gray-500 mb-4">Aucune évaluation trouvée</p>
-              <Button onClick={() => setShowCreateForm(true)} variant="outline">
+          <Card className="text-center py-8 sm:py-12">
+            <CardContent className="px-4 sm:px-6">
+              <p className="text-sm sm:text-base text-gray-500 mb-4">Aucune évaluation trouvée</p>
+              <Button 
+                onClick={() => setShowCreateForm(true)} 
+                variant="outline"
+                className="text-sm"
+              >
                 Créer votre première évaluation
               </Button>
             </CardContent>
