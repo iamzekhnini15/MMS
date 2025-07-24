@@ -117,7 +117,7 @@ const ManageClass: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gray-50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-background dark:bg-neutral-900">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-0 max-w-7xl mx-auto">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
@@ -151,7 +151,7 @@ const ManageClass: React.FC = () => {
                 {classes.map((classe) => (
                   <TableRow
                     key={classe.idClass}
-                    className="cursor-pointer hover:bg-gray-100"
+                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-900"
                     onClick={() => navigate(`/manage-classes/${classe.idClass}`)}
                   >
                     <TableCell className="text-xs sm:text-sm font-medium">
@@ -204,7 +204,7 @@ const ManageClass: React.FC = () => {
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {error && (
-              <div className="text-red-600 bg-red-100 p-2 sm:p-3 rounded text-sm">{error}</div>
+              <div className="text-red-600 bg-red-100 dark:bg-neutral-900 p-2 sm:p-3 rounded text-sm">{error}</div>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">

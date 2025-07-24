@@ -94,14 +94,14 @@ const Courses: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50">
+        <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50 dark:bg-neutral-900">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
             Gestion des cours
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
             Créez, modifiez et suivez les matières enseignées
           </p>
         </div>
@@ -120,13 +120,13 @@ const Courses: React.FC = () => {
             <div className="hidden md:block">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Nom du cours</TableHead>
-                    <TableHead className="hidden lg:table-cell">Salle de cours</TableHead>
-                    <TableHead className="hidden lg:table-cell">Date de début</TableHead>
-                    <TableHead className="hidden lg:table-cell">Date de fin</TableHead>
-                    <TableHead>Enseignant</TableHead>
-                    <TableHead>Actions</TableHead>
+                  <TableRow className="border-gray-200 dark:border-neutral-800">
+                    <TableHead className="text-gray-900 dark:text-white">Nom du cours</TableHead>
+                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">Salle de cours</TableHead>
+                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">Date de début</TableHead>
+                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">Date de fin</TableHead>
+                    <TableHead className="text-gray-900 dark:text-white">Enseignant</TableHead>
+                    <TableHead className="text-gray-900 dark:text-white">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
 
@@ -134,22 +134,22 @@ const Courses: React.FC = () => {
                   {courses.map((course) => (
                     <TableRow
                       key={course.idCourse}
-                      className="cursor-pointer hover:bg-gray-100"
+                      className="cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-900 border-gray-200 dark:border-neutral-800"
                       onClick={() => navigate(`/manage-courses/${course.idCourse}`)}
                     >
-                      <TableCell className="font-medium">{course.name}</TableCell>
-                      <TableCell className="hidden lg:table-cell">{course.classroom.name}</TableCell>
-                      <TableCell className="hidden lg:table-cell">{course.startDateTime}</TableCell>
-                      <TableCell className="hidden lg:table-cell">{course.endDateTime}</TableCell>
-                      <TableCell>
+                      <TableCell className="font-medium text-gray-900 dark:text-white">{course.name}</TableCell>
+                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">{course.classroom.name}</TableCell>
+                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">{course.startDateTime}</TableCell>
+                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">{course.endDateTime}</TableCell>
+                      <TableCell className="text-gray-600 dark:text-gray-300">
                         <div className="lg:hidden">
-                          <div className="font-medium">
+                          <div className="font-medium text-gray-900 dark:text-white">
                             {course.teacher.user.firstname} {course.teacher.user.lastname}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
                             Salle: {course.classroom.name}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
                             {course.startDateTime} - {course.endDateTime}
                           </div>
                         </div>
@@ -161,7 +161,7 @@ const Courses: React.FC = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-[#0071e3] hover:bg-[#0071e3]/10"
+                          className="text-[#0071e3] hover:bg-[#0071e3]/10 dark:text-gray-300 dark:hover:bg-neutral-900"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDelete(course.idCourse);
@@ -181,17 +181,17 @@ const Courses: React.FC = () => {
               {courses.map((course) => (
                 <div
                   key={course.idCourse}
-                  className="bg-white p-4 rounded-lg shadow-sm border cursor-pointer hover:shadow-md transition-shadow"
+                  className="bg-white dark:bg-neutral-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800 cursor-pointer hover:shadow-md transition-shadow"
                   onClick={() => navigate(`/manage-courses/${course.idCourse}`)}
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-semibold text-lg text-gray-900 flex-1">
+                    <h3 className="font-semibold text-lg text-gray-900 dark:text-white flex-1">
                       {course.name}
                     </h3>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-red-600 hover:bg-red-50 ml-2"
+                      className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 ml-2"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDelete(course.idCourse);
@@ -202,15 +202,15 @@ const Courses: React.FC = () => {
                   </div>
                   
                   <div className="space-y-2 text-sm">
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
                       <span className="font-medium w-20">Enseignant:</span>
                       <span>{course.teacher.user.firstname} {course.teacher.user.lastname}</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
                       <span className="font-medium w-20">Salle:</span>
                       <span>{course.classroom.name}</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
                       <span className="font-medium w-20">Période:</span>
                       <span>{course.startDateTime} - {course.endDateTime}</span>
                     </div>
@@ -220,22 +220,22 @@ const Courses: React.FC = () => {
             </div>
           </>
         ) : (
-          <p className="text-center text-gray-500">Aucun cours disponible.</p>
+          <p className="text-center text-gray-500 dark:text-gray-400">Aucun cours disponible.</p>
         )}
       </div>
 
       {/* Modal création/modification */}
       {showModal && (
         <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50 p-4">
-          <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-neutral-900 p-4 sm:p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto border dark:border-neutral-800">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">
                 Nouveau cours
               </h2>
               <button
                 style={{ cursor: 'pointer' }}
                 onClick={() => setShowModal(false)}
-                className="text-gray-500 hover:text-gray-700 p-1"
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 p-1"
                 aria-label="Fermer"
               >
                 <i className="fa-solid fa-times"></i>
@@ -244,7 +244,7 @@ const Courses: React.FC = () => {
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label
-                  className="block text-sm text-gray-700 mb-1"
+                  className="block text-sm text-gray-700 dark:text-gray-300 mb-1"
                   htmlFor="name"
                 >
                   Nom du cours
@@ -256,13 +256,13 @@ const Courses: React.FC = () => {
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Ex: Mathématiques"
-                  className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
+                  className="w-full border border-gray-300 dark:border-neutral-800 rounded-lg p-2 text-sm sm:text-base bg-white dark:bg-neutral-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 />
               </div>
 
               <div>
                 <label
-                  className="block text-sm text-gray-700 mb-1"
+                  className="block text-sm text-gray-700 dark:text-gray-300 mb-1"
                   htmlFor="classroomId"
                 >
                   Salle de cours
@@ -272,7 +272,7 @@ const Courses: React.FC = () => {
                   id="classroomId"
                   value={form.classroom.idClassroom || ''}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
+                  className="w-full border border-gray-300 dark:border-neutral-800 rounded-lg p-2 text-sm sm:text-base bg-white dark:bg-neutral-900 text-gray-900 dark:text-white"
                 >
                   <option value="">-- Choisir une salle --</option>
                   {classrooms?.map((c) => (
@@ -286,7 +286,7 @@ const Courses: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label
-                    className="block text-sm text-gray-700 mb-1"
+                    className="block text-sm text-gray-700 dark:text-gray-300 mb-1"
                     htmlFor="startDateTime"
                   >
                     Date de début
@@ -297,12 +297,12 @@ const Courses: React.FC = () => {
                     id="startDateTime"
                     value={form.startDateTime}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
+                    className="w-full border border-gray-300 dark:border-neutral-800 rounded-lg p-2 text-sm sm:text-base bg-white dark:bg-neutral-900 text-gray-900 dark:text-white"
                   />
                 </div>
                 <div>
                   <label
-                    className="block text-sm text-gray-700 mb-1"
+                    className="block text-sm text-gray-700 dark:text-gray-300 mb-1"
                     htmlFor="endDateTime"
                   >
                     Date de fin
@@ -313,14 +313,14 @@ const Courses: React.FC = () => {
                     id="endDateTime"
                     value={form.endDateTime}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
+                    className="w-full border border-gray-300 dark:border-neutral-800 rounded-lg p-2 text-sm sm:text-base bg-white dark:bg-neutral-900 text-gray-900 dark:text-white"
                   />
                 </div>
               </div>
 
               <div>
                 <label
-                  className="block text-sm text-gray-700 mb-1"
+                  className="block text-sm text-gray-700 dark:text-gray-300 mb-1"
                   htmlFor="teacherId"
                 >
                   Enseignant
@@ -330,7 +330,7 @@ const Courses: React.FC = () => {
                   id="teacherId"
                   value={form.teacher.idTeacher || ''}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-2 text-sm sm:text-base"
+                  className="w-full border border-gray-300 dark:border-neutral-800 rounded-lg p-2 text-sm sm:text-base bg-white dark:bg-neutral-900 text-gray-900 dark:text-white"
                 >
                   <option value="">-- Choisir un enseignant --</option>
                   {teachers?.map((t) => (
@@ -345,13 +345,13 @@ const Courses: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-sm sm:text-base order-2 sm:order-1"
+                  className="px-4 py-2 rounded bg-gray-300 dark:bg-neutral-900 hover:bg-gray-400 dark:hover:bg-neutral-900 text-gray-900 dark:text-white text-sm sm:text-base order-2 sm:order-1"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 text-sm sm:text-base order-1 sm:order-2"
+                  className="px-4 py-2 rounded bg-blue-600 dark:bg-neutral-900 text-white hover:bg-blue-700 dark:hover:bg-neutral-900 text-sm sm:text-base order-1 sm:order-2"
                 >
                   Enregistrer
                 </button>

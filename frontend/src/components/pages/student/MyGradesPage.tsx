@@ -126,16 +126,16 @@ const MyGradesPage: React.FC = () => {
 
   const getGradeColor = (score: number, maxScore: number) => {
     const percentage = (score / maxScore) * 100;
-    if (percentage >= 80) return 'text-green-600';
-    if (percentage >= 60) return 'text-orange-500';
-    return 'text-red-600';
+    if (percentage >= 80) return 'text-green-600 dark:text-green-400';
+    if (percentage >= 60) return 'text-orange-500 dark:text-orange-400';
+    return 'text-red-600 dark:text-red-400';
   };
 
   const getGradeBadgeColor = (score: number, maxScore: number) => {
     const percentage = (score / maxScore) * 100;
-    if (percentage >= 80) return 'bg-green-100 text-green-800';
-    if (percentage >= 60) return 'bg-orange-100 text-orange-800';
-    return 'bg-red-100 text-red-800';
+    if (percentage >= 80) return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300';
+    if (percentage >= 60) return 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300';
+    return 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300';
   };
 
   const calculateSubjectAverage = (subjectId: number) => {
@@ -163,10 +163,10 @@ const MyGradesPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-900">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Chargement de vos notes...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-blue-400 mx-auto mb-4"></div>
+          <p className="text-muted-foreground dark:text-gray-300">Chargement de vos notes...</p>
         </div>
       </div>
     );
@@ -174,9 +174,9 @@ const MyGradesPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Card className="p-6">
-          <div className="text-center text-red-600">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-900">
+        <Card className="p-6 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
+          <div className="text-center text-red-600 dark:text-red-400">
             <p className="text-lg font-semibold">Erreur</p>
             <p className="text-sm mt-2">{error}</p>
           </div>
@@ -194,29 +194,29 @@ const MyGradesPage: React.FC = () => {
   );
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
       {/* En-tête responsive */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mes Notes</h1>
-          <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Mes Notes</h1>
+          <p className="text-muted-foreground dark:text-gray-300 mt-1 sm:mt-2 text-sm sm:text-base">
             Consultez vos résultats et suivez vos progrès
           </p>
         </div>
         <div className="flex items-center space-x-2 self-center sm:self-auto">
-          <ChartBarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-          <span className="text-base sm:text-lg font-medium">
+          <ChartBarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary dark:text-blue-400" />
+          <span className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">
             {filteredGrades.length} évaluation(s)
           </span>
         </div>
       </div>
 
       {/* Filtres responsive */}
-      <Card>
+      <Card className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
         <CardContent className="p-3 sm:p-4">
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-stretch sm:items-center">
             <div className="flex items-center space-x-2 min-w-0 flex-1 sm:flex-initial">
-              <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
+              <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground dark:text-gray-400 flex-shrink-0" />
               <Select value={selectedSubject} onValueChange={setSelectedSubject}>
                 <SelectTrigger className="w-full sm:w-48">
                   <SelectValue placeholder="Filtrer par matière" />
@@ -236,7 +236,7 @@ const MyGradesPage: React.FC = () => {
             </div>
 
             <div className="flex items-center space-x-2 min-w-0 flex-1 sm:flex-initial">
-              <CalendarIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
+              <CalendarIcon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground dark:text-gray-400 flex-shrink-0" />
               <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
                 <SelectTrigger className="w-full sm:w-48">
                   <SelectValue placeholder="Filtrer par période" />
@@ -260,9 +260,9 @@ const MyGradesPage: React.FC = () => {
 
       {/* Moyennes par matière */}
       {selectedSubject === 'all' && uniqueSubjects && uniqueSubjects.length > 0 && (
-        <Card>
+        <Card className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardHeader>
-            <CardTitle className="flex items-center">
+            <CardTitle className="flex items-center text-gray-900 dark:text-gray-100">
               <ChartBarIcon className="h-5 w-5 mr-2" />
               Moyennes par matière
             </CardTitle>
@@ -274,9 +274,9 @@ const MyGradesPage: React.FC = () => {
                 return (
                   <div
                     key={subject.idSubject || 0}
-                    className="p-4 border rounded-lg bg-gray-50"
+                    className="p-4 border rounded-lg bg-gray-50 dark:bg-neutral-800 border-gray-200 dark:border-neutral-700"
                   >
-                    <h3 className="font-medium text-sm text-gray-600">
+                    <h3 className="font-medium text-sm text-gray-600 dark:text-gray-400">
                       {subject.name}
                     </h3>
                     {average !== null ? (
@@ -289,9 +289,9 @@ const MyGradesPage: React.FC = () => {
                         >
                           {average.toFixed(1)}/20
                         </span>
-                        <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-2 mt-2">
                           <div
-                            className="bg-primary h-2 rounded-full transition-all"
+                            className="bg-primary dark:bg-blue-400 h-2 rounded-full transition-all"
                             style={{
                               width: `${Math.min((average / 20) * 100, 100)}%`,
                             }}
@@ -299,7 +299,7 @@ const MyGradesPage: React.FC = () => {
                         </div>
                       </div>
                     ) : (
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         Aucune note disponible
                       </span>
                     )}
@@ -313,18 +313,18 @@ const MyGradesPage: React.FC = () => {
 
       {/* Affichage adaptatif des notes : Table sur desktop, Cards sur mobile */}
       {filteredGrades.length > 0 ? (
-        <Card>
+        <Card className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardHeader className="pb-3 sm:pb-6">
             <CardTitle className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div className="flex items-center">
                 <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                <span className="text-base sm:text-lg">
+                <span className="text-base sm:text-lg text-gray-900 dark:text-gray-100">
                   Mes Notes ({filteredGrades.length} évaluation{filteredGrades.length > 1 ? 's' : ''})
                 </span>
               </div>
               {/* Boutons de tri responsive */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
-                <span className="text-xs sm:text-sm text-muted-foreground">Trier par:</span>
+                <span className="text-xs sm:text-sm text-muted-foreground dark:text-gray-400">Trier par:</span>
                 <div className="flex flex-wrap gap-1 sm:gap-2">
                   <Button
                     variant={sortBy === 'date' ? 'default' : 'outline'}
@@ -367,12 +367,12 @@ const MyGradesPage: React.FC = () => {
             {/* Affichage mobile : Cartes style Smartschool */}
             <div className="block md:hidden p-4 space-y-3">
               {filteredGrades.map((grade: EvaluationGrade) => (
-                <Card key={grade.idGrade} className="border border-gray-200 hover:shadow-md transition-shadow">
+                <Card key={grade.idGrade} className="border border-gray-200 dark:border-neutral-700 hover:shadow-md transition-shadow bg-white dark:bg-neutral-800">
                   <CardContent className="p-4">
                     {/* Header de la carte avec matière et date */}
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h4 className="font-medium text-sm text-gray-900 mb-1">
+                        <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 mb-1">
                           {grade.evaluationTitle || `Évaluation ${grade.evaluationId}`}
                         </h4>
                         <Badge variant="secondary" className="text-xs">
@@ -380,7 +380,7 @@ const MyGradesPage: React.FC = () => {
                         </Badge>
                       </div>
                       <div className="text-right ml-3">
-                        <div className="flex items-center text-xs text-gray-500 mb-1">
+                        <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-1">
                           <CalendarIcon className="h-3 w-3 mr-1" />
                           {formatDate(grade.gradedAt || new Date().toISOString())}
                         </div>
@@ -396,7 +396,7 @@ const MyGradesPage: React.FC = () => {
                     {/* Score et pourcentage */}
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm text-gray-600">Note:</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Note:</span>
                         {grade.score !== null && grade.score !== undefined ? (
                           <Badge
                             className={`font-bold ${getGradeBadgeColor(
@@ -407,7 +407,7 @@ const MyGradesPage: React.FC = () => {
                             {grade.score}/{grade.maxScore || 20}
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="text-gray-500">
+                          <Badge variant="outline" className="text-gray-500 dark:text-gray-400">
                             Non noté
                           </Badge>
                         )}
@@ -427,10 +427,10 @@ const MyGradesPage: React.FC = () => {
 
                     {/* Commentaire si présent */}
                     {grade.comment && (
-                      <div className="mt-3 pt-3 border-t border-gray-100">
+                      <div className="mt-3 pt-3 border-t border-gray-100 dark:border-neutral-600">
                         <div className="flex items-start space-x-2">
-                          <span className="text-xs text-gray-500 mt-0.5">💬</span>
-                          <p className="text-xs text-gray-600 flex-1">{grade.comment}</p>
+                          <span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">💬</span>
+                          <p className="text-xs text-gray-600 dark:text-gray-300 flex-1">{grade.comment}</p>
                         </div>
                       </div>
                     )}
@@ -563,7 +563,7 @@ const MyGradesPage: React.FC = () => {
                       <TableCell className="min-w-[100px]">
                         {grade.comment ? (
                           <div className="max-w-xs">
-                            <p className="text-xs sm:text-sm text-muted-foreground truncate" title={grade.comment}>
+                            <p className="text-xs sm:text-sm text-muted-foreground dark:text-gray-400 truncate" title={grade.comment}>
                               {grade.comment}
                             </p>
                             {grade.comment.length > 50 && (
@@ -574,7 +574,7 @@ const MyGradesPage: React.FC = () => {
                             )}
                           </div>
                         ) : (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-gray-400 dark:text-gray-500">-</span>
                         )}
                       </TableCell>
                     </TableRow>
@@ -586,13 +586,13 @@ const MyGradesPage: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <Card className="text-center py-12">
+        <Card className="text-center py-12 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardContent>
-            <AcademicCapIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-muted-foreground mb-2">
+            <AcademicCapIcon className="h-16 w-16 text-muted-foreground dark:text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground dark:text-gray-300 mb-2">
               Aucune note disponible
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground dark:text-gray-400">
               {selectedSubject !== 'all' || selectedPeriod !== 'all'
                 ? 'Aucune note ne correspond aux filtres sélectionnés.'
                 : 'Vos notes apparaîtront ici une fois que vos enseignants les auront saisies.'}

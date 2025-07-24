@@ -93,9 +93,9 @@ const StudentBulletins: React.FC = () => {
   };
 
   const getGradeColor = (average: number) => {
-    if (average >= 80) return 'text-green-600 bg-green-50 border-green-200';
-    if (average >= 60) return 'text-orange-600 bg-orange-50 border-orange-200';
-    return 'text-red-600 bg-red-50 border-red-200';
+    if (average >= 80) return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/50';
+    if (average >= 60) return 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800/50';
+    return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50';
   };
 
   const formatDate = (dateString: string) => {
@@ -108,10 +108,10 @@ const StudentBulletins: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-4 sm:p-6 max-w-7xl">
+      <div className="container mx-auto p-4 sm:p-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
         <div className="flex items-center justify-center h-48 sm:h-64">
-          <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600 text-sm sm:text-base">Chargement de vos bulletins...</span>
+          <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+          <span className="ml-3 text-gray-600 dark:text-gray-300 text-sm sm:text-base">Chargement de vos bulletins...</span>
         </div>
       </div>
     );
@@ -119,10 +119,10 @@ const StudentBulletins: React.FC = () => {
 
   if (error) {
     return (
-      <div className="container mx-auto p-4 sm:p-6 max-w-7xl">
-        <Card className="border-red-200 bg-red-50">
+      <div className="container mx-auto p-4 sm:p-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
+        <Card className="border-red-200 dark:border-red-800/50 bg-red-50 dark:bg-red-900/20">
           <CardContent className="pt-4 sm:pt-6">
-            <p className="text-red-600 text-sm sm:text-base">{error}</p>
+            <p className="text-red-600 dark:text-red-400 text-sm sm:text-base">{error}</p>
           </CardContent>
         </Card>
       </div>
@@ -130,24 +130,24 @@ const StudentBulletins: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
       {/* En-tête responsive */}
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Mes Bulletins</h1>
-        <p className="text-gray-600 text-sm sm:text-base">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Mes Bulletins</h1>
+        <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
           Consultez vos bulletins scolaires rendus disponibles par vos professeurs
         </p>
       </div>
 
       {/* Liste des bulletins responsive */}
       {bulletins.length === 0 ? (
-        <Card className="text-center py-8 sm:py-12">
+        <Card className="text-center py-8 sm:py-12 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardContent>
-            <DocumentTextIcon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
+            <DocumentTextIcon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
               Aucun bulletin disponible
             </h3>
-            <p className="text-gray-600 text-sm sm:text-base mb-4">
+            <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base mb-4">
               Vos professeurs n'ont pas encore rendu de bulletins visibles pour vous.
             </p>
           </CardContent>
@@ -155,12 +155,12 @@ const StudentBulletins: React.FC = () => {
       ) : (
         <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {bulletins.map((bulletin) => (
-            <Card key={bulletin.idBulletin} className="hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+            <Card key={bulletin.idBulletin} className="hover:shadow-lg transition-all duration-200 transform hover:scale-105 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
               <CardHeader className="pb-3 sm:pb-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <DocumentTextIcon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
-                    <CardTitle className="text-base sm:text-lg truncate">{bulletin.bulletinPeriod.name}</CardTitle>
+                    <DocumentTextIcon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <CardTitle className="text-base sm:text-lg truncate text-gray-900 dark:text-gray-100">{bulletin.bulletinPeriod.name}</CardTitle>
                   </div>
                   <Badge variant="secondary" className="text-xs self-start sm:self-center">
                     {bulletin.bulletinPeriod.academicYear}
@@ -170,47 +170,47 @@ const StudentBulletins: React.FC = () => {
               
               <CardContent className="space-y-3 sm:space-y-4">
                 {/* Moyenne générale - mise en valeur responsive */}
-                <div className="text-center p-3 sm:p-4 bg-gray-50 rounded-lg">
-                  <div className={`text-2xl sm:text-3xl font-bold mb-1 ${getGradeColor(bulletin.generalAverage).split(' ')[0]}`}>
+                <div className="text-center p-3 sm:p-4 bg-gray-50 dark:bg-neutral-800 rounded-lg">
+                  <div className={`text-2xl sm:text-3xl font-bold mb-1 ${getGradeColor(bulletin.generalAverage).split(' ')[0]} ${getGradeColor(bulletin.generalAverage).split(' ')[2]}`}>
                     {bulletin.generalAverage.toFixed(1)}%
                   </div>
-                  <div className="text-xs sm:text-sm text-gray-600">Moyenne générale</div>
+                  <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Moyenne générale</div>
                 </div>
 
                 {/* Statistiques responsive */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-4 text-sm">
                   <div className="text-center">
-                    <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
+                    <div className="flex items-center justify-center gap-1 text-gray-600 dark:text-gray-400 mb-1">
                       <ChartBarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                       <span className="text-xs sm:text-sm">Rang</span>
                     </div>
-                    <div className="font-semibold text-sm sm:text-base">
+                    <div className="font-semibold text-sm sm:text-base text-gray-900 dark:text-gray-100">
                       {bulletin.classRank}ème / {bulletin.totalStudents}
                     </div>
                   </div>
                   
                   <div className="text-center">
-                    <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
+                    <div className="flex items-center justify-center gap-1 text-gray-600 dark:text-gray-400 mb-1">
                       <AcademicCapIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                       <span className="text-xs sm:text-sm">Moy. Classe</span>
                     </div>
-                    <div className="font-semibold text-sm sm:text-base">
+                    <div className="font-semibold text-sm sm:text-base text-gray-900 dark:text-gray-100">
                       {bulletin.classAverage.toFixed(1)}%
                     </div>
                   </div>
                 </div>
 
                 {/* Date de génération responsive */}
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                   <span className="truncate">Publié le {formatDate(bulletin.generatedAt)}</span>
                 </div>
 
                 {/* Commentaire s'il existe - responsive */}
                 {bulletin.generalComment && (
-                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-xs sm:text-sm text-blue-800 font-medium mb-1">Commentaire :</p>
-                    <p className="text-xs sm:text-sm text-blue-700 leading-relaxed">{bulletin.generalComment}</p>
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/50 rounded-lg">
+                    <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300 font-medium mb-1">Commentaire :</p>
+                    <p className="text-xs sm:text-sm text-blue-700 dark:text-blue-200 leading-relaxed">{bulletin.generalComment}</p>
                   </div>
                 )}
 

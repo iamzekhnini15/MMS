@@ -49,6 +49,7 @@ import { BulletinCalculationProvider } from './contexts/BulletinCalculationConte
 import { StudentBulletinProvider } from './contexts/StudentBulletinContext';
 import { EvaluationProvider } from './contexts/EvaluationContext';
 import { StatsProvider } from './contexts/StatsContext';
+import { ThemeProvider as CustomThemeProvider } from './contexts/ThemeContext';
 
 import theme from './themes';
 
@@ -473,9 +474,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <CustomThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </CustomThemeProvider>
   </React.StrictMode>,
 );

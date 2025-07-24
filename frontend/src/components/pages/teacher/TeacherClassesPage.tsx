@@ -66,9 +66,9 @@ const TeacherClassesPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-6 bg-gray-50 dark:bg-neutral-900 min-h-screen">
         <div className="flex items-center justify-center h-64">
-          <div className="text-lg text-gray-600">Chargement des classes...</div>
+          <div className="text-lg text-gray-600 dark:text-gray-300">Chargement des classes...</div>
         </div>
       </div>
     );
@@ -76,32 +76,32 @@ const TeacherClassesPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h3 className="text-red-800 font-medium">Erreur de chargement</h3>
-          <p className="text-red-600">{error}</p>
+      <div className="container mx-auto p-6 bg-gray-50 dark:bg-neutral-900 min-h-screen">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <h3 className="text-red-800 dark:text-red-300 font-medium">Erreur de chargement</h3>
+          <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-4 sm:p-6">
+    <div className="container mx-auto p-4 sm:p-6 bg-gray-50 dark:bg-neutral-900 min-h-screen">
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Mes Classes</h1>
-        <p className="text-sm sm:text-base text-gray-600">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Mes Classes</h1>
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Vue d'ensemble de vos classes et étudiants
         </p>
       </div>
 
       {!classes || classes.length === 0 ? (
-        <Card className="text-center py-8 sm:py-12">
+        <Card className="text-center py-8 sm:py-12 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardContent className="px-4 sm:px-6">
-            <UserGroupIcon className="h-12 w-12 sm:h-16 sm:w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
+            <UserGroupIcon className="h-12 w-12 sm:h-16 sm:w-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
               Aucune classe trouvée
             </h3>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
               Vous n'êtes assigné à aucune classe pour le moment.
             </p>
           </CardContent>
@@ -111,47 +111,47 @@ const TeacherClassesPage: React.FC = () => {
           {classes.map((classe: Classes) => (
             <Card
               key={classe.idClass}
-              className="hover:shadow-lg transition-shadow"
+              className="hover:shadow-lg transition-shadow bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800"
             >
               <CardHeader className="px-4 sm:px-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
-                    <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                    <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                       {classe.name}
                     </CardTitle>
                     <div className="mt-2 space-y-1">
-                      <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-                        <Badge variant="outline" className="text-xs">Niveau {classe.level}</Badge>
-                        <Badge variant="secondary" className="text-xs">{classe.department}</Badge>
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <Badge variant="outline" className="text-xs border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-gray-300">Niveau {classe.level}</Badge>
+                        <Badge variant="secondary" className="text-xs bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300">{classe.department}</Badge>
                       </div>
                     </div>
                   </div>
-                  <UserGroupIcon className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500 flex-shrink-0 ml-2" />
+                  <UserGroupIcon className="h-6 w-6 sm:h-8 sm:w-8 text-gray-500 dark:text-gray-300 flex-shrink-0 ml-2" />
                 </div>
               </CardHeader>
               <CardContent className="px-4 sm:px-6">
                 <div className="space-y-3 sm:space-y-4">
                   {/* Stats */}
                   <div className="grid grid-cols-2 gap-3 sm:gap-4 text-center">
-                    <div className="bg-blue-50 rounded-lg p-2 sm:p-3">
-                      <div className="text-xl sm:text-2xl font-bold text-blue-600">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2 sm:p-3">
+                      <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                         {getStudentCountForClass(classe.idClass)}
                       </div>
-                      <div className="text-xs sm:text-sm text-blue-600">Étudiants</div>
+                      <div className="text-xs sm:text-sm text-blue-600 dark:text-blue-400">Étudiants</div>
                     </div>
-                    <div className="bg-green-50 rounded-lg p-2 sm:p-3">
-                      <div className="text-xl sm:text-2xl font-bold text-green-600">5</div>
-                      <div className="text-xs sm:text-sm text-green-600">Matières</div>
+                    <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3">
+                      <div className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">5</div>
+                      <div className="text-xs sm:text-sm text-green-600 dark:text-green-400">Matières</div>
                     </div>
                   </div>
 
                   {/* Teacher Info */}
                   {classe.responsibleTeacher && (
-                    <div className="border-t pt-3">
-                      <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                    <div className="border-t border-gray-200 dark:border-neutral-700 pt-3">
+                      <h4 className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Professeur responsable
                       </h4>
-                      <p className="text-xs sm:text-sm text-gray-600 truncate">
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
                         {classe.responsibleTeacher.user?.firstname}{' '}
                         {classe.responsibleTeacher.user?.lastname}
                       </p>
@@ -159,7 +159,7 @@ const TeacherClassesPage: React.FC = () => {
                   )}
 
                   {/* Actions */}
-                  <div className="grid grid-cols-1 gap-2 pt-3 border-t">
+                  <div className="grid grid-cols-1 gap-2 pt-3 border-t border-gray-200 dark:border-neutral-700">
                     <Button
                       variant="outline"
                       size="sm"
@@ -200,38 +200,38 @@ const TeacherClassesPage: React.FC = () => {
 
       {/* Quick Stats responsive */}
       {classes && classes.length > 0 && (
-        <Card className="mt-6 sm:mt-8">
+        <Card className="mt-6 sm:mt-8 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardHeader className="px-4 sm:px-6">
-            <CardTitle className="text-base sm:text-lg">Statistiques générales</CardTitle>
+            <CardTitle className="text-base sm:text-lg text-gray-900 dark:text-gray-100">Statistiques générales</CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <div className="text-center">
-                <div className="text-xl sm:text-3xl font-bold text-blue-600">
+                <div className="text-xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">
                   {teacherStats?.totalClasses || classes?.length || 0}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">Classes totales</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Classes totales</div>
               </div>
               <div className="text-center">
-                <div className="text-xl sm:text-3xl font-bold text-green-600">
+                <div className="text-xl sm:text-3xl font-bold text-green-600 dark:text-green-400">
                   {teacherStats?.totalStudents || 0}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">Étudiants totaux</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Étudiants totaux</div>
               </div>
               <div className="text-center">
-                <div className="text-xl sm:text-3xl font-bold text-purple-600">
+                <div className="text-xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">
                   {teacherStats?.monthlyEvaluations || 0}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   <span className="hidden sm:inline">Évaluations ce mois</span>
                   <span className="sm:hidden">Eval. ce mois</span>
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-xl sm:text-3xl font-bold text-orange-600">
+                <div className="text-xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">
                   {teacherStats?.averageGrade || 0}%
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600">Moyenne générale</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Moyenne générale</div>
               </div>
             </div>
           </CardContent>

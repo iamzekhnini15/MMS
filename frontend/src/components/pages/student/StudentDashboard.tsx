@@ -37,35 +37,35 @@ const StudentDashboard: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
       {/* Header Section - Responsive */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
             Tableau de Bord Étudiant
           </h1>
-          <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">
+          <p className="text-muted-foreground dark:text-gray-300 mt-1 sm:mt-2 text-sm sm:text-base">
             Accédez à vos notes et suivez vos progrès
           </p>
         </div>
         <div className="flex-shrink-0 self-center sm:self-auto">
-          <AcademicCapIcon className="h-8 w-8 sm:h-12 sm:w-12 text-primary" />
+          <AcademicCapIcon className="h-8 w-8 sm:h-12 sm:w-12 text-primary dark:text-blue-400" />
         </div>
       </div>
 
       {/* Cards Grid - Responsive */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Card Mes Notes */}
-        <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105" 
+        <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800" 
               onClick={() => navigate('/student/grades')}>
           <CardHeader className="pb-3 sm:pb-4">
-            <CardTitle className="flex items-center text-base sm:text-lg">
+            <CardTitle className="flex items-center text-base sm:text-lg text-gray-900 dark:text-gray-100">
               <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
               Mes Notes
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+            <p className="text-xs sm:text-sm text-muted-foreground dark:text-gray-400 mb-3 sm:mb-4">
               Consultez vos notes et évaluations par matière
             </p>
             <Button className="w-full text-sm sm:text-base h-9 sm:h-10">
@@ -75,14 +75,14 @@ const StudentDashboard: React.FC = () => {
         </Card>
 
         {/* Card Emploi du temps */}
-        <Card className="opacity-50">
+        <Card className="opacity-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardHeader className="pb-3 sm:pb-4">
-            <CardTitle className="text-base sm:text-lg">
+            <CardTitle className="text-base sm:text-lg text-gray-900 dark:text-gray-100">
               Emploi du temps
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+            <p className="text-xs sm:text-sm text-muted-foreground dark:text-gray-400 mb-3 sm:mb-4">
               Consultez votre emploi du temps
             </p>
             <Button className="w-full text-sm sm:text-base h-9 sm:h-10" disabled>
@@ -93,14 +93,14 @@ const StudentDashboard: React.FC = () => {
 
         {/* Card Bulletins non disponibles */}
         {!loadingBulletins && !hasBulletins && (
-          <Card className="opacity-50">
+          <Card className="opacity-50 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
             <CardHeader className="pb-3 sm:pb-4">
-              <CardTitle className="text-base sm:text-lg">
+              <CardTitle className="text-base sm:text-lg text-gray-900 dark:text-gray-100">
                 Bulletins
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
+              <p className="text-xs sm:text-sm text-muted-foreground dark:text-gray-400 mb-3 sm:mb-4">
                 Aucun bulletin disponible pour le moment
               </p>
               <Button className="w-full text-sm sm:text-base h-9 sm:h-10" disabled>
@@ -112,19 +112,19 @@ const StudentDashboard: React.FC = () => {
 
         {/* Card Bulletins disponibles */}
         {!loadingBulletins && hasBulletins && (
-          <Card className="bg-green-50 border-green-200 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+          <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/50 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
             <CardHeader className="pb-3 sm:pb-4">
-              <CardTitle className="flex items-center text-green-800 text-base sm:text-lg">
+              <CardTitle className="flex items-center text-green-800 dark:text-green-400 text-base sm:text-lg">
                 <DocumentTextIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 Bulletins disponibles
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <p className="text-xs sm:text-sm text-green-700 mb-3 sm:mb-4">
+              <p className="text-xs sm:text-sm text-green-700 dark:text-green-300 mb-3 sm:mb-4">
                 Vos bulletins scolaires sont maintenant disponibles !
               </p>
               <Button 
-                className="w-full bg-green-600 hover:bg-green-700 text-sm sm:text-base h-9 sm:h-10"
+                className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-sm sm:text-base h-9 sm:h-10 text-white dark:text-white"
                 onClick={() => navigate('/student/bulletins')}
               >
                 Consulter mes bulletins

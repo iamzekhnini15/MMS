@@ -117,7 +117,7 @@ const CourseDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50 dark:bg-neutral-900">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
@@ -140,9 +140,9 @@ const CourseDetailPage: React.FC = () => {
               <AccordionItem
                 key={subject.idSubject}
                 value={`item-${subject.idSubject}`}
-                className="group bg-white rounded-lg border shadow-sm"
+                className="group bg-white dark:bg-neutral-900 rounded-lg border dark:border-neutral-800 shadow-sm"
               >
-                <AccordionTrigger className="h-auto sm:h-12 px-4 sm:px-6 py-3 sm:py-0 flex items-center justify-between text-left text-base sm:text-lg font-medium cursor-pointer transition-all hover:bg-gray-50 rounded-lg">
+                <AccordionTrigger className="h-auto sm:h-12 px-4 sm:px-6 py-3 sm:py-0 flex items-center justify-between text-left text-base sm:text-lg font-medium cursor-pointer transition-all hover:bg-gray-50 dark:hover:bg-neutral-900 rounded-lg">
                   <span className="pr-2">{subject.name}</span>
                 </AccordionTrigger>
                 <AccordionContent className="px-4 sm:px-6 py-4 space-y-3">
@@ -172,7 +172,7 @@ const CourseDetailPage: React.FC = () => {
                         .map((file) => (
                           <div
                             key={file.idFile}
-                            className="flex items-center space-x-2 p-2 bg-gray-50 rounded-md"
+                            className="flex items-center space-x-2 p-2 bg-gray-50 dark:bg-neutral-900 rounded-md"
                           >
                             {/* Bouton de visibilité - visible seulement pour les admins */}
                             {isAdmin && (

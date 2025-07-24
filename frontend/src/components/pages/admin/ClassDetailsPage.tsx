@@ -138,7 +138,7 @@ const ClassDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50 dark:bg-neutral-900">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
@@ -212,7 +212,7 @@ const ClassDetailPage: React.FC = () => {
               {students.map((student) => (
                 <div
                   key={student.user.idUser}
-                  className="bg-white p-4 rounded-lg shadow-sm border"
+                  className="bg-white dark:bg-neutral-900 p-4 rounded-lg shadow-sm border dark:border-neutral-800"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1">

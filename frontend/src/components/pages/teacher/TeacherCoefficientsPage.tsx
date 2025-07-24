@@ -220,25 +220,25 @@ const TeacherCoefficientsPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 sm:p-6">
+    <div className="container mx-auto p-4 sm:p-6 bg-gray-50 dark:bg-neutral-900 min-h-screen">
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Gestion des Coefficients
         </h1>
-        <p className="text-sm sm:text-base text-gray-600">
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Configurez les coefficients pour chaque matière par classe
         </p>
       </div>
 
       {/* Class Selector responsive */}
-      <Card className="mb-4 sm:mb-6">
+      <Card className="mb-4 sm:mb-6 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
         <CardHeader className="px-4 sm:px-6">
-          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <ChartBarIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg text-gray-900 dark:text-gray-100">
+            <ChartBarIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 dark:text-gray-300" />
             Sélection de la classe
           </CardTitle>
         </CardHeader>
-        <CardContent className="px-4 sm:px-6">
+                <CardContent className="px-4 sm:px-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
             {classes?.map((classe: Classes) => (
               <Button
@@ -257,23 +257,23 @@ const TeacherCoefficientsPage: React.FC = () => {
       </Card>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
-          <h3 className="text-red-800 font-medium text-sm sm:text-base">Erreur</h3>
-          <p className="text-red-600 text-sm">{error}</p>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+          <h3 className="text-red-800 dark:text-red-300 font-medium text-sm sm:text-base">Erreur</h3>
+          <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
         </div>
       )}
 
       {selectedClass && (
-        <Card>
+        <Card className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardHeader className="px-4 sm:px-6">
-            <CardTitle className="text-base sm:text-lg">
+            <CardTitle className="text-base sm:text-lg text-gray-900 dark:text-gray-100">
               Coefficients pour {getClassName(selectedClass)}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
             {subjectsLoading || coefficientsLoading ? (
               <div className="text-center py-6 sm:py-8">
-                <div className="text-gray-600 text-sm sm:text-base">
+                <div className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
                   Chargement des coefficients...
                 </div>
               </div>
@@ -282,19 +282,21 @@ const TeacherCoefficientsPage: React.FC = () => {
                 {subjectsForClass.map((subject: SubjectWithCoefficient) => (
                   <div
                     key={subject.idSubject}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                    className="flex items-center justify-between p-4 border border-gray-200 dark:border-neutral-800 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div>
-                        <h3 className="font-medium text-gray-900">
+                        <h3 className="font-medium text-gray-900 dark:text-gray-100">
                           {subject.name}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           {subject.description}
                         </p>
                       </div>
                       {subject.hasCoefficientSet && (
-                        <Badge variant="default">Configuré</Badge>
+                        <Badge variant="default" className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800">
+                          Configuré
+                        </Badge>
                       )}
                     </div>
 
@@ -331,7 +333,7 @@ const TeacherCoefficientsPage: React.FC = () => {
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
-                          <span className="text-lg font-semibold text-gray-900 min-w-[3rem] text-right">
+                          <span className="text-lg font-semibold text-gray-900 dark:text-gray-100 min-w-[3rem] text-right">
                             {subject.coefficient}
                           </span>
                           <Button
@@ -360,13 +362,13 @@ const TeacherCoefficientsPage: React.FC = () => {
       )}
 
       {!selectedClass && classes && classes.length === 0 && (
-        <Card className="text-center py-12">
+        <Card className="text-center py-12 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardContent>
-            <ChartBarIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <ChartBarIcon className="h-16 w-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
               Aucune classe trouvée
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Aucune classe n'est disponible pour configurer les coefficients.
             </p>
           </CardContent>

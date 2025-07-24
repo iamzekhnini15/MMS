@@ -387,7 +387,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-background dark:bg-neutral-900 min-h-screen">
       {/* En-tête */}
       <motion.div
         className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0"
@@ -400,8 +400,8 @@ const Dashboard: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <h1 className="text-2xl sm:text-3xl font-bold">Tableau de bord</h1>
-          <p className="text-sm sm:text-base text-muted-foreground mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
+          <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-300 mt-1">
             Bienvenue dans votre espace de gestion scolaire
           </p>
         </motion.div>
@@ -412,7 +412,7 @@ const Dashboard: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9">
+            <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9 border-gray-300 dark:border-neutral-800 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-900">
               <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">Export</span>
               <span className="sm:hidden">↓</span>
@@ -439,7 +439,7 @@ const Dashboard: React.FC = () => {
               transition: { duration: 0.2 },
             }}
           >
-            <Card className="hover:shadow-md transition-shadow">
+            <Card className="hover:shadow-md dark:hover:shadow-gray-800/20 transition-shadow bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
                 <CardTitle className="text-xs sm:text-sm font-medium truncate">
                   {stat.title}
@@ -483,7 +483,7 @@ const Dashboard: React.FC = () => {
         transition={{ duration: 0.6, delay: 0.8 }}
       >
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto bg-muted dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
             <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-4 py-2">
               <span className="hidden sm:inline">Vue d'ensemble</span>
               <span className="sm:hidden">Vue</span>
@@ -522,7 +522,7 @@ const Dashboard: React.FC = () => {
                     whileHover={{ scale: 1.005 }}
                   >
                     <Card
-                      className={`border-l-4 ${alert.type === 'error' ? 'border-l-red-500' : alert.type === 'warning' ? 'border-l-orange-500' : 'border-l-blue-500'}`}
+                      className={`border-l-4 ${alert.type === 'error' ? 'border-l-red-500' : alert.type === 'warning' ? 'border-l-orange-500' : 'border-l-blue-500'} bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800`}
                     >
                       <CardContent className="p-3 sm:p-4">
                         <div className="flex items-center space-x-2 sm:space-x-3">
@@ -554,7 +554,7 @@ const Dashboard: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                <Card>
+                <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
                   <CardHeader className="px-4 sm:px-6 py-3 sm:py-6">
                     <CardTitle className="flex items-center justify-between text-base sm:text-lg">
                       <span>Activités récentes</span>
@@ -581,7 +581,7 @@ const Dashboard: React.FC = () => {
                         >
                           <div className="mt-0.5 sm:mt-1 flex-shrink-0">
                             <motion.div
-                              className="p-1.5 sm:p-2 bg-muted rounded-lg"
+                              className="p-1.5 sm:p-2 bg-muted dark:bg-neutral-900 rounded-lg"
                               whileHover={{ scale: 1.05 }}
                               transition={{ duration: 0.2 }}
                             >
@@ -614,7 +614,7 @@ const Dashboard: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
-                <Card>
+                <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
                   <CardHeader className="px-4 sm:px-6 py-3 sm:py-6">
                     <CardTitle className="flex items-center justify-between text-base sm:text-lg">
                       <span>Événements à venir</span>
@@ -642,7 +642,7 @@ const Dashboard: React.FC = () => {
                           >
                             <div className="flex-shrink-0">
                               <motion.div
-                                className="text-center bg-muted rounded p-1 sm:p-2"
+                                className="text-center bg-muted dark:bg-neutral-900 rounded p-1 sm:p-2"
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ duration: 0.2 }}
                               >
@@ -696,7 +696,7 @@ const Dashboard: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
-              <Card>
+              <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
                 <CardHeader>
                   <CardTitle>Actions rapides</CardTitle>
                 </CardHeader>
@@ -716,7 +716,7 @@ const Dashboard: React.FC = () => {
                       >
                         <div
                           key={index}
-                          className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
+                          className="flex items-center space-x-3 p-4 rounded-lg border border-gray-200 dark:border-neutral-800 hover:bg-muted/50 dark:hover:bg-neutral-900/50 transition-colors cursor-pointer bg-white dark:bg-neutral-900"
                           onClick={action.action}
                         >
                           <motion.div

@@ -192,7 +192,7 @@ const ManageTeacher: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gray-50">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gray-50 dark:bg-neutral-900">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-0 max-w-7xl mx-auto">
         <div className="space-y-2">
@@ -230,7 +230,7 @@ const ManageTeacher: React.FC = () => {
                 {teachers.map((t) => (
                   <TableRow
                     key={t.idTeacher}
-                    className="cursor-pointer hover:bg-gray-100"
+                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-900"
                   >
                     <TableCell className="font-medium text-xs sm:text-sm">
                       <div>
@@ -262,7 +262,7 @@ const ManageTeacher: React.FC = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-[#0071e3] hover:bg-[#0071e3]/10 text-xs h-8 px-2 sm:px-3"
+                        className="text-[#0071e3] hover:bg-[#0071e3]/10 dark:hover:bg-neutral-900 text-xs h-8 px-2 sm:px-3"
                         onClick={() => openModalFor(t)}
                       >
                         <span className="hidden sm:inline">Modifier</span>
@@ -271,7 +271,7 @@ const ManageTeacher: React.FC = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-red-600 hover:bg-red-600/10 text-xs h-8 px-2 sm:px-3"
+                        className="text-red-600 hover:bg-red-600/10 dark:hover:bg-neutral-900 text-xs h-8 px-2 sm:px-3"
                         onClick={() => deleteTeacher(t.idTeacher)}
                       >
                         <span className="hidden sm:inline">Supprimer</span>

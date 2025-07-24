@@ -24,6 +24,7 @@ import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
 import { UserContext } from '@/contexts/UserContext';
+import DarkModeToggle from '@/components/ui/dark-mode-toggle';
 import {
   Sidebar,
   SidebarContent,
@@ -239,34 +240,37 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar variant="inset" {...props} className="bg-gray-50 dark:bg-neutral-900 [&>*]:bg-gray-50 [&>*]:dark:bg-neutral-900">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link to="/">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                <div className="bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-white flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">ManageMySchool</span>
-                  <span className="truncate text-xs">
+                  <span className="truncate font-medium text-gray-900 dark:text-white">ManageMySchool</span>
+                  <span className="truncate text-xs text-gray-600 dark:text-gray-300">
                     {userRole === 'ADMIN' && 'Administration'}
                     {userRole === 'TEACHER' && 'Interface Enseignant'}
                     {userRole === 'STUDENT' && 'Interface Étudiant'}
                     {!userRole && 'Système de gestion scolaire'}
                   </span>
                 </div>
+                <div className="ml-auto">
+                  <DarkModeToggle size="sm" />
+                </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-gray-50 dark:bg-neutral-900">
         <NavMain items={navigation.navMain} />
         <NavSecondary items={navigation.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="bg-gray-50 dark:bg-neutral-900">
         <NavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
