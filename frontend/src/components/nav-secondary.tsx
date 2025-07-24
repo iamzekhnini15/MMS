@@ -13,6 +13,7 @@ import {
 
 export function NavSecondary({
   items,
+  isCollapsed = false,
   ...props
 }: {
   items: {
@@ -20,6 +21,7 @@ export function NavSecondary({
     url: string;
     icon: LucideIcon;
   }[];
+  isCollapsed?: boolean;
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const navigate = useNavigate();
   const { isMobile, setOpenMobile } = useSidebar();
@@ -46,7 +48,7 @@ export function NavSecondary({
                   className="w-full flex items-center cursor-pointer"
                 >
                   <item.icon />
-                  <span>{item.title}</span>
+                  {!isCollapsed && <span>{item.title}</span>}
                 </button>
               </SidebarMenuButton>
             </SidebarMenuItem>

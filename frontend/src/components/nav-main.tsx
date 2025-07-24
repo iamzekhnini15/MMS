@@ -23,6 +23,7 @@ import {
 
 export function NavMain({
   items,
+  isCollapsed = false,
 }: {
   items: {
     title: string;
@@ -34,6 +35,7 @@ export function NavMain({
       url: string;
     }[];
   }[];
+  isCollapsed?: boolean;
 }) {
   const navigate = useNavigate();
   const { isMobile, setOpenMobile } = useSidebar();
@@ -50,7 +52,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+      {!isCollapsed && <SidebarGroupLabel>Navigation</SidebarGroupLabel>}
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
@@ -61,10 +63,10 @@ export function NavMain({
                   className="w-full flex items-center cursor-pointer"
                 >
                   <item.icon />
-                  <span>{item.title}</span>
+                  {!isCollapsed && <span>{item.title}</span>}
                 </button>
               </SidebarMenuButton>
-              {item.items?.length ? (
+              {!isCollapsed && item.items?.length ? (
                 <>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuAction className="data-[state=open]:rotate-90">

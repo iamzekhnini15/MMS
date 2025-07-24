@@ -25,12 +25,14 @@ import {
 
 export function NavUser({
   user,
+  isCollapsed = false,
 }: {
   user: {
     name: string;
     email: string;
     avatar: string;
   };
+  isCollapsed?: boolean;
 }) {
   const { isMobile, setOpenMobile } = useSidebar();
   const navigate = useNavigate();
@@ -78,11 +80,13 @@ export function NavUser({
                   {displayName?.charAt(0)?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{displayName}</span>
-                <span className="truncate text-xs">{displayEmail}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              {!isCollapsed && (
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{displayName}</span>
+                  <span className="truncate text-xs">{displayEmail}</span>
+                </div>
+              )}
+              {!isCollapsed && <ChevronsUpDown className="ml-auto size-4" />}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent

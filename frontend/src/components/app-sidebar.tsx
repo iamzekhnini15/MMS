@@ -33,6 +33,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
+  useSidebar,
 } from '@/components/ui/sidebar';
 
 // Configuration de navigation par rôle
@@ -222,6 +224,7 @@ const getNavigationByRole = (role: string | undefined) => {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { authenticatedUser } = useContext(UserContext);
+  const { state } = useSidebar();
   
   // Récupérer le rôle de l'utilisateur connecté
   const userRole = authenticatedUser?.user?.role;
@@ -239,39 +242,50 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     avatar: '/avatars/default.jpg', // Avatar par défaut
   };
 
+  const isCollapsed = state === 'collapsed';
+
   return (
-    <Sidebar variant="inset" {...props} className="bg-gray-50 dark:bg-neutral-900 [&>*]:bg-gray-50 [&>*]:dark:bg-neutral-900">
+    <Sidebar variant="inset" collapsible="icon" {...props} className="bg-gray-50 dark:bg-neutral-900 [&>*]:bg-gray-50 [&>*]:dark:bg-neutral-900">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link to="/">
-                <div className="bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-white flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium text-gray-900 dark:text-white">ManageMySchool</span>
-                  <span className="truncate text-xs text-gray-600 dark:text-gray-300">
-                    {userRole === 'ADMIN' && 'Administration'}
-                    {userRole === 'TEACHER' && 'Interface Enseignant'}
-                    {userRole === 'STUDENT' && 'Interface Étudiant'}
-                    {!userRole && 'Système de gestion scolaire'}
-                  </span>
-                </div>
-                <div className="ml-auto">
-                  <DarkModeToggle size="sm" />
-                </div>
-              </Link>
-            </SidebarMenuButton>
+            {!isCollapsed ? (
+              <div className="flex items-center gap-2">
+                <SidebarMenuButton size="lg" asChild className="flex-1">
+                  <Link to="/">
+                    <div className="bg-gray-200 dark:bg-neutral-800 text-gray-800 dark:text-white flex aspect-square size-8 items-center justify-center rounded-lg">
+                      <Command className="size-4" />
+                    </div>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-medium text-gray-900 dark:text-white">ManageMySchool</span>
+                      <span className="truncate text-xs text-gray-600 dark:text-gray-300">
+                        {userRole === 'ADMIN' && 'Administration'}
+                        {userRole === 'TEACHER' && 'Interface Enseignant'}
+                        {userRole === 'STUDENT' && 'Interface Étudiant'}
+                        {!userRole && 'Système de gestion scolaire'}
+                      </span>
+                    </div>
+                    <div className="ml-auto">
+                      <DarkModeToggle size="sm" />
+                    </div>
+                  </Link>
+                </SidebarMenuButton>
+                <SidebarTrigger className="h-8 w-8 shrink-0" />
+              </div>
+            ) : (
+              <div className="flex justify-center">
+                <SidebarTrigger className="h-8 w-8" />
+              </div>
+            )}
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent className="bg-gray-50 dark:bg-neutral-900">
-        <NavMain items={navigation.navMain} />
-        <NavSecondary items={navigation.navSecondary} className="mt-auto" />
+        <NavMain items={navigation.navMain} isCollapsed={isCollapsed} />
+        <NavSecondary items={navigation.navSecondary} className="mt-auto" isCollapsed={isCollapsed} />
       </SidebarContent>
       <SidebarFooter className="bg-gray-50 dark:bg-neutral-900">
-        <NavUser user={userData} />
+        <NavUser user={userData} isCollapsed={isCollapsed} />
       </SidebarFooter>
     </Sidebar>
   );
