@@ -18,14 +18,14 @@ import type { Classes } from '../../../types';
 const TeacherClassesPage: React.FC = () => {
   const navigate = useNavigate();
   const { classes, loading, error, fetchClasses } = useContext(ClassesContext);
-  const { 
-    teacherStats, 
-    fetchClassStats, 
+  const {
+    teacherStats,
+    fetchClassStats,
     fetchTeacherStats,
-    getStudentCountForClass 
+    getStudentCountForClass,
   } = useContext(StatsContext);
   const { authenticatedUser } = useContext(UserContext);
-  
+
   const [selectedClass, setSelectedClass] = useState<Classes | null>(null);
   const [showStudentsModal, setShowStudentsModal] = useState(false);
 
@@ -39,7 +39,7 @@ const TeacherClassesPage: React.FC = () => {
       // Fetch class stats
       const classIds = classes.map((classe: Classes) => classe.idClass);
       fetchClassStats(classIds);
-      
+
       // Fetch teacher stats
       if (authenticatedUser.user.idUser) {
         fetchTeacherStats(authenticatedUser.user.idUser);
@@ -68,7 +68,9 @@ const TeacherClassesPage: React.FC = () => {
     return (
       <div className="container mx-auto p-6 bg-gray-50 dark:bg-neutral-900 min-h-screen">
         <div className="flex items-center justify-center h-64">
-          <div className="text-lg text-gray-600 dark:text-gray-300">Chargement des classes...</div>
+          <div className="text-lg text-gray-600 dark:text-gray-300">
+            Chargement des classes...
+          </div>
         </div>
       </div>
     );
@@ -78,7 +80,9 @@ const TeacherClassesPage: React.FC = () => {
     return (
       <div className="container mx-auto p-6 bg-gray-50 dark:bg-neutral-900 min-h-screen">
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <h3 className="text-red-800 dark:text-red-300 font-medium">Erreur de chargement</h3>
+          <h3 className="text-red-800 dark:text-red-300 font-medium">
+            Erreur de chargement
+          </h3>
           <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>
@@ -88,7 +92,9 @@ const TeacherClassesPage: React.FC = () => {
   return (
     <div className="container mx-auto p-4 sm:p-6 bg-gray-50 dark:bg-neutral-900 min-h-screen">
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Mes Classes</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          Mes Classes
+        </h1>
         <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Vue d'ensemble de vos classes et étudiants
         </p>
@@ -121,8 +127,18 @@ const TeacherClassesPage: React.FC = () => {
                     </CardTitle>
                     <div className="mt-2 space-y-1">
                       <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                        <Badge variant="outline" className="text-xs border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-gray-300">Niveau {classe.level}</Badge>
-                        <Badge variant="secondary" className="text-xs bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300">{classe.department}</Badge>
+                        <Badge
+                          variant="outline"
+                          className="text-xs border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-gray-300"
+                        >
+                          Niveau {classe.level}
+                        </Badge>
+                        <Badge
+                          variant="secondary"
+                          className="text-xs bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300"
+                        >
+                          {classe.department}
+                        </Badge>
                       </div>
                     </div>
                   </div>
@@ -137,11 +153,17 @@ const TeacherClassesPage: React.FC = () => {
                       <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                         {getStudentCountForClass(classe.idClass)}
                       </div>
-                      <div className="text-xs sm:text-sm text-blue-600 dark:text-blue-400">Étudiants</div>
+                      <div className="text-xs sm:text-sm text-blue-600 dark:text-blue-400">
+                        Étudiants
+                      </div>
                     </div>
                     <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-2 sm:p-3">
-                      <div className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">5</div>
-                      <div className="text-xs sm:text-sm text-green-600 dark:text-green-400">Matières</div>
+                      <div className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
+                        5
+                      </div>
+                      <div className="text-xs sm:text-sm text-green-600 dark:text-green-400">
+                        Matières
+                      </div>
                     </div>
                   </div>
 
@@ -202,7 +224,9 @@ const TeacherClassesPage: React.FC = () => {
       {classes && classes.length > 0 && (
         <Card className="mt-6 sm:mt-8 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
           <CardHeader className="px-4 sm:px-6">
-            <CardTitle className="text-base sm:text-lg text-gray-900 dark:text-gray-100">Statistiques générales</CardTitle>
+            <CardTitle className="text-base sm:text-lg text-gray-900 dark:text-gray-100">
+              Statistiques générales
+            </CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -210,13 +234,17 @@ const TeacherClassesPage: React.FC = () => {
                 <div className="text-xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">
                   {teacherStats?.totalClasses || classes?.length || 0}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Classes totales</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  Classes totales
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-xl sm:text-3xl font-bold text-green-600 dark:text-green-400">
                   {teacherStats?.totalStudents || 0}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Étudiants totaux</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  Étudiants totaux
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">
@@ -231,7 +259,9 @@ const TeacherClassesPage: React.FC = () => {
                 <div className="text-xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">
                   {teacherStats?.averageGrade || 0}%
                 </div>
-                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Moyenne générale</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  Moyenne générale
+                </div>
               </div>
             </div>
           </CardContent>

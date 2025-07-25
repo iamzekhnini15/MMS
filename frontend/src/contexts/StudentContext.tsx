@@ -1,4 +1,10 @@
-import { createContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback,
+} from 'react';
 import { Student, StudentContextType } from '../types';
 
 const defaultContext: StudentContextType = {
@@ -16,7 +22,7 @@ const StudentProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-    const getAllStudentsForClass = useCallback(async (idClass: number) => {
+  const getAllStudentsForClass = useCallback(async (idClass: number) => {
     try {
       setLoading(true);
 

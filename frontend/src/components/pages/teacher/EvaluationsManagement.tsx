@@ -46,7 +46,9 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
   const { subjects, fetchAllSubjects } = useContext(SubjectContext);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingEvaluation, setEditingEvaluation] = useState<Evaluation | null>(null);
+  const [editingEvaluation, setEditingEvaluation] = useState<Evaluation | null>(
+    null,
+  );
   const [newEvaluation, setNewEvaluation] = useState<Partial<Evaluation>>({
     title: '',
     description: '',
@@ -198,7 +200,10 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
               <span className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
                 Période actuelle: {currentPeriod.name}
               </span>
-              <Badge variant="secondary" className="bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-300 text-xs sm:text-sm self-start sm:self-auto">
+              <Badge
+                variant="secondary"
+                className="bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-300 text-xs sm:text-sm self-start sm:self-auto"
+              >
                 {new Date(currentPeriod.startDate).toLocaleDateString()} -{' '}
                 {new Date(currentPeriod.endDate).toLocaleDateString()}
               </Badge>
@@ -211,14 +216,21 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
         <Card className="border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900">
           <CardHeader className="px-4 sm:px-6">
             <CardTitle className="text-gray-800 dark:text-white text-base sm:text-lg">
-              {editingEvaluation ? 'Modifier l\'évaluation' : 'Créer une nouvelle évaluation'}
+              {editingEvaluation
+                ? "Modifier l'évaluation"
+                : 'Créer une nouvelle évaluation'}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
-            <form onSubmit={handleCreateEvaluation} className="space-y-3 sm:space-y-4">
+            <form
+              onSubmit={handleCreateEvaluation}
+              className="space-y-3 sm:space-y-4"
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label htmlFor="title" className="text-sm dark:text-gray-300">Titre *</Label>
+                  <Label htmlFor="title" className="text-sm dark:text-gray-300">
+                    Titre *
+                  </Label>
                   <Input
                     id="title"
                     value={newEvaluation.title || ''}
@@ -234,7 +246,12 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                   />
                 </div>
                 <div>
-                  <Label htmlFor="evaluationDate" className="text-sm dark:text-gray-300">Date d'évaluation *</Label>
+                  <Label
+                    htmlFor="evaluationDate"
+                    className="text-sm dark:text-gray-300"
+                  >
+                    Date d'évaluation *
+                  </Label>
                   <Input
                     id="evaluationDate"
                     type="date"
@@ -252,7 +269,12 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="description" className="text-sm dark:text-gray-300">Description</Label>
+                <Label
+                  htmlFor="description"
+                  className="text-sm dark:text-gray-300"
+                >
+                  Description
+                </Label>
                 <Input
                   id="description"
                   value={newEvaluation.description || ''}
@@ -269,7 +291,12 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
-                  <Label htmlFor="classId" className="text-sm dark:text-gray-300">Classe *</Label>
+                  <Label
+                    htmlFor="classId"
+                    className="text-sm dark:text-gray-300"
+                  >
+                    Classe *
+                  </Label>
                   <Select
                     onValueChange={(value) =>
                       setNewEvaluation({
@@ -296,7 +323,12 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                 </div>
 
                 <div>
-                  <Label htmlFor="subjectId" className="text-sm dark:text-gray-300">Matière *</Label>
+                  <Label
+                    htmlFor="subjectId"
+                    className="text-sm dark:text-gray-300"
+                  >
+                    Matière *
+                  </Label>
                   <Select
                     onValueChange={(value) =>
                       setNewEvaluation({
@@ -323,7 +355,12 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                 </div>
 
                 <div>
-                  <Label htmlFor="maxScore" className="text-sm dark:text-gray-300">Note maximale</Label>
+                  <Label
+                    htmlFor="maxScore"
+                    className="text-sm dark:text-gray-300"
+                  >
+                    Note maximale
+                  </Label>
                   <Input
                     id="maxScore"
                     type="number"
@@ -355,7 +392,9 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                   }
                   className="rounded dark:bg-neutral-800 dark:border-neutral-700"
                 />
-                <Label htmlFor="visible" className="text-sm dark:text-gray-300">Visible aux étudiants</Label>
+                <Label htmlFor="visible" className="text-sm dark:text-gray-300">
+                  Visible aux étudiants
+                </Label>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2">
@@ -364,7 +403,9 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                   className="bg-neutral-700 dark:bg-neutral-600 hover:bg-neutral-800 dark:hover:bg-neutral-500 text-white text-sm h-9"
                 >
                   <span className="hidden sm:inline">
-                    {editingEvaluation ? 'Modifier l\'évaluation' : 'Créer l\'évaluation'}
+                    {editingEvaluation
+                      ? "Modifier l'évaluation"
+                      : "Créer l'évaluation"}
                   </span>
                   <span className="sm:hidden">
                     {editingEvaluation ? 'Modifier' : 'Créer'}
@@ -402,23 +443,30 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                         evaluation.isVisible || false ? 'default' : 'secondary'
                       }
                       className={`text-xs self-start sm:self-auto ${
-                        evaluation.isVisible || false 
-                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800' 
+                        evaluation.isVisible || false
+                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800'
                           : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800'
                       }`}
                     >
                       {evaluation.isVisible || false ? 'Visible' : 'Masqué'}
                     </Badge>
                   </div>
-                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">{evaluation.description}</p>
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">
+                    {evaluation.description}
+                  </p>
                   <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                     <span className="flex items-center gap-1">
                       <span>📅</span>
                       <span className="hidden sm:inline">
-                        {new Date(evaluation.evaluationDate).toLocaleDateString()}
+                        {new Date(
+                          evaluation.evaluationDate,
+                        ).toLocaleDateString()}
                       </span>
                       <span className="sm:hidden">
-                        {new Date(evaluation.evaluationDate).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
+                        {new Date(evaluation.evaluationDate).toLocaleDateString(
+                          'fr-FR',
+                          { day: '2-digit', month: '2-digit' },
+                        )}
                       </span>
                     </span>
                     <span>📊 /{evaluation.maxScore}</span>
@@ -440,7 +488,7 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                     </span>
                   </div>
                 </div>
-                
+
                 {/* Nouvelle section des boutons - une seule ligne */}
                 <div className="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-gray-100 dark:border-neutral-800">
                   {/* Bouton principal "Saisir les notes" à gauche */}
@@ -452,19 +500,23 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
                   >
                     📝 Saisir les notes
                   </Button>
-                  
+
                   {/* Groupe de petits boutons à droite */}
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
-                      variant={evaluation.isVisible ? "default" : "outline"}
+                      variant={evaluation.isVisible ? 'default' : 'outline'}
                       className={`text-xs h-8 px-3 ${
-                        evaluation.isVisible 
-                          ? "bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white border-green-600 dark:border-green-700" 
-                          : "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700 hover:bg-red-200 dark:hover:bg-red-800"
+                        evaluation.isVisible
+                          ? 'bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white border-green-600 dark:border-green-700'
+                          : 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700 hover:bg-red-200 dark:hover:bg-red-800'
                       }`}
                       onClick={() => handleToggleVisibility(evaluation)}
-                      title={evaluation.isVisible ? "Masquer aux étudiants" : "Rendre visible aux étudiants"}
+                      title={
+                        evaluation.isVisible
+                          ? 'Masquer aux étudiants'
+                          : 'Rendre visible aux étudiants'
+                      }
                     >
                       {evaluation.isVisible ? '👁️' : '👁️‍🗨️'}
                     </Button>
@@ -498,9 +550,11 @@ const EvaluationsManagement: React.FC<EvaluationsManagementProps> = ({
         {(!evaluations || evaluations.length === 0) && (
           <Card className="text-center py-8 sm:py-12 dark:bg-neutral-900 dark:border-neutral-800">
             <CardContent className="px-4 sm:px-6">
-              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4">Aucune évaluation trouvée</p>
-              <Button 
-                onClick={() => setShowCreateForm(true)} 
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4">
+                Aucune évaluation trouvée
+              </p>
+              <Button
+                onClick={() => setShowCreateForm(true)}
                 variant="outline"
                 className="text-sm dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800"
               >

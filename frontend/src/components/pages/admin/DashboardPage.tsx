@@ -400,7 +400,9 @@ const Dashboard: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            Tableau de bord
+          </h1>
           <p className="text-sm sm:text-base text-muted-foreground dark:text-gray-300 mt-1">
             Bienvenue dans votre espace de gestion scolaire
           </p>
@@ -412,14 +414,22 @@ const Dashboard: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9 border-gray-300 dark:border-neutral-800 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-900">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs sm:text-sm h-8 sm:h-9 border-gray-300 dark:border-neutral-800 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-900"
+            >
               <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">Export</span>
               <span className="sm:hidden">↓</span>
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
+            >
               <Bell className="w-3 h-3 sm:w-4 sm:h-4" />
             </Button>
           </motion.div>
@@ -449,7 +459,9 @@ const Dashboard: React.FC = () => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <stat.icon className={`h-3 w-3 sm:h-4 sm:w-4 ${stat.color}`} />
+                  <stat.icon
+                    className={`h-3 w-3 sm:h-4 sm:w-4 ${stat.color}`}
+                  />
                 </motion.div>
               </CardHeader>
               <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
@@ -484,22 +496,37 @@ const Dashboard: React.FC = () => {
       >
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto bg-muted dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
-            <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-4 py-2">
+            <TabsTrigger
+              value="overview"
+              className="text-xs sm:text-sm px-2 sm:px-4 py-2"
+            >
               <span className="hidden sm:inline">Vue d'ensemble</span>
               <span className="sm:hidden">Vue</span>
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="text-xs sm:text-sm px-2 sm:px-4 py-2">
+            <TabsTrigger
+              value="analytics"
+              className="text-xs sm:text-sm px-2 sm:px-4 py-2"
+            >
               <span className="hidden sm:inline">Analyses</span>
               <span className="sm:hidden">📊</span>
             </TabsTrigger>
-            <TabsTrigger value="performance" className="text-xs sm:text-sm px-2 sm:px-4 py-2 hidden sm:flex">
+            <TabsTrigger
+              value="performance"
+              className="text-xs sm:text-sm px-2 sm:px-4 py-2 hidden sm:flex"
+            >
               Performance
             </TabsTrigger>
-            <TabsTrigger value="alerts" className="text-xs sm:text-sm px-2 sm:px-4 py-2">
+            <TabsTrigger
+              value="alerts"
+              className="text-xs sm:text-sm px-2 sm:px-4 py-2"
+            >
               <span className="hidden sm:inline">Alertes</span>
               <span className="sm:hidden">⚠️</span>
             </TabsTrigger>
-            <TabsTrigger value="settings" className="text-xs sm:text-sm px-2 sm:px-4 py-2 hidden lg:flex">
+            <TabsTrigger
+              value="settings"
+              className="text-xs sm:text-sm px-2 sm:px-4 py-2 hidden lg:flex"
+            >
               Paramètres
             </TabsTrigger>
           </TabsList>
@@ -531,10 +558,14 @@ const Dashboard: React.FC = () => {
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <alert.icon className={`h-3 w-3 sm:h-4 sm:w-4 ${alert.color}`} />
+                            <alert.icon
+                              className={`h-3 w-3 sm:h-4 sm:w-4 ${alert.color}`}
+                            />
                           </motion.div>
                           <div className="min-w-0 flex-1">
-                            <p className="font-medium text-xs sm:text-sm truncate">{alert.title}</p>
+                            <p className="font-medium text-xs sm:text-sm truncate">
+                              {alert.title}
+                            </p>
                             <p className="text-xs text-muted-foreground line-clamp-2">
                               {alert.message}
                             </p>
@@ -562,7 +593,11 @@ const Dashboard: React.FC = () => {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                        >
                           <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </motion.div>
@@ -622,7 +657,11 @@ const Dashboard: React.FC = () => {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                        >
                           <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </motion.div>
@@ -662,7 +701,12 @@ const Dashboard: React.FC = () => {
                                 <p className="text-xs sm:text-sm font-medium truncate">
                                   {event.title}
                                 </p>
-                                <Badge variant="secondary" className="self-start text-xs">{event.type}</Badge>
+                                <Badge
+                                  variant="secondary"
+                                  className="self-start text-xs"
+                                >
+                                  {event.type}
+                                </Badge>
                               </div>
                               <div className="flex items-center space-x-1 sm:space-x-2 text-xs text-muted-foreground">
                                 <Clock className="w-3 h-3" />

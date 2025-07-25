@@ -98,7 +98,9 @@ const ManageClassroom: React.FC = () => {
                 <TableRow>
                   <TableHead className="text-xs sm:text-sm">Nom</TableHead>
                   <TableHead className="text-xs sm:text-sm">Niveau</TableHead>
-                  <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Capacité</TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden sm:table-cell">
+                    Capacité
+                  </TableHead>
                   <TableHead className="text-xs sm:text-sm">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -116,8 +118,12 @@ const ManageClassroom: React.FC = () => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-xs sm:text-sm">{classrooms.level}</TableCell>
-                    <TableCell className="text-xs sm:text-sm hidden sm:table-cell">{classrooms.capacity}</TableCell>
+                    <TableCell className="text-xs sm:text-sm">
+                      {classrooms.level}
+                    </TableCell>
+                    <TableCell className="text-xs sm:text-sm hidden sm:table-cell">
+                      {classrooms.capacity}
+                    </TableCell>
                     <TableCell>
                       <Button
                         variant="ghost"
@@ -139,7 +145,9 @@ const ManageClassroom: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-8 sm:py-12">
-            <p className="text-sm sm:text-base text-gray-500">Aucune salle disponible.</p>
+            <p className="text-sm sm:text-base text-gray-500">
+              Aucune salle disponible.
+            </p>
           </div>
         )}
       </div>
@@ -148,11 +156,15 @@ const ManageClassroom: React.FC = () => {
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent className="max-w-3xl mx-2 sm:mx-auto max-h-[90vh] overflow-y-auto">
           <DialogHeader className="pb-4">
-            <DialogTitle className="text-lg sm:text-xl">Ajouter une salle</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">
+              Ajouter une salle
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {error && (
-              <div className="text-red-600 bg-red-100 dark:bg-neutral-900 p-2 sm:p-3 rounded text-sm">{error}</div>
+              <div className="text-red-600 bg-red-100 dark:bg-neutral-900 p-2 sm:p-3 rounded text-sm">
+                {error}
+              </div>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -178,7 +190,9 @@ const ManageClassroom: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block mb-1 font-medium text-sm">Capacité</label>
+                <label className="block mb-1 font-medium text-sm">
+                  Capacité
+                </label>
                 <Input
                   name="capacity"
                   value={form.capacity}

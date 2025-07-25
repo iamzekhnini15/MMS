@@ -23,7 +23,8 @@ const StudentsListModal: React.FC<StudentsListModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { students, loading, error, getAllStudentsForClass } = useContext(StudentContext);
+  const { students, loading, error, getAllStudentsForClass } =
+    useContext(StudentContext);
   const [localStudents, setLocalStudents] = useState<Student[]>([]);
 
   useEffect(() => {
@@ -49,7 +50,9 @@ const StudentsListModal: React.FC<StudentsListModalProps> = ({
               Étudiants de la classe {classData.name}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mt-1">
-              {localStudents.length} étudiant{localStudents.length !== 1 ? 's' : ''} inscrit{localStudents.length !== 1 ? 's' : ''}
+              {localStudents.length} étudiant
+              {localStudents.length !== 1 ? 's' : ''} inscrit
+              {localStudents.length !== 1 ? 's' : ''}
             </p>
           </div>
           <Button
@@ -67,14 +70,18 @@ const StudentsListModal: React.FC<StudentsListModalProps> = ({
           {loading && (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
-              <span className="ml-3 text-gray-600 dark:text-gray-300">Chargement des étudiants...</span>
+              <span className="ml-3 text-gray-600 dark:text-gray-300">
+                Chargement des étudiants...
+              </span>
             </div>
           )}
 
           {error && (
             <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
               <CardContent className="pt-6">
-                <p className="text-red-600 dark:text-red-400">Erreur: {error}</p>
+                <p className="text-red-600 dark:text-red-400">
+                  Erreur: {error}
+                </p>
               </CardContent>
             </Card>
           )}
@@ -83,7 +90,9 @@ const StudentsListModal: React.FC<StudentsListModalProps> = ({
             <Card className="text-center py-12 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
               <CardContent>
                 <AcademicCapIcon className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-                <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">Aucun étudiant trouvé</p>
+                <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
+                  Aucun étudiant trouvé
+                </p>
                 <p className="text-gray-400 dark:text-gray-500">
                   Cette classe ne contient pas encore d'étudiants inscrits.
                 </p>
@@ -100,13 +109,15 @@ const StudentsListModal: React.FC<StudentsListModalProps> = ({
                 <div className="col-span-2">Date de naissance</div>
                 <div className="col-span-2">ID Étudiant</div>
               </div>
-              
+
               {/* Liste des étudiants */}
               {localStudents.map((student: Student, index) => (
-                <div 
-                  key={student.idStudent} 
+                <div
+                  key={student.idStudent}
                   className={`grid grid-cols-12 gap-4 px-4 py-3 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors border-b border-gray-100 dark:border-neutral-800 ${
-                    index % 2 === 0 ? 'bg-white dark:bg-neutral-900' : 'bg-gray-25 dark:bg-neutral-900/50'
+                    index % 2 === 0
+                      ? 'bg-white dark:bg-neutral-900'
+                      : 'bg-gray-25 dark:bg-neutral-900/50'
                   }`}
                 >
                   <div className="col-span-4 flex items-center gap-3">
@@ -119,7 +130,7 @@ const StudentsListModal: React.FC<StudentsListModalProps> = ({
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="col-span-4 flex items-center">
                     <div className="flex items-center gap-2 min-w-0">
                       <EnvelopeIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
@@ -128,21 +139,25 @@ const StudentsListModal: React.FC<StudentsListModalProps> = ({
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="col-span-2 flex items-center">
                     <div className="flex items-center gap-2">
                       <CalendarDaysIcon className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                       <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {student.dateOfBirth 
-                          ? new Date(student.dateOfBirth).toLocaleDateString('fr-FR')
-                          : 'Non renseigné'
-                        }
+                        {student.dateOfBirth
+                          ? new Date(student.dateOfBirth).toLocaleDateString(
+                              'fr-FR',
+                            )
+                          : 'Non renseigné'}
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="col-span-2 flex items-center">
-                    <Badge variant="secondary" className="text-xs bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-neutral-700">
+                    <Badge
+                      variant="secondary"
+                      className="text-xs bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-neutral-700"
+                    >
                       {student.idStudent}
                     </Badge>
                   </div>
@@ -155,7 +170,8 @@ const StudentsListModal: React.FC<StudentsListModalProps> = ({
         <div className="border-t border-gray-200 dark:border-neutral-700 p-6 bg-gray-50 dark:bg-neutral-800">
           <div className="flex items-center justify-center">
             <div className="text-sm text-gray-600 dark:text-gray-300">
-              <strong>{localStudents.length}</strong> étudiant{localStudents.length !== 1 ? 's' : ''} au total
+              <strong>{localStudents.length}</strong> étudiant
+              {localStudents.length !== 1 ? 's' : ''} au total
             </div>
           </div>
         </div>

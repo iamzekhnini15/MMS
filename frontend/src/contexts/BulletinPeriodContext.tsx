@@ -64,11 +64,12 @@ export const BulletinPeriodProvider = ({
       const data = await response.json();
       console.log('fetchActivePeriods data:', data);
       setPeriods(data);
-      
+
       // Automatically set current period to the first active period if not already set
       if (data && data.length > 0 && !currentPeriod) {
         // Try to find the period marked as current, or use the first one
-        const currentPeriodFromAPI = data.find((period: BulletinPeriod) => period.isActive) || data[0];
+        const currentPeriodFromAPI =
+          data.find((period: BulletinPeriod) => period.isActive) || data[0];
         setCurrentPeriod(currentPeriodFromAPI);
         console.log('Auto-selected current period:', currentPeriodFromAPI);
       }
@@ -98,73 +99,82 @@ export const BulletinPeriodProvider = ({
     }
   }, []);
 
-  const createPeriod = useCallback(async (period: BulletinPeriod) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('/api/bulletin-periods/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(period),
-      });
+  const createPeriod = useCallback(
+    async (period: BulletinPeriod) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('/api/bulletin-periods/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(period),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to create period');
+        if (!response.ok) {
+          throw new Error('Failed to create period');
+        }
+
+        await fetchActivePeriods();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
       }
+    },
+    [fetchActivePeriods],
+  );
 
-      await fetchActivePeriods();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchActivePeriods]);
+  const updatePeriod = useCallback(
+    async (id: number, period: BulletinPeriod) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/bulletin-periods/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(period),
+        });
 
-  const updatePeriod = useCallback(async (id: number, period: BulletinPeriod) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/bulletin-periods/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(period),
-      });
+        if (!response.ok) {
+          throw new Error('Failed to update period');
+        }
 
-      if (!response.ok) {
-        throw new Error('Failed to update period');
+        await fetchActivePeriods();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
       }
+    },
+    [fetchActivePeriods],
+  );
 
-      await fetchActivePeriods();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchActivePeriods]);
+  const deletePeriod = useCallback(
+    async (id: number) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/bulletin-periods/${id}`, {
+          method: 'DELETE',
+        });
 
-  const deletePeriod = useCallback(async (id: number) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/bulletin-periods/${id}`, {
-        method: 'DELETE',
-      });
+        if (!response.ok) {
+          throw new Error('Failed to delete period');
+        }
 
-      if (!response.ok) {
-        throw new Error('Failed to delete period');
+        await fetchActivePeriods();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
       }
-
-      await fetchActivePeriods();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchActivePeriods]);
+    },
+    [fetchActivePeriods],
+  );
 
   const value: BulletinPeriodContextType = {
     periods,

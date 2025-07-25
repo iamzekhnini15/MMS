@@ -28,7 +28,8 @@ export function LoginForm() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { loginUser, authenticatedUser }: UserContextType = useContext(UserContext);
+  const { loginUser, authenticatedUser }: UserContextType =
+    useContext(UserContext);
   const navigate = useNavigate();
   const { redirectBasedOnRole } = useRoleBasedRedirect();
 

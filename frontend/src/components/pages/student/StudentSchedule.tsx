@@ -9,7 +9,9 @@ const StudentSchedule: React.FC = () => {
       {/* Header responsive */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Mon Emploi du Temps</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Mon Emploi du Temps
+          </h1>
           <p className="text-muted-foreground dark:text-gray-300 mt-1 sm:mt-2 text-sm sm:text-base">
             Consultez votre planning de cours
           </p>
@@ -27,9 +29,13 @@ const StudentSchedule: React.FC = () => {
             Emploi du temps bientôt disponible
           </h3>
           <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4 max-w-md mx-auto">
-            Cette fonctionnalité sera implémentée dans une prochaine phase du projet.
+            Cette fonctionnalité sera implémentée dans une prochaine phase du
+            projet.
           </p>
-          <Button disabled className="text-sm sm:text-base h-9 sm:h-10 px-4 sm:px-6">
+          <Button
+            disabled
+            className="text-sm sm:text-base h-9 sm:h-10 px-4 sm:px-6"
+          >
             Voir l'emploi du temps
           </Button>
         </CardContent>

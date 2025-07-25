@@ -94,7 +94,7 @@ const Courses: React.FC = () => {
   };
 
   return (
-        <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50 dark:bg-neutral-900">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8 bg-gray-50 dark:bg-neutral-900">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
@@ -121,12 +121,24 @@ const Courses: React.FC = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="border-gray-200 dark:border-neutral-800">
-                    <TableHead className="text-gray-900 dark:text-white">Nom du cours</TableHead>
-                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">Salle de cours</TableHead>
-                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">Date de début</TableHead>
-                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">Date de fin</TableHead>
-                    <TableHead className="text-gray-900 dark:text-white">Enseignant</TableHead>
-                    <TableHead className="text-gray-900 dark:text-white">Actions</TableHead>
+                    <TableHead className="text-gray-900 dark:text-white">
+                      Nom du cours
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">
+                      Salle de cours
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">
+                      Date de début
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell text-gray-900 dark:text-white">
+                      Date de fin
+                    </TableHead>
+                    <TableHead className="text-gray-900 dark:text-white">
+                      Enseignant
+                    </TableHead>
+                    <TableHead className="text-gray-900 dark:text-white">
+                      Actions
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
 
@@ -135,16 +147,27 @@ const Courses: React.FC = () => {
                     <TableRow
                       key={course.idCourse}
                       className="cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-900 border-gray-200 dark:border-neutral-800"
-                      onClick={() => navigate(`/manage-courses/${course.idCourse}`)}
+                      onClick={() =>
+                        navigate(`/manage-courses/${course.idCourse}`)
+                      }
                     >
-                      <TableCell className="font-medium text-gray-900 dark:text-white">{course.name}</TableCell>
-                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">{course.classroom.name}</TableCell>
-                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">{course.startDateTime}</TableCell>
-                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">{course.endDateTime}</TableCell>
+                      <TableCell className="font-medium text-gray-900 dark:text-white">
+                        {course.name}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">
+                        {course.classroom.name}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">
+                        {course.startDateTime}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell text-gray-600 dark:text-gray-300">
+                        {course.endDateTime}
+                      </TableCell>
                       <TableCell className="text-gray-600 dark:text-gray-300">
                         <div className="lg:hidden">
                           <div className="font-medium text-gray-900 dark:text-white">
-                            {course.teacher.user.firstname} {course.teacher.user.lastname}
+                            {course.teacher.user.firstname}{' '}
+                            {course.teacher.user.lastname}
                           </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
                             Salle: {course.classroom.name}
@@ -154,7 +177,8 @@ const Courses: React.FC = () => {
                           </div>
                         </div>
                         <div className="hidden lg:block">
-                          {course.teacher.user.firstname} {course.teacher.user.lastname}
+                          {course.teacher.user.firstname}{' '}
+                          {course.teacher.user.lastname}
                         </div>
                       </TableCell>
                       <TableCell className="space-x-2">
@@ -200,11 +224,14 @@ const Courses: React.FC = () => {
                       ✕
                     </Button>
                   </div>
-                  
+
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center text-gray-600 dark:text-gray-300">
                       <span className="font-medium w-20">Enseignant:</span>
-                      <span>{course.teacher.user.firstname} {course.teacher.user.lastname}</span>
+                      <span>
+                        {course.teacher.user.firstname}{' '}
+                        {course.teacher.user.lastname}
+                      </span>
                     </div>
                     <div className="flex items-center text-gray-600 dark:text-gray-300">
                       <span className="font-medium w-20">Salle:</span>
@@ -212,7 +239,9 @@ const Courses: React.FC = () => {
                     </div>
                     <div className="flex items-center text-gray-600 dark:text-gray-300">
                       <span className="font-medium w-20">Période:</span>
-                      <span>{course.startDateTime} - {course.endDateTime}</span>
+                      <span>
+                        {course.startDateTime} - {course.endDateTime}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -220,7 +249,9 @@ const Courses: React.FC = () => {
             </div>
           </>
         ) : (
-          <p className="text-center text-gray-500 dark:text-gray-400">Aucun cours disponible.</p>
+          <p className="text-center text-gray-500 dark:text-gray-400">
+            Aucun cours disponible.
+          </p>
         )}
       </div>
 

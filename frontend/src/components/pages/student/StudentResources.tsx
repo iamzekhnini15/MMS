@@ -9,7 +9,9 @@ const StudentResources: React.FC = () => {
       {/* Header responsive */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Mes Ressources</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Mes Ressources
+          </h1>
           <p className="text-muted-foreground dark:text-gray-300 mt-1 sm:mt-2 text-sm sm:text-base">
             Accédez à vos cours et documents pédagogiques
           </p>
@@ -27,9 +29,13 @@ const StudentResources: React.FC = () => {
             Ressources bientôt disponibles
           </h3>
           <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4 max-w-md mx-auto">
-            Vos enseignants pourront partager des documents, cours et exercices ici.
+            Vos enseignants pourront partager des documents, cours et exercices
+            ici.
           </p>
-          <Button disabled className="text-sm sm:text-base h-9 sm:h-10 px-4 sm:px-6">
+          <Button
+            disabled
+            className="text-sm sm:text-base h-9 sm:h-10 px-4 sm:px-6"
+          >
             Parcourir les ressources
           </Button>
         </CardContent>

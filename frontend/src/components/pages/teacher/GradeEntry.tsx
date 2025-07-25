@@ -255,7 +255,9 @@ const GradeEntry: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-sm">
             <div>
               <span className="font-medium text-blue-900">Date:</span>
-              <p className="text-xs sm:text-sm">{new Date(evaluation.evaluationDate).toLocaleDateString()}</p>
+              <p className="text-xs sm:text-sm">
+                {new Date(evaluation.evaluationDate).toLocaleDateString()}
+              </p>
             </div>
             <div>
               <span className="font-medium text-blue-900">Note max:</span>

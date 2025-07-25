@@ -15,7 +15,12 @@ import {
 import { ClassesContext } from '../../../contexts/ClassesContext';
 import { StudentContext } from '../../../contexts/StudentContext';
 import BulletinPeriodContext from '../../../contexts/BulletinPeriodContext';
-import type { Classes, Student, BulletinPeriod, StudentBulletin } from '../../../types';
+import type {
+  Classes,
+  Student,
+  BulletinPeriod,
+  StudentBulletin,
+} from '../../../types';
 
 // Interface étendue pour notre composant
 interface EnhancedStudentBulletin extends StudentBulletin {
@@ -67,8 +72,10 @@ const BulletinViewModal: React.FC<BulletinViewModalProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Informations générales */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Informations générales</h3>
-              
+              <h3 className="text-lg font-semibold text-gray-900">
+                Informations générales
+              </h3>
+
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="font-medium">Étudiant</span>
@@ -86,7 +93,8 @@ const BulletinViewModal: React.FC<BulletinViewModalProps> = ({
                 </div>
                 <p className="text-gray-900">{period.name}</p>
                 <p className="text-sm text-gray-600">
-                  Du {new Date(period.startDate).toLocaleDateString()} au {new Date(period.endDate).toLocaleDateString()}
+                  Du {new Date(period.startDate).toLocaleDateString()} au{' '}
+                  {new Date(period.endDate).toLocaleDateString()}
                 </p>
               </div>
 
@@ -105,7 +113,7 @@ const BulletinViewModal: React.FC<BulletinViewModalProps> = ({
             {/* Statistiques */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900">Résultats</h3>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-blue-50 p-4 rounded-lg text-center">
                   <div className="text-2xl font-bold text-blue-600">
@@ -113,7 +121,7 @@ const BulletinViewModal: React.FC<BulletinViewModalProps> = ({
                   </div>
                   <div className="text-sm text-blue-600">Moyenne générale</div>
                 </div>
-                
+
                 <div className="bg-green-50 p-4 rounded-lg text-center">
                   <div className="text-2xl font-bold text-green-600">
                     {bulletin.classRank}
@@ -127,19 +135,25 @@ const BulletinViewModal: React.FC<BulletinViewModalProps> = ({
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Moyenne de classe</span>
-                  <span className="text-lg font-semibold">{bulletin.classAverage.toFixed(2)}</span>
+                  <span className="text-lg font-semibold">
+                    {bulletin.classAverage.toFixed(2)}
+                  </span>
                 </div>
               </div>
 
               {/* Notes par matière */}
               {bulletin.subjectGrades && bulletin.subjectGrades.length > 0 && (
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-3">Notes par matière</h4>
+                  <h4 className="font-medium text-gray-900 mb-3">
+                    Notes par matière
+                  </h4>
                   <div className="space-y-2">
                     {bulletin.subjectGrades.map((subject, index) => (
                       <div key={index} className="bg-gray-50 p-3 rounded-lg">
                         <div className="flex justify-between items-center">
-                          <span className="font-medium">{subject.subjectName}</span>
+                          <span className="font-medium">
+                            {subject.subjectName}
+                          </span>
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">
                               Coef. {subject.coefficient}
@@ -160,7 +174,9 @@ const BulletinViewModal: React.FC<BulletinViewModalProps> = ({
           {/* Commentaires généraux */}
           {bulletin.generalComment && (
             <div className="mt-6 pt-6 border-t">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Commentaires généraux</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                Commentaires généraux
+              </h3>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-gray-700">{bulletin.generalComment}</p>
               </div>
@@ -183,18 +199,26 @@ const BulletinViewModal: React.FC<BulletinViewModalProps> = ({
 };
 
 const BulletinsManagement: React.FC = () => {
-  const { classes, loading: classesLoading, fetchClasses } = useContext(ClassesContext);
+  const {
+    classes,
+    loading: classesLoading,
+    fetchClasses,
+  } = useContext(ClassesContext);
   const { students, getAllStudentsForClass } = useContext(StudentContext);
   const { periods, fetchActivePeriods } = useContext(BulletinPeriodContext);
 
   const [selectedClass, setSelectedClass] = useState<Classes | null>(null);
-  const [selectedPeriod, setSelectedPeriod] = useState<BulletinPeriod | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<BulletinPeriod | null>(
+    null,
+  );
   const [bulletins, setBulletins] = useState<StudentBulletin[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedBulletin, setSelectedBulletin] = useState<StudentBulletin | null>(null);
+  const [selectedBulletin, setSelectedBulletin] =
+    useState<StudentBulletin | null>(null);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [showBulletinModal, setShowBulletinModal] = useState(false);
-  const [editingBulletin, setEditingBulletin] = useState<StudentBulletin | null>(null);
+  const [editingBulletin, setEditingBulletin] =
+    useState<StudentBulletin | null>(null);
 
   useEffect(() => {
     fetchClasses();
@@ -215,9 +239,9 @@ const BulletinsManagement: React.FC = () => {
     try {
       // Récupérer les bulletins existants
       const response = await fetch(
-        `/api/bulletins/class/${selectedClass.idClass}/period/${selectedPeriod.idPeriod}`
+        `/api/bulletins/class/${selectedClass.idClass}/period/${selectedPeriod.idPeriod}`,
       );
-      
+
       if (response.ok) {
         const existingBulletins = await response.json();
         setBulletins(existingBulletins);
@@ -235,7 +259,7 @@ const BulletinsManagement: React.FC = () => {
 
   const handleViewBulletin = (bulletin: StudentBulletin) => {
     // Trouver l'étudiant correspondant
-    const student = students?.find(s => s.idStudent === bulletin.studentId);
+    const student = students?.find((s) => s.idStudent === bulletin.studentId);
     if (student) {
       setSelectedBulletin(bulletin);
       setSelectedStudent(student);
@@ -287,7 +311,9 @@ const BulletinsManagement: React.FC = () => {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Gestion des Bulletins</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          Gestion des Bulletins
+        </h1>
         <p className="text-gray-600">
           Consultez et modifiez les bulletins de vos étudiants
         </p>
@@ -307,7 +333,9 @@ const BulletinsManagement: React.FC = () => {
                 value={selectedClass?.idClass || ''}
                 onChange={(e) => {
                   const classId = parseInt(e.target.value);
-                  const classe = classes?.find((c: Classes) => c.idClass === classId);
+                  const classe = classes?.find(
+                    (c: Classes) => c.idClass === classId,
+                  );
                   setSelectedClass(classe || null);
                   setBulletins([]);
                 }}
@@ -328,7 +356,9 @@ const BulletinsManagement: React.FC = () => {
                 value={selectedPeriod?.idPeriod || ''}
                 onChange={(e) => {
                   const periodId = parseInt(e.target.value);
-                  const period = periods?.find((p: BulletinPeriod) => p.idPeriod === periodId);
+                  const period = periods?.find(
+                    (p: BulletinPeriod) => p.idPeriod === periodId,
+                  );
                   setSelectedPeriod(period || null);
                   setBulletins([]);
                 }}
@@ -343,7 +373,7 @@ const BulletinsManagement: React.FC = () => {
             </div>
 
             <div className="flex items-end">
-              <Button 
+              <Button
                 onClick={loadBulletins}
                 disabled={!selectedClass || !selectedPeriod || loading}
                 className="w-full"
@@ -361,11 +391,16 @@ const BulletinsManagement: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-900">
             Bulletins - {selectedClass?.name} - {selectedPeriod?.name}
           </h2>
-          
+
           {bulletins.map((bulletin) => {
-            const student = students?.find(s => s.idStudent === bulletin.studentId);
+            const student = students?.find(
+              (s) => s.idStudent === bulletin.studentId,
+            );
             return (
-              <Card key={bulletin.idBulletin || bulletin.studentId} className="hover:shadow-md transition-shadow">
+              <Card
+                key={bulletin.idBulletin || bulletin.studentId}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardContent className="pt-6">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-3">
@@ -374,13 +409,20 @@ const BulletinsManagement: React.FC = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold text-gray-900">
-                          {bulletin.studentName || (student ? `${student.user.firstname} ${student.user.lastname}` : 'Étudiant inconnu')}
+                          {bulletin.studentName ||
+                            (student
+                              ? `${student.user.firstname} ${student.user.lastname}`
+                              : 'Étudiant inconnu')}
                         </h3>
                         <p className="text-sm text-gray-600">
                           {student?.user.email || 'Email non disponible'}
                         </p>
                         <div className="flex gap-2 mt-1">
-                          <Badge variant={bulletin.isVisible ? 'default' : 'secondary'}>
+                          <Badge
+                            variant={
+                              bulletin.isVisible ? 'default' : 'secondary'
+                            }
+                          >
                             {bulletin.isVisible ? 'Publié' : 'Brouillon'}
                           </Badge>
                           <Badge variant="outline">
@@ -392,7 +434,7 @@ const BulletinsManagement: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex gap-2">
                       <Button
                         size="sm"
@@ -406,7 +448,9 @@ const BulletinsManagement: React.FC = () => {
                       <Button
                         size="sm"
                         onClick={() => {
-                          const student = students?.find(s => s.idStudent === bulletin.studentId);
+                          const student = students?.find(
+                            (s) => s.idStudent === bulletin.studentId,
+                          );
                           if (student) {
                             setSelectedStudent(student);
                             setEditingBulletin(bulletin);
@@ -426,19 +470,23 @@ const BulletinsManagement: React.FC = () => {
         </div>
       )}
 
-      {selectedClass && selectedPeriod && bulletins.length === 0 && !loading && (
-        <Card className="text-center py-12">
-          <CardContent>
-            <DocumentTextIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Aucun bulletin trouvé
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Aucun bulletin n'a encore été généré pour cette classe et cette période.
-            </p>
-          </CardContent>
-        </Card>
-      )}
+      {selectedClass &&
+        selectedPeriod &&
+        bulletins.length === 0 &&
+        !loading && (
+          <Card className="text-center py-12">
+            <CardContent>
+              <DocumentTextIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Aucun bulletin trouvé
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Aucun bulletin n'a encore été généré pour cette classe et cette
+                période.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
       {/* Modal de visualisation du bulletin */}
       <BulletinViewModal
@@ -461,9 +509,14 @@ const BulletinsManagement: React.FC = () => {
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b">
               <h2 className="text-xl font-bold text-gray-900">
-                Modifier le bulletin de {selectedStudent.user.firstname} {selectedStudent.user.lastname}
+                Modifier le bulletin de {selectedStudent.user.firstname}{' '}
+                {selectedStudent.user.lastname}
               </h2>
-              <Button variant="outline" size="sm" onClick={() => setEditingBulletin(null)}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditingBulletin(null)}
+              >
                 <XMarkIcon className="w-4 h-4" />
               </Button>
             </div>
@@ -474,9 +527,11 @@ const BulletinsManagement: React.FC = () => {
                     <div className="text-2xl font-bold text-blue-600">
                       {editingBulletin.generalAverage.toFixed(2)}
                     </div>
-                    <div className="text-sm text-blue-600">Moyenne générale</div>
+                    <div className="text-sm text-blue-600">
+                      Moyenne générale
+                    </div>
                   </div>
-                  
+
                   <div className="bg-green-50 p-4 rounded-lg text-center">
                     <div className="text-2xl font-bold text-green-600">
                       {editingBulletin.classRank}
@@ -522,12 +577,13 @@ const BulletinsManagement: React.FC = () => {
               </div>
             </div>
             <div className="border-t p-6 bg-gray-50 flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setEditingBulletin(null)}>
+              <Button
+                variant="outline"
+                onClick={() => setEditingBulletin(null)}
+              >
                 Annuler
               </Button>
-              <Button onClick={handleSaveBulletin}>
-                Sauvegarder
-              </Button>
+              <Button onClick={handleSaveBulletin}>Sauvegarder</Button>
             </div>
           </div>
         </div>

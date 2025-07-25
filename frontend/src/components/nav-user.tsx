@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '@/contexts/UserContext';
 import { UserContextType } from '@/types';
+import DarkModeToggle from '@/components/ui/dark-mode-toggle';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -52,29 +53,40 @@ export function NavUser({
     <SidebarMenu>
       <SidebarMenuItem>
         <div className="flex flex-col gap-1">
-          {/* Avatar/User info */}
-          <SidebarMenuButton
-            size="lg"
-            className="justify-center hover:bg-gray-100 dark:hover:bg-neutral-800"
-            title={`${displayName} - ${displayEmail}`}
-          >
-            <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={displayAvatar} alt={displayName} />
-              <AvatarFallback className="rounded-lg bg-gray-200 dark:bg-neutral-700 text-gray-800 dark:text-white">
-                {displayName?.charAt(0)?.toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            {!isCollapsed && (
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium text-gray-900 dark:text-white">{displayName}</span>
-                <span className="truncate text-xs text-gray-600 dark:text-gray-300">{displayEmail}</span>
-              </div>
-            )}
-          </SidebarMenuButton>
-          
+          {/* Avatar/User info avec Dark Mode Toggle */}
+          <div className="flex items-center gap-2">
+            <SidebarMenuButton
+              size="lg"
+              className="flex-1 justify-center hover:bg-gray-100 dark:hover:bg-neutral-800"
+              title={`${displayName} - ${displayEmail}`}
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={displayAvatar} alt={displayName} />
+                <AvatarFallback className="rounded-lg bg-gray-200 dark:bg-neutral-700 text-gray-800 dark:text-white">
+                  {displayName?.charAt(0)?.toUpperCase() || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              {!isCollapsed && (
+                <>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium text-gray-900 dark:text-white">
+                      {displayName}
+                    </span>
+                    <span className="truncate text-xs text-gray-600 dark:text-gray-300">
+                      {displayEmail}
+                    </span>
+                  </div>
+                  <div className="flex-shrink-0">
+                    <DarkModeToggle size="sm" className="h-8 w-8 p-1.5" />
+                  </div>
+                </>
+              )}
+            </SidebarMenuButton>
+          </div>
+
           {/* Bouton de déconnexion - toujours visible */}
           <SidebarMenuButton
-            size={isCollapsed ? "lg" : "sm"}
+            size={isCollapsed ? 'lg' : 'sm'}
             onClick={handleLogout}
             className="justify-center hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800"
             title="Déconnexion"

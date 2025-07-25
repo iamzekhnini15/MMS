@@ -8,9 +8,9 @@ interface DarkModeToggleProps {
   size?: 'sm' | 'default' | 'lg';
 }
 
-const DarkModeToggle: React.FC<DarkModeToggleProps> = ({ 
-  className = '', 
-  size = 'default' 
+const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
+  className = '',
+  size = 'default',
 }) => {
   const { isDarkMode, toggleDarkMode } = useTheme();
 
@@ -20,7 +20,9 @@ const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
       size={size}
       onClick={toggleDarkMode}
       className={`p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-neutral-900 ${className}`}
-      aria-label={isDarkMode ? 'Activer le mode clair' : 'Activer le mode sombre'}
+      aria-label={
+        isDarkMode ? 'Activer le mode clair' : 'Activer le mode sombre'
+      }
     >
       {isDarkMode ? (
         <Sun className="h-4 w-4 text-yellow-500" />

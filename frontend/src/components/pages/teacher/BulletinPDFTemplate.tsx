@@ -5,12 +5,14 @@ interface BulletinPDFTemplateProps {
   bulletinData: DetailedStudentBulletin;
 }
 
-const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({ bulletinData }) => {
+const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({
+  bulletinData,
+}) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       day: '2-digit',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -22,8 +24,9 @@ const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({ bulletinData 
 
   return (
     <div id="bulletin-pdf-content" className="pdf-container">
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           .pdf-container {
             font-family: 'Helvetica Neue', sans-serif;
             max-width: 210mm;
@@ -141,11 +144,14 @@ const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({ bulletinData 
             font-size: 10px;
             color: #888;
           }
-        `
-      }} />
+        `,
+        }}
+      />
 
       <div className="title">Bulletin Scolaire</div>
-      <div className="subtitle">{bulletinData.periodName} • {bulletinData.academicYear}</div>
+      <div className="subtitle">
+        {bulletinData.periodName} • {bulletinData.academicYear}
+      </div>
 
       <div className="section info-grid">
         <div>
@@ -158,7 +164,9 @@ const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({ bulletinData 
         </div>
         <div>
           <div className="info-label">Date</div>
-          <div className="info-value">{formatDate(bulletinData.generatedAt)}</div>
+          <div className="info-value">
+            {formatDate(bulletinData.generatedAt)}
+          </div>
         </div>
         <div>
           <div className="info-label">Effectif</div>
@@ -168,7 +176,12 @@ const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({ bulletinData 
 
       <div className="section stat-block">
         <div className="stat">
-          <div className="stat-value" style={{ color: getGradeColor(bulletinData.generalAverage) }}>{bulletinData.generalAverage.toFixed(1)}%</div>
+          <div
+            className="stat-value"
+            style={{ color: getGradeColor(bulletinData.generalAverage) }}
+          >
+            {bulletinData.generalAverage.toFixed(1)}%
+          </div>
           <div className="stat-label">Moyenne Générale</div>
         </div>
         <div className="stat">
@@ -176,7 +189,9 @@ const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({ bulletinData 
           <div className="stat-label">Rang</div>
         </div>
         <div className="stat">
-          <div className="stat-value">{bulletinData.classAverage.toFixed(1)}%</div>
+          <div className="stat-value">
+            {bulletinData.classAverage.toFixed(1)}%
+          </div>
           <div className="stat-label">Moyenne Classe</div>
         </div>
       </div>
@@ -188,20 +203,39 @@ const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({ bulletinData 
             <div className="subject-details">
               <span>Coefficient: {subject.coefficient}</span>
               <span>Évaluations: {subject.evaluationGrades.length}</span>
-              <span className="grade" style={{ color: getGradeColor(subject.average) }}>{subject.average.toFixed(1)}%</span>
+              <span
+                className="grade"
+                style={{ color: getGradeColor(subject.average) }}
+              >
+                {subject.average.toFixed(1)}%
+              </span>
             </div>
 
             {subject.evaluationGrades.map((evaluation, i) => (
               <div key={i} className="evaluation">
-                <div className="evaluation-title">{evaluation.evaluationTitle}</div>
-                <div style={{ fontSize: '10px', color: '#666' }}>{formatDate(evaluation.gradedAt)} • {evaluation.gradedByName}</div>
+                <div className="evaluation-title">
+                  {evaluation.evaluationTitle}
+                </div>
+                <div style={{ fontSize: '10px', color: '#666' }}>
+                  {formatDate(evaluation.gradedAt)} • {evaluation.gradedByName}
+                </div>
                 {evaluation.comment && (
-                  <div style={{ fontSize: '10px', fontStyle: 'italic', color: '#888' }}>
+                  <div
+                    style={{
+                      fontSize: '10px',
+                      fontStyle: 'italic',
+                      color: '#888',
+                    }}
+                  >
                     "{evaluation.comment}"
                   </div>
                 )}
-                <div className="grade" style={{ color: getGradeColor(evaluation.percentage) }}>
-                  {evaluation.score.toFixed(1)} / {evaluation.maxScore} • {evaluation.percentage.toFixed(1)}%
+                <div
+                  className="grade"
+                  style={{ color: getGradeColor(evaluation.percentage) }}
+                >
+                  {evaluation.score.toFixed(1)} / {evaluation.maxScore} •{' '}
+                  {evaluation.percentage.toFixed(1)}%
                 </div>
               </div>
             ))}
@@ -217,7 +251,8 @@ const BulletinPDFTemplate: React.FC<BulletinPDFTemplateProps> = ({ bulletinData 
       )}
 
       <div className="footer">
-        Généré le {formatDate(new Date().toISOString())} • Système de Gestion Scolaire
+        Généré le {formatDate(new Date().toISOString())} • Système de Gestion
+        Scolaire
       </div>
     </div>
   );

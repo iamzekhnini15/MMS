@@ -27,17 +27,20 @@ const App = () => {
             <div className="lg:hidden bg-white dark:bg-neutral-900 border-b dark:border-neutral-800 px-4 py-3 flex items-center justify-between shadow-sm">
               <div className="flex items-center">
                 <SidebarTrigger className="mr-3 dark:text-white" />
-                <span className="font-bold text-lg text-blue-600 dark:text-white">MMS</span>
+                <span className="font-bold text-lg text-blue-600 dark:text-white">
+                  MMS
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <DarkModeToggle size="sm" />
                 <div className="text-sm text-gray-500 dark:text-white">
-                  {authenticatedUser?.user?.firstname} {authenticatedUser?.user?.lastname}
+                  {authenticatedUser?.user?.firstname}{' '}
+                  {authenticatedUser?.user?.lastname}
                 </div>
               </div>
             </div>
           )}
-          
+
           {/* Navbar uniquement pour les utilisateurs non-connectés */}
           {!isAuthenticated && (
             <>
@@ -49,9 +52,11 @@ const App = () => {
             </>
           )}
 
-          <main className={`flex-1 overflow-y-auto bg-gray-50 dark:bg-neutral-900 ${
-            isAuthenticated ? 'p-4 sm:p-6' : 'p-6'
-          }`}>
+          <main
+            className={`flex-1 overflow-y-auto bg-gray-50 dark:bg-neutral-900 ${
+              isAuthenticated ? 'p-4 sm:p-6' : 'p-6'
+            }`}
+          >
             <Outlet />
           </main>
         </div>

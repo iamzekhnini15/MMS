@@ -24,7 +24,6 @@ import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
 import { UserContext } from '@/contexts/UserContext';
-import DarkModeToggle from '@/components/ui/dark-mode-toggle';
 import {
   Sidebar,
   SidebarContent,
@@ -225,12 +224,13 @@ const getNavigationByRole = (role: string | undefined) => {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { authenticatedUser } = useContext(UserContext);
   const { state } = useSidebar();
-  
+
   // Récupérer le rôle de l'utilisateur connecté
   const userRole = authenticatedUser?.user?.role;
-  const userName = authenticatedUser?.user?.firstname && authenticatedUser?.user?.lastname 
-    ? `${authenticatedUser.user.firstname} ${authenticatedUser.user.lastname}`
-    : 'Utilisateur';
+  const userName =
+    authenticatedUser?.user?.firstname && authenticatedUser?.user?.lastname
+      ? `${authenticatedUser.user.firstname} ${authenticatedUser.user.lastname}`
+      : 'Utilisateur';
   const userEmail = authenticatedUser?.user?.email || 'non-connecté';
 
   // Obtenir la navigation appropriée selon le rôle
@@ -245,7 +245,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const isCollapsed = state === 'collapsed';
 
   return (
-    <Sidebar variant="inset" collapsible="icon" {...props} className="bg-gray-50 dark:bg-neutral-900 [&>*]:bg-gray-50 [&>*]:dark:bg-neutral-900">
+    <Sidebar
+      variant="inset"
+      collapsible="icon"
+      {...props}
+      className="bg-gray-50 dark:bg-neutral-900 [&>*]:bg-gray-50 [&>*]:dark:bg-neutral-900"
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -257,16 +262,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Command className="size-4" />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-medium text-gray-900 dark:text-white">ManageMySchool</span>
+                      <span className="truncate font-medium text-gray-900 dark:text-white">
+                        ManageMySchool
+                      </span>
                       <span className="truncate text-xs text-gray-600 dark:text-gray-300">
                         {userRole === 'ADMIN' && 'Administration'}
                         {userRole === 'TEACHER' && 'Interface Enseignant'}
                         {userRole === 'STUDENT' && 'Interface Étudiant'}
                         {!userRole && 'Système de gestion scolaire'}
                       </span>
-                    </div>
-                    <div className="ml-auto">
-                      <DarkModeToggle size="sm" />
                     </div>
                   </Link>
                 </SidebarMenuButton>
@@ -282,7 +286,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent className="bg-gray-50 dark:bg-neutral-900">
         <NavMain items={navigation.navMain} isCollapsed={isCollapsed} />
-        <NavSecondary items={navigation.navSecondary} className="mt-auto" isCollapsed={isCollapsed} />
+        <NavSecondary
+          items={navigation.navSecondary}
+          className="mt-auto"
+          isCollapsed={isCollapsed}
+        />
       </SidebarContent>
       <SidebarFooter className="bg-gray-50 dark:bg-neutral-900">
         <NavUser user={userData} isCollapsed={isCollapsed} />

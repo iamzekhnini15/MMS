@@ -5,9 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { 
-  PlusIcon, 
-  TrashIcon, 
+import {
+  PlusIcon,
+  TrashIcon,
   CalendarIcon,
   PencilSquareIcon as EditIcon,
   EyeIcon,
@@ -158,11 +158,13 @@ const BulletinPeriodsManagement: React.FC = () => {
         </h1>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center">
           <div className="flex items-center gap-2">
-            <Switch 
+            <Switch
               checked={showAllPeriods}
               onCheckedChange={setShowAllPeriods}
             />
-            <span className="text-xs sm:text-sm dark:text-gray-300">Afficher toutes les périodes</span>
+            <span className="text-xs sm:text-sm dark:text-gray-300">
+              Afficher toutes les périodes
+            </span>
           </div>
           <Button
             onClick={() => setShowCreateForm(true)}
@@ -198,13 +200,20 @@ const BulletinPeriodsManagement: React.FC = () => {
         <Card className="border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900">
           <CardHeader className="px-4 sm:px-6">
             <CardTitle className="text-gray-800 dark:text-white text-base sm:text-lg">
-              {editingPeriod ? 'Modifier la période' : 'Créer une nouvelle période'}
+              {editingPeriod
+                ? 'Modifier la période'
+                : 'Créer une nouvelle période'}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
-            <form onSubmit={handleCreatePeriod} className="space-y-3 sm:space-y-4">
+            <form
+              onSubmit={handleCreatePeriod}
+              className="space-y-3 sm:space-y-4"
+            >
               <div>
-                <Label htmlFor="name" className="text-sm dark:text-gray-300">Nom de la période *</Label>
+                <Label htmlFor="name" className="text-sm dark:text-gray-300">
+                  Nom de la période *
+                </Label>
                 <Input
                   id="name"
                   value={newPeriod.name || ''}
@@ -218,7 +227,12 @@ const BulletinPeriodsManagement: React.FC = () => {
               </div>
 
               <div>
-                <Label htmlFor="academicYear" className="text-sm dark:text-gray-300">Année académique *</Label>
+                <Label
+                  htmlFor="academicYear"
+                  className="text-sm dark:text-gray-300"
+                >
+                  Année académique *
+                </Label>
                 <Input
                   id="academicYear"
                   value={newPeriod.academicYear || ''}
@@ -233,7 +247,12 @@ const BulletinPeriodsManagement: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label htmlFor="startDate" className="text-sm dark:text-gray-300">Date de début *</Label>
+                  <Label
+                    htmlFor="startDate"
+                    className="text-sm dark:text-gray-300"
+                  >
+                    Date de début *
+                  </Label>
                   <Input
                     id="startDate"
                     type="date"
@@ -246,7 +265,12 @@ const BulletinPeriodsManagement: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="endDate" className="text-sm dark:text-gray-300">Date de fin *</Label>
+                  <Label
+                    htmlFor="endDate"
+                    className="text-sm dark:text-gray-300"
+                  >
+                    Date de fin *
+                  </Label>
                   <Input
                     id="endDate"
                     type="date"
@@ -270,7 +294,9 @@ const BulletinPeriodsManagement: React.FC = () => {
                   }
                   className="rounded dark:bg-neutral-800 dark:border-neutral-700"
                 />
-                <Label htmlFor="active" className="text-sm dark:text-gray-300">Période active</Label>
+                <Label htmlFor="active" className="text-sm dark:text-gray-300">
+                  Période active
+                </Label>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2">
@@ -301,103 +327,116 @@ const BulletinPeriodsManagement: React.FC = () => {
 
       {/* Liste des périodes responsive */}
       <div className="grid gap-3 sm:gap-4">
-        {(showAllPeriods ? periods : periods?.filter(p => p.isActive))?.map((period: BulletinPeriod) => (
-          <Card
-            key={period.idPeriod}
-            className={`hover:shadow-md transition-shadow dark:bg-neutral-900 dark:border-neutral-800 ${
-              isCurrentPeriod(period) ? 'border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-950' : ''
-            }`}
-          >
-            <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0">
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
-                    <h3 className="font-semibold text-base sm:text-lg truncate dark:text-white">{period.name}</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {isCurrentPeriod(period) && (
-                        <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800 text-xs">
-                          Période actuelle
+        {(showAllPeriods ? periods : periods?.filter((p) => p.isActive))?.map(
+          (period: BulletinPeriod) => (
+            <Card
+              key={period.idPeriod}
+              className={`hover:shadow-md transition-shadow dark:bg-neutral-900 dark:border-neutral-800 ${
+                isCurrentPeriod(period)
+                  ? 'border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-950'
+                  : ''
+              }`}
+            >
+              <CardContent className="pt-4 sm:pt-6 px-4 sm:px-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                      <h3 className="font-semibold text-base sm:text-lg truncate dark:text-white">
+                        {period.name}
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {isCurrentPeriod(period) && (
+                          <Badge className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800 text-xs">
+                            Période actuelle
+                          </Badge>
+                        )}
+                        <Badge
+                          variant={
+                            period.isActive || false ? 'default' : 'secondary'
+                          }
+                          className={`text-xs ${
+                            period.isActive || false
+                              ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800'
+                              : 'bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-neutral-700'
+                          }`}
+                        >
+                          {period.isActive || false ? 'Active' : 'Inactive'}
                         </Badge>
-                      )}
-                      <Badge
-                        variant={
-                          period.isActive || false ? 'default' : 'secondary'
-                        }
-                        className={`text-xs ${
-                          period.isActive || false 
-                            ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800' 
-                            : 'bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-neutral-700'
-                        }`}
-                      >
-                        {period.isActive || false ? 'Active' : 'Inactive'}
-                      </Badge>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:gap-4 gap-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                      <span>
+                        📅 Début:{' '}
+                        {new Date(period.startDate).toLocaleDateString()}
+                      </span>
+                      <span>
+                        📅 Fin: {new Date(period.endDate).toLocaleDateString()}
+                      </span>
+                      <span className="hidden sm:inline">
+                        ⏱️{' '}
+                        {Math.ceil(
+                          (new Date(period.endDate).getTime() -
+                            new Date(period.startDate).getTime()) /
+                            (1000 * 60 * 60 * 24),
+                        )}{' '}
+                        jours
+                      </span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    <span>
-                      📅 Début: {new Date(period.startDate).toLocaleDateString()}
-                    </span>
-                    <span>
-                      📅 Fin: {new Date(period.endDate).toLocaleDateString()}
-                    </span>
-                    <span className="hidden sm:inline">
-                      ⏱️{' '}
-                      {Math.ceil(
-                        (new Date(period.endDate).getTime() -
-                          new Date(period.startDate).getTime()) /
-                          (1000 * 60 * 60 * 24),
-                      )}{' '}
-                      jours
-                    </span>
+                  <div className="flex gap-2 self-start sm:self-auto">
+                    <Button
+                      size="sm"
+                      variant={period.isActive ? 'default' : 'outline'}
+                      className={`text-xs h-8 px-3 ${
+                        period.isActive
+                          ? 'bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white border-green-600 dark:border-green-700'
+                          : 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700 hover:bg-red-200 dark:hover:bg-red-800'
+                      }`}
+                      onClick={() => handleToggleActive(period)}
+                      title={period.isActive ? 'Désactiver' : 'Activer'}
+                    >
+                      {period.isActive ? (
+                        <EyeIcon className="w-3 h-3" />
+                      ) : (
+                        <EyeSlashIcon className="w-3 h-3" />
+                      )}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleEditPeriod(period)}
+                      title="Modifier la période"
+                      className="text-xs h-8 px-3 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800"
+                    >
+                      <EditIcon className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-xs h-8 px-3 dark:border-neutral-700 dark:hover:bg-neutral-800"
+                      onClick={() => handleDeletePeriod(period.idPeriod!)}
+                      disabled={isCurrentPeriod(period)}
+                      title="Supprimer la période"
+                    >
+                      <TrashIcon className="w-3 h-3" />
+                    </Button>
                   </div>
                 </div>
-
-                <div className="flex gap-2 self-start sm:self-auto">
-                  <Button
-                    size="sm"
-                    variant={period.isActive ? "default" : "outline"}
-                    className={`text-xs h-8 px-3 ${
-                      period.isActive 
-                        ? "bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white border-green-600 dark:border-green-700" 
-                        : "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700 hover:bg-red-200 dark:hover:bg-red-800"
-                    }`}
-                    onClick={() => handleToggleActive(period)}
-                    title={period.isActive ? "Désactiver" : "Activer"}
-                  >
-                    {period.isActive ? <EyeIcon className="w-3 h-3" /> : <EyeSlashIcon className="w-3 h-3" />}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleEditPeriod(period)}
-                    title="Modifier la période"
-                    className="text-xs h-8 px-3 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800"
-                  >
-                    <EditIcon className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-xs h-8 px-3 dark:border-neutral-700 dark:hover:bg-neutral-800"
-                    onClick={() => handleDeletePeriod(period.idPeriod!)}
-                    disabled={isCurrentPeriod(period)}
-                    title="Supprimer la période"
-                  >
-                    <TrashIcon className="w-3 h-3" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ),
+        )}
 
         {(!periods || periods.length === 0) && (
           <Card className="text-center py-8 sm:py-12 dark:bg-neutral-900 dark:border-neutral-800">
             <CardContent className="px-4 sm:px-6">
-              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4">Aucune période trouvée</p>
-              <Button 
-                onClick={() => setShowCreateForm(true)} 
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4">
+                Aucune période trouvée
+              </p>
+              <Button
+                onClick={() => setShowCreateForm(true)}
                 variant="outline"
                 className="text-sm dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800"
               >

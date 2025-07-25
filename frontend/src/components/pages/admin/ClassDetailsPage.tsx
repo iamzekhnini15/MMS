@@ -142,7 +142,9 @@ const ClassDetailPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{classe.name}</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+            {classe.name}
+          </h1>
           <div className="text-gray-700 text-sm sm:text-base lg:text-lg space-y-1">
             <p>
               <strong>Niveau:</strong> {classe.level}
@@ -177,9 +179,15 @@ const ClassDetailPage: React.FC = () => {
                   <TableRow>
                     <TableHead>Prénom</TableHead>
                     <TableHead>Nom</TableHead>
-                    <TableHead className="hidden lg:table-cell">Email</TableHead>
-                    <TableHead className="hidden lg:table-cell">Téléphone</TableHead>
-                    <TableHead className="hidden lg:table-cell">Date de naissance</TableHead>
+                    <TableHead className="hidden lg:table-cell">
+                      Email
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell">
+                      Téléphone
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell">
+                      Date de naissance
+                    </TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -188,9 +196,15 @@ const ClassDetailPage: React.FC = () => {
                     <TableRow key={student.user.idUser}>
                       <TableCell>{student.user.firstname}</TableCell>
                       <TableCell>{student.user.lastname}</TableCell>
-                      <TableCell className="hidden lg:table-cell">{student.user.email}</TableCell>
-                      <TableCell className="hidden lg:table-cell">{student.user.phone || '-'}</TableCell>
-                      <TableCell className="hidden lg:table-cell">{student.dateOfBirth}</TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        {student.user.email}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        {student.user.phone || '-'}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        {student.dateOfBirth}
+                      </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
                           <button className="text-blue-600 hover:underline text-sm">
@@ -229,7 +243,7 @@ const ClassDetailPage: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2 text-sm">
                     <div className="flex flex-col sm:flex-row sm:items-center text-gray-600">
                       <span className="font-medium w-full sm:w-24">Email:</span>
@@ -259,12 +273,17 @@ const ClassDetailPage: React.FC = () => {
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto backdrop-blur-sm mx-4">
           <DialogHeader>
-            <DialogTitle className="text-lg sm:text-xl">Ajouter un élève</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">
+              Ajouter un élève
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {userFields.map(({ label, field }) => (
-                <div key={field} className={field === 'email' ? 'sm:col-span-2' : ''}>
+                <div
+                  key={field}
+                  className={field === 'email' ? 'sm:col-span-2' : ''}
+                >
                   <label className="block text-sm font-medium mb-1">
                     {label}
                   </label>
@@ -301,7 +320,9 @@ const ClassDetailPage: React.FC = () => {
               </div>
             </div>
 
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mt-6 mb-4">Adresse</h3>
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mt-6 mb-4">
+              Adresse
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { label: 'Rue', field: 'street' },
@@ -328,7 +349,10 @@ const ClassDetailPage: React.FC = () => {
             </div>
 
             <div className="flex justify-end mt-6 pt-4">
-              <Button type="submit" className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg w-full sm:w-auto">
+              <Button
+                type="submit"
+                className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg w-full sm:w-auto"
+              >
                 Enregistrer
               </Button>
             </div>

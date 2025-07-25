@@ -17,7 +17,8 @@ const TeacherDashboard: React.FC = () => {
       description: 'Créer, modifier et organiser vos évaluations',
       icon: ClipboardDocumentListIcon,
       href: '/teacher/evaluations',
-      color: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/50 hover:bg-blue-100 dark:hover:bg-blue-900/30',
+      color:
+        'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/50 hover:bg-blue-100 dark:hover:bg-blue-900/30',
       iconColor: 'text-blue-600 dark:text-blue-400',
     },
     {
@@ -26,7 +27,8 @@ const TeacherDashboard: React.FC = () => {
         'Interface de saisie par évaluation avec liste des étudiants',
       icon: AcademicCapIcon,
       href: '/teacher/grades',
-      color: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/50 hover:bg-green-100 dark:hover:bg-green-900/30',
+      color:
+        'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/50 hover:bg-green-100 dark:hover:bg-green-900/30',
       iconColor: 'text-green-600 dark:text-green-400',
     },
     {
@@ -34,7 +36,8 @@ const TeacherDashboard: React.FC = () => {
       description: "Gérer les périodes d'évaluation (trimestres, semestres...)",
       icon: CalendarDaysIcon,
       href: '/teacher/periods',
-      color: 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800/50 hover:bg-purple-100 dark:hover:bg-purple-900/30',
+      color:
+        'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800/50 hover:bg-purple-100 dark:hover:bg-purple-900/30',
       iconColor: 'text-purple-600 dark:text-purple-400',
     },
     {
@@ -42,7 +45,8 @@ const TeacherDashboard: React.FC = () => {
       description: 'Configurer les coefficients pour chaque matière et classe',
       icon: ChartBarIcon,
       href: '/teacher/coefficients',
-      color: 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800/50 hover:bg-orange-100 dark:hover:bg-orange-900/30',
+      color:
+        'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800/50 hover:bg-orange-100 dark:hover:bg-orange-900/30',
       iconColor: 'text-orange-600 dark:text-orange-400',
     },
     {
@@ -50,7 +54,8 @@ const TeacherDashboard: React.FC = () => {
       description: "Vue d'ensemble de vos classes et étudiants",
       icon: UserGroupIcon,
       href: '/teacher/classes',
-      color: 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/30',
+      color:
+        'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/30',
       iconColor: 'text-indigo-600 dark:text-indigo-400',
     },
     {
@@ -58,7 +63,8 @@ const TeacherDashboard: React.FC = () => {
       description: 'Générer et consulter les bulletins de notes',
       icon: DocumentTextIcon,
       href: '/teacher/bulletins',
-      color: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50 hover:bg-red-100 dark:hover:bg-red-900/30',
+      color:
+        'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50 hover:bg-red-100 dark:hover:bg-red-900/30',
       iconColor: 'text-red-600 dark:text-red-400',
     },
   ];
@@ -166,10 +172,18 @@ const TeacherDashboard: React.FC = () => {
               Besoin d'aide pour utiliser le système de gestion des notes ?
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
-              <Button size="sm" variant="outline" className="text-xs sm:text-sm h-8 sm:h-9 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900">
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-xs sm:text-sm h-8 sm:h-9 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900"
+              >
                 📖 Guide d'utilisation
               </Button>
-              <Button size="sm" variant="outline" className="text-xs sm:text-sm h-8 sm:h-9 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900">
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-xs sm:text-sm h-8 sm:h-9 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900"
+              >
                 💬 Support technique
               </Button>
             </div>

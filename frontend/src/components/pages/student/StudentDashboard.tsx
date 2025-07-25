@@ -13,17 +13,21 @@ const StudentDashboard: React.FC = () => {
 
   useEffect(() => {
     checkAvailableBulletins();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticatedUser]);
 
   const checkAvailableBulletins = async () => {
     if (!authenticatedUser?.user?.idUser) return;
 
     try {
-      const response = await fetch(`/api/bulletins/student/user/${authenticatedUser.user.idUser}/visible`, {
-        headers: {
-          'Authorization': authenticatedUser.token,
+      const response = await fetch(
+        `/api/bulletins/student/user/${authenticatedUser.user.idUser}/visible`,
+        {
+          headers: {
+            Authorization: authenticatedUser.token,
+          },
         },
-      });
+      );
 
       if (response.ok) {
         const bulletins = await response.json();
@@ -56,8 +60,10 @@ const StudentDashboard: React.FC = () => {
       {/* Cards Grid - Responsive */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Card Mes Notes */}
-        <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800" 
-              onClick={() => navigate('/student/grades')}>
+        <Card
+          className="hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800"
+          onClick={() => navigate('/student/grades')}
+        >
           <CardHeader className="pb-3 sm:pb-4">
             <CardTitle className="flex items-center text-base sm:text-lg text-gray-900 dark:text-gray-100">
               <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
@@ -85,7 +91,10 @@ const StudentDashboard: React.FC = () => {
             <p className="text-xs sm:text-sm text-muted-foreground dark:text-gray-400 mb-3 sm:mb-4">
               Consultez votre emploi du temps
             </p>
-            <Button className="w-full text-sm sm:text-base h-9 sm:h-10" disabled>
+            <Button
+              className="w-full text-sm sm:text-base h-9 sm:h-10"
+              disabled
+            >
               Bientôt disponible
             </Button>
           </CardContent>
@@ -103,7 +112,10 @@ const StudentDashboard: React.FC = () => {
               <p className="text-xs sm:text-sm text-muted-foreground dark:text-gray-400 mb-3 sm:mb-4">
                 Aucun bulletin disponible pour le moment
               </p>
-              <Button className="w-full text-sm sm:text-base h-9 sm:h-10" disabled>
+              <Button
+                className="w-full text-sm sm:text-base h-9 sm:h-10"
+                disabled
+              >
                 En attente
               </Button>
             </CardContent>
@@ -123,7 +135,7 @@ const StudentDashboard: React.FC = () => {
               <p className="text-xs sm:text-sm text-green-700 dark:text-green-300 mb-3 sm:mb-4">
                 Vos bulletins scolaires sont maintenant disponibles !
               </p>
-              <Button 
+              <Button
                 className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-sm sm:text-base h-9 sm:h-10 text-white dark:text-white"
                 onClick={() => navigate('/student/bulletins')}
               >

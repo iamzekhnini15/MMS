@@ -6,7 +6,7 @@ export const useRoleBasedRedirect = () => {
 
   const redirectBasedOnRole = (user: AuthenticatedUser) => {
     const role = user.user.role;
-    
+
     switch (role) {
       case 'ADMIN':
         navigate('/admin/dashboard');

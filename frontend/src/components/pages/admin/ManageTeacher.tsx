@@ -217,11 +217,21 @@ const ManageTeacher: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-xs sm:text-sm">Nom</TableHead>
-                  <TableHead className="text-xs sm:text-sm hidden md:table-cell">Email</TableHead>
-                  <TableHead className="text-xs sm:text-sm hidden lg:table-cell">Spécialité</TableHead>
-                  <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Contrat</TableHead>
-                  <TableHead className="text-xs sm:text-sm hidden lg:table-cell">FT</TableHead>
-                  <TableHead className="text-xs sm:text-sm hidden xl:table-cell">Disp.</TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden md:table-cell">
+                    Email
+                  </TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden lg:table-cell">
+                    Spécialité
+                  </TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden sm:table-cell">
+                    Contrat
+                  </TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden lg:table-cell">
+                    FT
+                  </TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden xl:table-cell">
+                    Disp.
+                  </TableHead>
                   <TableHead className="text-xs sm:text-sm">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -234,7 +244,9 @@ const ManageTeacher: React.FC = () => {
                   >
                     <TableCell className="font-medium text-xs sm:text-sm">
                       <div>
-                        <div>{t.user.lastname} {t.user.firstname}</div>
+                        <div>
+                          {t.user.lastname} {t.user.firstname}
+                        </div>
                         <div className="text-xs text-gray-500 md:hidden">
                           {t.user.email}
                         </div>
@@ -285,7 +297,9 @@ const ManageTeacher: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-8 sm:py-12">
-            <p className="text-sm sm:text-base text-gray-500">Aucun enseignant disponible.</p>
+            <p className="text-sm sm:text-base text-gray-500">
+              Aucun enseignant disponible.
+            </p>
           </div>
         )}
       </div>
@@ -307,7 +321,9 @@ const ManageTeacher: React.FC = () => {
           <form className="space-y-3 sm:space-y-4" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstname" className="text-sm">Prénom</Label>
+                <Label htmlFor="firstname" className="text-sm">
+                  Prénom
+                </Label>
                 <Input
                   id="firstname"
                   name="firstname"
@@ -319,7 +335,9 @@ const ManageTeacher: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="lastname" className="text-sm">Nom de famille</Label>
+                <Label htmlFor="lastname" className="text-sm">
+                  Nom de famille
+                </Label>
                 <Input
                   id="lastname"
                   name="lastname"
@@ -331,7 +349,9 @@ const ManageTeacher: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm">Email</Label>
+                <Label htmlFor="email" className="text-sm">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   name="email"
@@ -345,7 +365,9 @@ const ManageTeacher: React.FC = () => {
 
               {!editing && (
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm">Mot de passe</Label>
+                  <Label htmlFor="password" className="text-sm">
+                    Mot de passe
+                  </Label>
                   <Input
                     id="password"
                     name="password"
@@ -359,7 +381,9 @@ const ManageTeacher: React.FC = () => {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-sm">Téléphone</Label>
+                <Label htmlFor="phone" className="text-sm">
+                  Téléphone
+                </Label>
                 <Input
                   id="phone"
                   name="phone"
@@ -371,7 +395,9 @@ const ManageTeacher: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="civility" className="text-sm">Civilité</Label>
+                <Label htmlFor="civility" className="text-sm">
+                  Civilité
+                </Label>
                 <Select
                   name="civility"
                   value={formData.user.civility}
@@ -385,14 +411,20 @@ const ManageTeacher: React.FC = () => {
                     <SelectValue placeholder="Civilité" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="M" className="text-sm">Monsieur</SelectItem>
-                    <SelectItem value="Mme" className="text-sm">Madame</SelectItem>
+                    <SelectItem value="M" className="text-sm">
+                      Monsieur
+                    </SelectItem>
+                    <SelectItem value="Mme" className="text-sm">
+                      Madame
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="contractType" className="text-sm">Type de contrat</Label>
+                <Label htmlFor="contractType" className="text-sm">
+                  Type de contrat
+                </Label>
                 <Select
                   name="contractType"
                   value={formData.contractType}
@@ -406,9 +438,15 @@ const ManageTeacher: React.FC = () => {
                     <SelectValue placeholder="Type de contrat" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="CDI" className="text-sm">CDI</SelectItem>
-                    <SelectItem value="CDD" className="text-sm">CDD</SelectItem>
-                    <SelectItem value="Interim" className="text-sm">Intérim</SelectItem>
+                    <SelectItem value="CDI" className="text-sm">
+                      CDI
+                    </SelectItem>
+                    <SelectItem value="CDD" className="text-sm">
+                      CDD
+                    </SelectItem>
+                    <SelectItem value="Interim" className="text-sm">
+                      Intérim
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -428,11 +466,15 @@ const ManageTeacher: React.FC = () => {
                     } as CheckboxChangeEvent)
                   }
                 />
-                <Label htmlFor="isfullTime" className="text-sm">Temps plein</Label>
+                <Label htmlFor="isfullTime" className="text-sm">
+                  Temps plein
+                </Label>
               </div>
 
               <div className="space-y-2 col-span-1 sm:col-span-2">
-                <Label htmlFor="availability" className="text-sm">Disponibilité</Label>
+                <Label htmlFor="availability" className="text-sm">
+                  Disponibilité
+                </Label>
                 <Input
                   id="availability"
                   name="availability"
@@ -443,7 +485,9 @@ const ManageTeacher: React.FC = () => {
               </div>
 
               <div className="space-y-2 col-span-1 sm:col-span-2">
-                <Label htmlFor="specialities" className="text-sm">Spécialités</Label>
+                <Label htmlFor="specialities" className="text-sm">
+                  Spécialités
+                </Label>
                 <Input
                   id="specialities"
                   name="specialities"

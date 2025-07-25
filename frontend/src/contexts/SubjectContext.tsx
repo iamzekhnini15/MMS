@@ -104,26 +104,28 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const toggleFileVisibility = useCallback(async (
-    fileId: number,
-    currentVisibility: boolean,
-  ) => {
-    try {
-      const response = await fetch(`/api/file/${fileId}/toggleVisibility`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ visible: !currentVisibility }),
-      });
+  const toggleFileVisibility = useCallback(
+    async (fileId: number, currentVisibility: boolean) => {
+      try {
+        const response = await fetch(`/api/file/${fileId}/toggleVisibility`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ visible: !currentVisibility }),
+        });
 
-      if (!response.ok)
-        throw new Error('Erreur lors de la mise à jour de la visibilité');
+        if (!response.ok)
+          throw new Error('Erreur lors de la mise à jour de la visibilité');
 
-      await fetchAllFile();
-    } catch (error) {
-      console.error(error);
-      alert('Une erreur est survenue lors de la mise à jour de la visibilité.');
-    }
-  }, [fetchAllFile]);
+        await fetchAllFile();
+      } catch (error) {
+        console.error(error);
+        alert(
+          'Une erreur est survenue lors de la mise à jour de la visibilité.',
+        );
+      }
+    },
+    [fetchAllFile],
+  );
 
   // Alias for fetchSubject to match the interface
   const fetchAllSubjects = fetchSubject;

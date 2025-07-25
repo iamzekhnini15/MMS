@@ -121,7 +121,9 @@ const CourseDetailPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 max-w-7xl mx-auto">
         <div className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{course.name}</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+            {course.name}
+          </h1>
         </div>
         <Button
           onClick={() => setShowForm(true)}
@@ -146,11 +148,13 @@ const CourseDetailPage: React.FC = () => {
                   <span className="pr-2">{subject.name}</span>
                 </AccordionTrigger>
                 <AccordionContent className="px-4 sm:px-6 py-4 space-y-3">
-                  <p className="text-gray-700 text-sm sm:text-base">{subject.description}</p>
+                  <p className="text-gray-700 text-sm sm:text-base">
+                    {subject.description}
+                  </p>
                   <span className="text-xs sm:text-sm text-gray-500 block">
                     Coefficient : {subject.coefficient}
                   </span>
-                  
+
                   <div className="mt-4 space-y-3">
                     {/* Bouton d'ajout de fichier - visible seulement pour les admins */}
                     {isAdmin && (
@@ -167,7 +171,8 @@ const CourseDetailPage: React.FC = () => {
                     <div className="space-y-2">
                       {files
                         ?.filter(
-                          (file) => file.subject.idSubject === subject.idSubject,
+                          (file) =>
+                            file.subject.idSubject === subject.idSubject,
                         )
                         .map((file) => (
                           <div
@@ -178,7 +183,10 @@ const CourseDetailPage: React.FC = () => {
                             {isAdmin && (
                               <button
                                 onClick={() =>
-                                  toggleFileVisibility(file.idFile, file.visible)
+                                  toggleFileVisibility(
+                                    file.idFile,
+                                    file.visible,
+                                  )
                                 }
                                 className="flex-shrink-0"
                               >
@@ -222,7 +230,9 @@ const CourseDetailPage: React.FC = () => {
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="sm:max-w-[425px] mx-4 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-lg sm:text-xl">Ajouter une matière</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">
+              Ajouter une matière
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -280,7 +290,10 @@ const CourseDetailPage: React.FC = () => {
               >
                 Annuler
               </Button>
-              <Button type="submit" className="order-1 sm:order-2 text-sm sm:text-base">
+              <Button
+                type="submit"
+                className="order-1 sm:order-2 text-sm sm:text-base"
+              >
                 Ajouter
               </Button>
             </div>
@@ -292,7 +305,9 @@ const CourseDetailPage: React.FC = () => {
       <Dialog open={showFileUpload} onOpenChange={setShowFileUpload}>
         <DialogContent className="sm:max-w-[700px] mx-4 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-lg sm:text-xl">Ajouter un fichier</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">
+              Ajouter un fichier
+            </DialogTitle>
           </DialogHeader>
           {currentSubjectId && (
             <FileUpload

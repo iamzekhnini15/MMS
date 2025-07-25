@@ -31,7 +31,13 @@ import {
 } from './components/pages/teacher';
 import { RoleBasedDashboardRedirect } from './components/pages/RoleBasedDashboardRedirect';
 import DetailedBulletinPage from './components/pages/teacher/DetailedBulletinPage';
-import { MyGradesPage, StudentDashboard, StudentSchedule, StudentBulletins, StudentResources } from './components/pages/student';
+import {
+  MyGradesPage,
+  StudentDashboard,
+  StudentSchedule,
+  StudentBulletins,
+  StudentResources,
+} from './components/pages/student';
 import { LoginForm } from './components/login-form';
 import ProtectedRoute from './components/ProtectedRoutes';
 
@@ -63,14 +69,14 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <HomePage /> },
-      { 
-        path: 'debug', 
+      {
+        path: 'debug',
         element: (
           <ProtectedRoute
             requiredRoles={['ADMIN']}
             element={<NetworkDebugPage />}
           />
-        )
+        ),
       },
       {
         path: 'dashboard',

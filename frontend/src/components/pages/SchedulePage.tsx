@@ -358,7 +358,9 @@ const SchedulePage = () => {
             <User className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">{teachers?.length || 0}</div>
+            <div className="text-xl sm:text-2xl font-bold">
+              {teachers?.length || 0}
+            </div>
           </CardContent>
         </Card>
 
@@ -370,17 +372,23 @@ const SchedulePage = () => {
             <Building className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">{classrooms?.length || 0}</div>
+            <div className="text-xl sm:text-2xl font-bold">
+              {classrooms?.length || 0}
+            </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Total cours</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">
+              Total cours
+            </CardTitle>
             <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">{courses?.length || 0}</div>
+            <div className="text-xl sm:text-2xl font-bold">
+              {courses?.length || 0}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -533,11 +541,13 @@ const SchedulePage = () => {
                           <div className="text-xs text-muted-foreground mt-1 space-y-1">
                             <div className="flex items-center">
                               <Clock className="w-3 h-3 mr-1" />
-                              {formatTime(course.startDateTime)} - {formatTime(course.endDateTime)}
+                              {formatTime(course.startDateTime)} -{' '}
+                              {formatTime(course.endDateTime)}
                             </div>
                             <div className="flex items-center">
                               <User className="w-3 h-3 mr-1" />
-                              {course.teacher.user.firstname} {course.teacher.user.lastname}
+                              {course.teacher.user.firstname}{' '}
+                              {course.teacher.user.lastname}
                             </div>
                             <div className="flex items-center">
                               <MapPin className="w-3 h-3 mr-1" />
@@ -592,7 +602,9 @@ const SchedulePage = () => {
                 <div className="flex items-start sm:items-center space-x-3 sm:space-x-4 flex-1">
                   <div className="w-2 h-12 bg-blue-500 rounded-full flex-shrink-0"></div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-sm sm:text-base">{course.name}</h3>
+                    <h3 className="font-medium text-sm sm:text-base">
+                      {course.name}
+                    </h3>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-xs sm:text-sm text-muted-foreground mt-1 gap-1 sm:gap-0">
                       <div className="flex items-center">
                         <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
@@ -782,7 +794,10 @@ const SchedulePage = () => {
               >
                 Annuler
               </Button>
-              <Button type="submit" className="order-1 sm:order-2 text-sm sm:text-base">
+              <Button
+                type="submit"
+                className="order-1 sm:order-2 text-sm sm:text-base"
+              >
                 {selectedCourse ? 'Modifier' : 'Créer'}
               </Button>
             </div>

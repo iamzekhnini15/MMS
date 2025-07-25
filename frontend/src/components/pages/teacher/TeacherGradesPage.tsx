@@ -81,7 +81,9 @@ const TeacherGradesPage: React.FC = () => {
     return (
       <div className="container mx-auto p-6 dark:bg-neutral-900 min-h-screen">
         <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <h3 className="text-red-800 dark:text-red-400 font-medium">Erreur de chargement</h3>
+          <h3 className="text-red-800 dark:text-red-400 font-medium">
+            Erreur de chargement
+          </h3>
           <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>
@@ -111,7 +113,7 @@ const TeacherGradesPage: React.FC = () => {
               Vous n'avez pas encore créé d'évaluations. Créez votre première
               évaluation pour pouvoir saisir des notes.
             </p>
-            <Button 
+            <Button
               onClick={() => navigate('/teacher/evaluations')}
               className="text-sm sm:text-base bg-neutral-700 dark:bg-neutral-600 hover:bg-neutral-800 dark:hover:bg-neutral-500 text-white"
             >
@@ -139,14 +141,17 @@ const TeacherGradesPage: React.FC = () => {
                       </div>
                       <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                         <div>
-                          <strong>Classe:</strong> {getClassname(evaluation.classId)}
+                          <strong>Classe:</strong>{' '}
+                          {getClassname(evaluation.classId)}
                         </div>
                         <div>
-                          <strong>Matière:</strong> {getSubjectName(evaluation.subjectId)}
+                          <strong>Matière:</strong>{' '}
+                          {getSubjectName(evaluation.subjectId)}
                         </div>
                         {evaluation.periodId && (
                           <div>
-                            <strong>Période:</strong> {getPeriodName(evaluation.periodId)}
+                            <strong>Période:</strong>{' '}
+                            {getPeriodName(evaluation.periodId)}
                           </div>
                         )}
                       </div>
@@ -156,8 +161,8 @@ const TeacherGradesPage: React.FC = () => {
                     <Badge
                       variant={evaluation.isVisible ? 'default' : 'secondary'}
                       className={`text-xs ${
-                        evaluation.isVisible 
-                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800' 
+                        evaluation.isVisible
+                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800'
                           : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800'
                       }`}
                     >
@@ -178,12 +183,13 @@ const TeacherGradesPage: React.FC = () => {
                         evaluation.isGradesVisible ? 'default' : 'outline'
                       }
                       className={`text-xs ${
-                        evaluation.isGradesVisible 
-                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800' 
+                        evaluation.isGradesVisible
+                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800'
                           : 'bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-neutral-700'
                       }`}
                     >
-                      Notes {evaluation.isGradesVisible ? 'visibles' : 'masquées'}
+                      Notes{' '}
+                      {evaluation.isGradesVisible ? 'visibles' : 'masquées'}
                     </Badge>
                   </div>
                 </div>
@@ -192,7 +198,9 @@ const TeacherGradesPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                   <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                     {evaluation.description && (
-                      <p className="mb-2 line-clamp-2">{evaluation.description}</p>
+                      <p className="mb-2 line-clamp-2">
+                        {evaluation.description}
+                      </p>
                     )}
                     <div>
                       <strong>Note max:</strong> {evaluation.maxScore} pts

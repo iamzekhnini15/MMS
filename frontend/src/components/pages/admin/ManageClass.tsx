@@ -142,8 +142,12 @@ const ManageClass: React.FC = () => {
                 <TableRow>
                   <TableHead className="text-xs sm:text-sm">Nom</TableHead>
                   <TableHead className="text-xs sm:text-sm">Niveau</TableHead>
-                  <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Département</TableHead>
-                  <TableHead className="text-xs sm:text-sm hidden md:table-cell">Responsable</TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden sm:table-cell">
+                    Département
+                  </TableHead>
+                  <TableHead className="text-xs sm:text-sm hidden md:table-cell">
+                    Responsable
+                  </TableHead>
                   <TableHead className="text-xs sm:text-sm">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -152,7 +156,9 @@ const ManageClass: React.FC = () => {
                   <TableRow
                     key={classe.idClass}
                     className="cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-900"
-                    onClick={() => navigate(`/manage-classes/${classe.idClass}`)}
+                    onClick={() =>
+                      navigate(`/manage-classes/${classe.idClass}`)
+                    }
                   >
                     <TableCell className="text-xs sm:text-sm font-medium">
                       <div>
@@ -162,8 +168,12 @@ const ManageClass: React.FC = () => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-xs sm:text-sm">{classe.level}</TableCell>
-                    <TableCell className="text-xs sm:text-sm hidden sm:table-cell">{classe.department}</TableCell>
+                    <TableCell className="text-xs sm:text-sm">
+                      {classe.level}
+                    </TableCell>
+                    <TableCell className="text-xs sm:text-sm hidden sm:table-cell">
+                      {classe.department}
+                    </TableCell>
                     <TableCell className="text-xs sm:text-sm hidden md:table-cell">
                       <div className="truncate max-w-32">
                         {classe.responsibleTeacher?.user?.firstname}{' '}
@@ -191,7 +201,9 @@ const ManageClass: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-8 sm:py-12">
-            <p className="text-sm sm:text-base text-gray-500">Aucune classe disponible.</p>
+            <p className="text-sm sm:text-base text-gray-500">
+              Aucune classe disponible.
+            </p>
           </div>
         )}
       </div>
@@ -200,16 +212,23 @@ const ManageClass: React.FC = () => {
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent className="max-w-3xl mx-2 sm:mx-auto max-h-[90vh] overflow-y-auto">
           <DialogHeader className="pb-4">
-            <DialogTitle className="text-lg sm:text-xl">Ajouter une classe</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">
+              Ajouter une classe
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {error && (
-              <div className="text-red-600 bg-red-100 dark:bg-neutral-900 p-2 sm:p-3 rounded text-sm">{error}</div>
+              <div className="text-red-600 bg-red-100 dark:bg-neutral-900 p-2 sm:p-3 rounded text-sm">
+                {error}
+              </div>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label htmlFor="name" className="block mb-1 font-medium text-sm">
+                <label
+                  htmlFor="name"
+                  className="block mb-1 font-medium text-sm"
+                >
                   Nom
                 </label>
                 <Input
@@ -221,7 +240,10 @@ const ManageClass: React.FC = () => {
                 />
               </div>
               <div>
-                <label htmlFor="level" className="block mb-1 font-medium text-sm">
+                <label
+                  htmlFor="level"
+                  className="block mb-1 font-medium text-sm"
+                >
                   Niveau
                 </label>
                 <Input
@@ -234,7 +256,10 @@ const ManageClass: React.FC = () => {
                 />
               </div>
               <div>
-                <label htmlFor="department" className="block mb-1 font-medium text-sm">
+                <label
+                  htmlFor="department"
+                  className="block mb-1 font-medium text-sm"
+                >
                   Département
                 </label>
                 <Input
@@ -256,7 +281,10 @@ const ManageClass: React.FC = () => {
                   onValueChange={handleTeacherSelect}
                   value={form.responsibleTeacherId}
                 >
-                  <SelectTrigger id="responsibleTeacherId" className="w-full text-sm">
+                  <SelectTrigger
+                    id="responsibleTeacherId"
+                    className="w-full text-sm"
+                  >
                     <SelectValue placeholder="Sélectionnez un responsable" />
                   </SelectTrigger>
                   <SelectContent>

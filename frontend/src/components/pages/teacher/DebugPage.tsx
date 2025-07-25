@@ -4,10 +4,21 @@ import BulletinPeriodContext from '../../../contexts/BulletinPeriodContext';
 import { UserContext } from '../../../contexts/UserContext';
 
 const DebugPage: React.FC = () => {
-  const { classes, loading: classesLoading, error: classesError, fetchClasses } = useContext(ClassesContext);
-  const { periods, currentPeriod, loading: periodsLoading, error: periodsError, fetchActivePeriods } = useContext(BulletinPeriodContext);
+  const {
+    classes,
+    loading: classesLoading,
+    error: classesError,
+    fetchClasses,
+  } = useContext(ClassesContext);
+  const {
+    periods,
+    currentPeriod,
+    loading: periodsLoading,
+    error: periodsError,
+    fetchActivePeriods,
+  } = useContext(BulletinPeriodContext);
   const { authenticatedUser } = useContext(UserContext);
-  
+
   const [apiStatus, setApiStatus] = useState<string>('Checking...');
 
   useEffect(() => {
@@ -23,7 +34,7 @@ const DebugPage: React.FC = () => {
         setApiStatus(`API Error: ${err}`);
       }
     };
-    
+
     checkAPI();
     fetchClasses();
     fetchActivePeriods();
@@ -32,7 +43,7 @@ const DebugPage: React.FC = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Debug Information</h1>
-      
+
       <div className="space-y-4">
         <div className="bg-blue-50 p-4 rounded">
           <h2 className="font-semibold">User Context</h2>

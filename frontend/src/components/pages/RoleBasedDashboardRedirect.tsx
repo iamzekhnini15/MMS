@@ -3,8 +3,9 @@ import { UserContext } from '../../contexts/UserContext';
 import { useRoleBasedRedirect } from '../../hooks/useRoleBasedRedirect';
 
 /**
- * Composant qui redirige automatiquement vers le dashboard approprié 
+ * Composant qui redirige automatiquement vers le dashboard approprié
  * en fonction du rôle de l'utilisateur connecté
+ * @return {JSX.Element} Le composant de redirection
  */
 export function RoleBasedDashboardRedirect() {
   const { authenticatedUser } = useContext(UserContext);

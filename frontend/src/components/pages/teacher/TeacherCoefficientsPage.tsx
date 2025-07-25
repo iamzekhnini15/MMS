@@ -238,7 +238,7 @@ const TeacherCoefficientsPage: React.FC = () => {
             Sélection de la classe
           </CardTitle>
         </CardHeader>
-                <CardContent className="px-4 sm:px-6">
+        <CardContent className="px-4 sm:px-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
             {classes?.map((classe: Classes) => (
               <Button
@@ -258,7 +258,9 @@ const TeacherCoefficientsPage: React.FC = () => {
 
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
-          <h3 className="text-red-800 dark:text-red-300 font-medium text-sm sm:text-base">Erreur</h3>
+          <h3 className="text-red-800 dark:text-red-300 font-medium text-sm sm:text-base">
+            Erreur
+          </h3>
           <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
         </div>
       )}
@@ -294,7 +296,10 @@ const TeacherCoefficientsPage: React.FC = () => {
                         </p>
                       </div>
                       {subject.hasCoefficientSet && (
-                        <Badge variant="default" className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800">
+                        <Badge
+                          variant="default"
+                          className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800"
+                        >
                           Configuré
                         </Badge>
                       )}
