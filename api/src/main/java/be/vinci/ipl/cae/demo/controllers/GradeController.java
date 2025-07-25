@@ -5,6 +5,7 @@ import be.vinci.ipl.cae.demo.models.entities.BulletinConfig;
 import be.vinci.ipl.cae.demo.models.entities.EvaluationGrade;
 import be.vinci.ipl.cae.demo.services.GradeService;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -110,7 +111,7 @@ public class GradeController {
   ) {
     try {
       BulletinConfig.AverageType type = BulletinConfig.AverageType.valueOf(
-          averageType.toUpperCase()
+          averageType.toUpperCase(Locale.ROOT)
       );
       Double average = gradeService.calculateSubjectAverage(studentId, subjectId, periodId, type);
       return ResponseEntity.ok(average);

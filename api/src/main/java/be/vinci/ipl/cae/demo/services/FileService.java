@@ -134,20 +134,20 @@ public class FileService {
    */
   private boolean isValidFileType(String contentType) {
     return contentType != null && (
-      contentType.equals("application/pdf")
-        || contentType.equals("application/msword")
-        || contentType.equals(
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
-        || contentType.equals("application/vnd.ms-powerpoint")
-        || contentType.equals(
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation")
-        || contentType.equals("application/vnd.ms-excel")
-        || contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        || contentType.equals("image/jpeg")
-        || contentType.equals("image/png")
-        || contentType.equals("image/gif")
-        || contentType.equals("text/plain")
+      "application/pdf".equals(contentType)
+        || "application/msword".equals(contentType)
+        || "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        .equals(contentType)
+        || "application/vnd.ms-powerpoint".equals(contentType)
+        || "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        .equals(contentType)
+        || "application/vnd.ms-excel".equals(contentType)
+        || "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        .equals(contentType)
+        || "image/jpeg".equals(contentType)
+        || "image/png".equals(contentType)
+        || "image/gif".equals(contentType)
+        || "text/plain".equals(contentType)
       );
   }
 

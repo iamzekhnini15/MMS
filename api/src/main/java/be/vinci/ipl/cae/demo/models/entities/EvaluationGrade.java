@@ -126,7 +126,7 @@ public class EvaluationGrade {
   @JsonProperty("percentage")
   public Double getPercentage() {
     if (score != null && evaluation != null && evaluation.getMaxScore() != null) {
-      return (score / evaluation.getMaxScore()) * 100;
+      return score / evaluation.getMaxScore() * 100;
     }
     return null;
   }

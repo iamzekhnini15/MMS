@@ -39,12 +39,7 @@ public class BulletinCalculationService {
     }
 
     // Get all grades for this student in this period across all subjects
-    List<EvaluationGrade> grades = evaluationGradeRepository.findAll().stream()
-        .filter(grade -> grade.getStudent().getIdStudent().equals(studentId)
-          && grade.getEvaluation().getBulletinPeriod().getIdPeriod().equals(periodId)
-          && grade.getIncludeInCalculation()
-          && grade.getStatus() == EvaluationGrade.GradeStatus.PRESENT)
-        .collect(Collectors.toList());
+    List<EvaluationGrade> grades = getStudentGradesForPeriod(studentId, periodId);
 
     if (grades.isEmpty()) {
       return null;
@@ -76,7 +71,7 @@ public class BulletinCalculationService {
 
       if (subjectTotalMaxScore > 0) {
         // Calculate subject average as percentage (0-100)
-        double subjectAverage = (subjectTotalScore / subjectTotalMaxScore) * 100.0;
+        double subjectAverage = subjectTotalScore / subjectTotalMaxScore * 100.0;
         totalSubjectAverages += subjectAverage;
         subjectCount++;
       }
@@ -173,12 +168,7 @@ public class BulletinCalculationService {
     }
 
     // Get all grades for this student in this period across all subjects
-    List<EvaluationGrade> grades = evaluationGradeRepository.findAll().stream()
-        .filter(grade -> grade.getStudent().getIdStudent().equals(studentId)
-          && grade.getEvaluation().getBulletinPeriod().getIdPeriod().equals(periodId)
-          && grade.getIncludeInCalculation()
-          && grade.getStatus() == EvaluationGrade.GradeStatus.PRESENT)
-        .collect(Collectors.toList());
+    List<EvaluationGrade> grades = getStudentGradesForPeriod(studentId, periodId);
 
     if (grades.isEmpty()) {
       return Map.of();
@@ -205,11 +195,27 @@ public class BulletinCalculationService {
 
       if (subjectTotalMaxScore > 0) {
         // Calculate subject average as percentage (0-100)
-        double subjectAverage = (subjectTotalScore / subjectTotalMaxScore) * 100.0;
+        double subjectAverage = subjectTotalScore / subjectTotalMaxScore * 100.0;
         subjectAverages.put(subjectId, subjectAverage);
       }
     }
 
     return subjectAverages;
+  }
+
+  /**
+   * Helper method to get all grades for a student in a specific period.
+   *
+   * @param studentId the student ID
+   * @param periodId the period ID
+   * @return list of grades for the student in the period
+   */
+  private List<EvaluationGrade> getStudentGradesForPeriod(Long studentId, Long periodId) {
+    return evaluationGradeRepository.findAll().stream()
+        .filter(grade -> grade.getStudent().getIdStudent().equals(studentId)
+          && grade.getEvaluation().getBulletinPeriod().getIdPeriod().equals(periodId)
+          && grade.getIncludeInCalculation()
+          && grade.getStatus() == EvaluationGrade.GradeStatus.PRESENT)
+        .collect(Collectors.toList());
   }
 }

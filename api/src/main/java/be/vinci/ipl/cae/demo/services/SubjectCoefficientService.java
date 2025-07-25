@@ -97,7 +97,7 @@ public class SubjectCoefficientService {
     }
 
     coefficient.setCoefficient(dto.getCoefficient());
-    coefficient.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
+    coefficient.setIsActive(dto.getIsActive() == null || dto.getIsActive());
 
     return coefficientRepository.save(coefficient);
   }
@@ -114,8 +114,10 @@ public class SubjectCoefficientService {
       Long classId,
       List<SubjectCoefficientDto> coefficients
   ) {
-    ClassEntity classEntity = classesRepository.findById(classId)
-        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+    // Verify class exists
+    if (!classesRepository.existsById(classId)) {
+      throw new IllegalArgumentException("Class not found");
+    }
 
     return coefficients.stream().map(dto -> {
       dto.setClassId(classId); // Ensure class ID is set

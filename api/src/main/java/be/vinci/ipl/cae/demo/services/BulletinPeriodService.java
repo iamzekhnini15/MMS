@@ -68,7 +68,7 @@ public class BulletinPeriodService {
     period.setStartDate(dto.getStartDate());
     period.setEndDate(dto.getEndDate());
     period.setAcademicYear(dto.getAcademicYear());
-    period.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
+    period.setIsActive(dto.getIsActive() == null || dto.getIsActive());
     period.setDescription(dto.getDescription());
     
     return bulletinPeriodRepository.save(period);

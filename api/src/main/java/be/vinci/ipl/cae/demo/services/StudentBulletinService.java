@@ -356,14 +356,14 @@ public class StudentBulletinService {
             gradeDto.setGradedById(grade.getGradedBy().getIdTeacher());
             gradeDto.setGradedByName(grade.getGradedBy().getUser().getFirstname() + " "
                 + grade.getGradedBy().getUser().getLastname());
-            gradeDto.setPercentage((grade.getScore() / grade.getEvaluation().getMaxScore()) * 100);
+            gradeDto.setPercentage(grade.getScore() / grade.getEvaluation().getMaxScore() * 100);
 
             evaluationGradeDtos.add(gradeDto);
           }
         }
 
         if (totalMaxScore > 0) {
-          double average = (totalScore / totalMaxScore) * 100; // Convert to percentage (0-100)
+          double average = totalScore / totalMaxScore * 100; // Convert to percentage (0-100)
           subjectGrade.setAverage(average);
           subjectGrade.setCoefficient(subjectCoeff.getCoefficient());
           subjectGrade.setWeightedAverage(average * subjectGrade.getCoefficient());

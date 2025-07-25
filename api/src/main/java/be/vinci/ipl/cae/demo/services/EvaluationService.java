@@ -112,9 +112,9 @@ public class EvaluationService {
     evaluation.setBulletinPeriod(period);
     evaluation.setMaxScore(dto.getMaxScore());
     evaluation.setEvaluationDate(dto.getEvaluationDate());
-    evaluation.setIsVisible(dto.getIsVisible() != null ? dto.getIsVisible() : false);
+    evaluation.setIsVisible(dto.getIsVisible() != null && dto.getIsVisible());
     evaluation.setIsGradesVisible(dto.getIsGradesVisible() != null
-        ? dto.getIsGradesVisible() : false);
+        && dto.getIsGradesVisible());
     evaluation.setType(dto.getType() != null
         ? dto.getType() : Evaluation.EvaluationType.INTERROGATION);
     evaluation.setCreatedAt(new Date());

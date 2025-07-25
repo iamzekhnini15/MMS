@@ -13,6 +13,7 @@ import be.vinci.ipl.cae.demo.repositories.TeacherRepository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -108,26 +109,13 @@ public class GradeService {
     Teacher teacher = teacherRepository.findById(teacherId)
         .orElseThrow(() -> new IllegalArgumentException("Teacher not found"));
 
-    // Check if grade already exists
-    Optional<EvaluationGrade> existingGrade = gradeRepository.findByEvaluationAndStudent(
-        evaluation,
-        student
-    );
-    
-    EvaluationGrade grade;
-    if (existingGrade.isPresent()) {
-      grade = existingGrade.get();
-    } else {
-      grade = new EvaluationGrade();
-      grade.setEvaluation(evaluation);
-      grade.setStudent(student);
-      grade.setGradedBy(teacher);
-    }
+    // Get or create grade
+    EvaluationGrade grade = getOrCreateGrade(evaluation, student, teacher);
 
     grade.setScore(score);
-    grade.setIncludeInCalculation(includeInCalculation != null ? includeInCalculation : true);
+    grade.setIncludeInCalculation(includeInCalculation == null || includeInCalculation);
     grade.setStatus(EvaluationGrade.GradeStatus.valueOf(
-        status != null ? status.toUpperCase() : "PRESENT"
+        status != null ? status.toUpperCase(Locale.ROOT) : "PRESENT"
       )
     );
     grade.setComment(comment);
@@ -158,25 +146,13 @@ public class GradeService {
               "Student not found: " + gradeDto.getStudentId()
           ));
 
-      // Check if grade already exists
-      Optional<EvaluationGrade> existingGrade = gradeRepository.findByEvaluationAndStudent(
-          evaluation,
-          student
-      );
-      
-      EvaluationGrade grade;
-      if (existingGrade.isPresent()) {
-        grade = existingGrade.get();
-      } else {
-        grade = new EvaluationGrade();
-        grade.setEvaluation(evaluation);
-        grade.setStudent(student);
-        grade.setGradedBy(teacher);
-      }
+      // Get or create grade
+      EvaluationGrade grade = getOrCreateGrade(evaluation, student, teacher);
 
       grade.setScore(gradeDto.getScore());
       grade.setIncludeInCalculation(gradeDto.getIncludeInCalculation());
-      grade.setStatus(EvaluationGrade.GradeStatus.valueOf(gradeDto.getStatus().toUpperCase()));
+      grade.setStatus(EvaluationGrade.GradeStatus.valueOf(
+          gradeDto.getStatus().toUpperCase(Locale.ROOT)));
       grade.setComment(gradeDto.getComment());
       grade.setGradedAt(new Date());
 
@@ -224,7 +200,7 @@ public class GradeService {
     for (EvaluationGrade grade : grades) {
       if (grade.getIncludeInCalculation()) {
         // Convert to percentage (score/maxScore * 20)
-        double percentage = (grade.getScore() / grade.getEvaluation().getMaxScore()) * 20.0;
+        double percentage = grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
         sum += percentage;
         count++;
       }
@@ -239,7 +215,7 @@ public class GradeService {
     
     for (EvaluationGrade grade : grades) {
       if (grade.getIncludeInCalculation()) {
-        double percentage = (grade.getScore() / grade.getEvaluation().getMaxScore()) * 20.0;
+        double percentage = grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
         double weight = grade.getEvaluation().getMaxScore(); // Use max score as weight
         weightedSum += percentage * weight;
         totalWeight += weight;
@@ -255,7 +231,7 @@ public class GradeService {
     
     for (EvaluationGrade grade : grades) {
       if (grade.getIncludeInCalculation()) {
-        double percentage = (grade.getScore() / grade.getEvaluation().getMaxScore()) * 20.0;
+        double percentage = grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
         if (percentage > 0) { // Avoid 0 in geometric mean
           product *= percentage;
           count++;
@@ -272,7 +248,7 @@ public class GradeService {
     
     for (EvaluationGrade grade : grades) {
       if (grade.getIncludeInCalculation()) {
-        double percentage = (grade.getScore() / grade.getEvaluation().getMaxScore()) * 20.0;
+        double percentage = grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
         if (percentage > 0) { // Avoid division by 0
           reciprocalSum += 1.0 / percentage;
           count++;
@@ -300,5 +276,32 @@ public class GradeService {
    */
   public Optional<EvaluationGrade> getGradeById(Long gradeId) {
     return gradeRepository.findById(gradeId);
+  }
+
+  /**
+   * Helper method to create or update an evaluation grade.
+   *
+   * @param evaluation the evaluation
+   * @param student the student
+   * @param teacher the teacher (optional, used only for new grades)
+   * @return the existing or new evaluation grade
+   */
+  private EvaluationGrade getOrCreateGrade(Evaluation evaluation, Student student, Teacher teacher) {
+    Optional<EvaluationGrade> existingGrade = gradeRepository.findByEvaluationAndStudent(
+        evaluation,
+        student
+    );
+    
+    if (existingGrade.isPresent()) {
+      return existingGrade.get();
+    } else {
+      EvaluationGrade grade = new EvaluationGrade();
+      grade.setEvaluation(evaluation);
+      grade.setStudent(student);
+      if (teacher != null) {
+        grade.setGradedBy(teacher);
+      }
+      return grade;
+    }
   }
 }
