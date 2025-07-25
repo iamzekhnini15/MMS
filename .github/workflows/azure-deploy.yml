@@ -161,11 +161,12 @@ jobs:
           mvn clean package -DskipTests
 
       - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_APP_SERVICE_NAME }}
           publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
           package: api/target/*.jar
+          type: 'jar'
 
   # Job pour fermer la PR (Static Web Apps)
   close_pull_request_job:
