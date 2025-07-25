@@ -3,15 +3,13 @@ package be.vinci.ipl.cae.demo.models.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -21,21 +19,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "subject_coefficients")
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class SubjectCoefficient {
+public class SubjectCoefficient extends SubjectClassBaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idCoefficient;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idSubject", nullable = false)
-  private Subject subject;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idClass", nullable = false)
-  private ClassEntity classEntity;
 
   @Column(nullable = false)
   private Double coefficient; // e.g., 4.0, 6.0

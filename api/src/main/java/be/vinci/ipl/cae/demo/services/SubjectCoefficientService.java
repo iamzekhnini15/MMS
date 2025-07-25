@@ -7,6 +7,7 @@ import be.vinci.ipl.cae.demo.models.entities.SubjectCoefficient;
 import be.vinci.ipl.cae.demo.repositories.ClassesRepository;
 import be.vinci.ipl.cae.demo.repositories.SubjectCoefficientRepository;
 import be.vinci.ipl.cae.demo.repositories.SubjectRepository;
+import be.vinci.ipl.cae.demo.utils.EntityUtils;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class SubjectCoefficientService {
   private final SubjectCoefficientRepository coefficientRepository;
   private final SubjectRepository subjectRepository;
   private final ClassesRepository classesRepository;
+  private final EntityUtils entityUtils;
 
   /**
    * Get all coefficients for a class.
@@ -32,8 +34,7 @@ public class SubjectCoefficientService {
    * @return list of coefficients
    */
   public List<SubjectCoefficient> getCoefficientsByClass(Long classId) {
-    ClassEntity classEntity = classesRepository.findById(classId)
-        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+    ClassEntity classEntity = entityUtils.validateAndGetClass(classId);
     
     return coefficientRepository.findByClassEntityAndIsActiveTrue(classEntity);
   }
@@ -45,8 +46,7 @@ public class SubjectCoefficientService {
    * @return list of coefficients
    */
   public List<SubjectCoefficient> getCoefficientsBySubject(Long subjectId) {
-    Subject subject = subjectRepository.findById(subjectId)
-        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
+    Subject subject = entityUtils.validateAndGetSubject(subjectId);
     
     return coefficientRepository.findBySubjectAndIsActiveTrue(subject);
   }
@@ -62,10 +62,8 @@ public class SubjectCoefficientService {
       Long subjectId,
       Long classId
   ) {
-    Subject subject = subjectRepository.findById(subjectId)
-        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
-    ClassEntity classEntity = classesRepository.findById(classId)
-        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+    Subject subject = entityUtils.validateAndGetSubject(subjectId);
+    ClassEntity classEntity = entityUtils.validateAndGetClass(classId);
     
     return coefficientRepository.findBySubjectAndClassEntityAndIsActiveTrue(subject, classEntity);
   }
@@ -78,10 +76,8 @@ public class SubjectCoefficientService {
    */
   @Transactional
   public SubjectCoefficient saveCoefficient(SubjectCoefficientDto dto) {
-    Subject subject = subjectRepository.findById(dto.getSubjectId())
-        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
-    ClassEntity classEntity = classesRepository.findById(dto.getClassId())
-        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+    Subject subject = entityUtils.validateAndGetSubject(dto.getSubjectId());
+    ClassEntity classEntity = entityUtils.validateAndGetClass(dto.getClassId());
 
     // Check if coefficient already exists
     Optional<SubjectCoefficient> existingCoefficient = coefficientRepository

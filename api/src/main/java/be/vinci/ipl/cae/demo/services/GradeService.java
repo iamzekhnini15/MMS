@@ -193,14 +193,20 @@ public class GradeService {
     }
   }
 
+  /**
+   * Helper method to convert grade to percentage.
+   */
+  private double convertToPercentage(EvaluationGrade grade) {
+    return grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
+  }
+
   private Double calculateArithmeticAverage(List<EvaluationGrade> grades) {
     double sum = 0.0;
     int count = 0;
     
     for (EvaluationGrade grade : grades) {
       if (grade.getIncludeInCalculation()) {
-        // Convert to percentage (score/maxScore * 20)
-        double percentage = grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
+        double percentage = convertToPercentage(grade);
         sum += percentage;
         count++;
       }
@@ -215,7 +221,7 @@ public class GradeService {
     
     for (EvaluationGrade grade : grades) {
       if (grade.getIncludeInCalculation()) {
-        double percentage = grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
+        double percentage = convertToPercentage(grade);
         double weight = grade.getEvaluation().getMaxScore(); // Use max score as weight
         weightedSum += percentage * weight;
         totalWeight += weight;
@@ -231,7 +237,7 @@ public class GradeService {
     
     for (EvaluationGrade grade : grades) {
       if (grade.getIncludeInCalculation()) {
-        double percentage = grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
+        double percentage = convertToPercentage(grade);
         if (percentage > 0) { // Avoid 0 in geometric mean
           product *= percentage;
           count++;
@@ -248,7 +254,7 @@ public class GradeService {
     
     for (EvaluationGrade grade : grades) {
       if (grade.getIncludeInCalculation()) {
-        double percentage = grade.getScore() / grade.getEvaluation().getMaxScore() * 20.0;
+        double percentage = convertToPercentage(grade);
         if (percentage > 0) { // Avoid division by 0
           reciprocalSum += 1.0 / percentage;
           count++;
@@ -286,7 +292,8 @@ public class GradeService {
    * @param teacher the teacher (optional, used only for new grades)
    * @return the existing or new evaluation grade
    */
-  private EvaluationGrade getOrCreateGrade(Evaluation evaluation, Student student, Teacher teacher) {
+  private EvaluationGrade getOrCreateGrade(Evaluation evaluation, Student student,
+      Teacher teacher) {
     Optional<EvaluationGrade> existingGrade = gradeRepository.findByEvaluationAndStudent(
         evaluation,
         student

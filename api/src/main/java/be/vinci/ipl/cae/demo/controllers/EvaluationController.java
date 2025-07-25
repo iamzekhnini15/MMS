@@ -3,6 +3,7 @@ package be.vinci.ipl.cae.demo.controllers;
 import be.vinci.ipl.cae.demo.models.dtos.EvaluationDto;
 import be.vinci.ipl.cae.demo.models.entities.Evaluation;
 import be.vinci.ipl.cae.demo.services.EvaluationService;
+import be.vinci.ipl.cae.demo.utils.ControllerUtils;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -149,13 +150,8 @@ public class EvaluationController {
   public ResponseEntity<Evaluation> updateEvaluation(
       @PathVariable Long id,
       @RequestBody EvaluationDto dto) {
-    try {
-      Optional<Evaluation> updatedEvaluation = evaluationService.updateEvaluation(id, dto);
-      return updatedEvaluation.map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest().build();
-    }
+    return ControllerUtils.handleUpdateOperation(() -> 
+        evaluationService.updateEvaluation(id, dto));
   }
 
   /**

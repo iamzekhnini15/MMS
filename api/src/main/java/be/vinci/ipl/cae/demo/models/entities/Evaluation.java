@@ -17,6 +17,7 @@ import jakarta.persistence.TemporalType;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -25,10 +26,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "evaluations")
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Evaluation {
+public class Evaluation extends SubjectClassBaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idEvaluation;
@@ -38,14 +40,6 @@ public class Evaluation {
 
   @Column(length = 1000)
   private String description; // Optional description of the evaluation
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idSubject", nullable = false)
-  private Subject subject;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idClass", nullable = false)
-  private ClassEntity classEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "idTeacher", nullable = false)

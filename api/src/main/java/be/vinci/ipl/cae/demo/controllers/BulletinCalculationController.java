@@ -73,7 +73,7 @@ public class BulletinCalculationController {
   @GetMapping("/student/{studentId}/class/{classId}/period/{periodId}")
   public ResponseEntity<Map<String, Object>> getStudentBulletinStatistics(
       @PathVariable Long studentId, @PathVariable Long classId, @PathVariable Long periodId) {
-    try {
+    return handleServiceOperation(() -> {
       Double average = 
           bulletinCalculationService.calculateStudentAverageForPeriod(studentId, periodId);
       Integer rank = 
@@ -85,11 +85,8 @@ public class BulletinCalculationController {
       response.put("average", average);
       response.put("rank", rank);
       response.put("classAverage", classAverage);
-
-      return ResponseEntity.ok(response);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-    }
+      return response;
+    });
   }
 
   /**
@@ -103,7 +100,7 @@ public class BulletinCalculationController {
   @GetMapping("/bulletin/student/{studentId}/class/{classId}/period/{periodId}")
   public ResponseEntity<Map<String, Object>> getStudentDetailedBulletin(
       @PathVariable Long studentId, @PathVariable Long classId, @PathVariable Long periodId) {
-    try {
+    return handleServiceOperation(() -> {
       Double overallAverage = 
           bulletinCalculationService.calculateStudentAverageForPeriod(studentId, periodId);
       Integer rank = 
@@ -119,10 +116,31 @@ public class BulletinCalculationController {
       response.put("classAverage", classAverage);
       response.put("subjectAverages", subjectAverages);
       response.put("hasGrades", !subjectAverages.isEmpty());
+      return response;
+    });
+  }
 
-      return ResponseEntity.ok(response);
+  /**
+   * Helper method to handle service operations with standard exception handling.
+   *
+   * @param operation the service operation to execute
+   * @return ResponseEntity with appropriate status
+   */
+  private ResponseEntity<Map<String, Object>> handleServiceOperation(
+      ServiceOperation operation) {
+    try {
+      Map<String, Object> result = operation.execute();
+      return ResponseEntity.ok(result);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
     }
+  }
+
+  /**
+   * Functional interface for service operations.
+   */
+  @FunctionalInterface
+  private interface ServiceOperation {
+    Map<String, Object> execute() throws Exception;
   }
 }

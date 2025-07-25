@@ -23,6 +23,14 @@ public class BulletinCalculationService {
   private final StudentRepository studentRepository;
 
   /**
+   * Helper method to group grades by subject.
+   */
+  private Map<Long, List<EvaluationGrade>> groupGradesBySubject(List<EvaluationGrade> grades) {
+    return grades.stream()
+        .collect(Collectors.groupingBy(grade -> grade.getEvaluation().getSubject().getIdSubject()));
+  }
+
+  /**
    * Calculate the average grade for a student in a specific period. This calculates the average by
    * subject first, then calculates the overall average. Example: Student has Math (18/20),
    * Chemistry (16/20), Physics (19/20) Result: Math=90%, Chemistry=80%, Physics=95% =>
@@ -46,8 +54,7 @@ public class BulletinCalculationService {
     }
 
     // Group grades by subject to calculate average per subject
-    Map<Long, List<EvaluationGrade>> gradesBySubject = grades.stream()
-        .collect(Collectors.groupingBy(grade -> grade.getEvaluation().getSubject().getIdSubject()));
+    Map<Long, List<EvaluationGrade>> gradesBySubject = groupGradesBySubject(grades);
 
     if (gradesBySubject.isEmpty()) {
       return null;
@@ -61,17 +68,9 @@ public class BulletinCalculationService {
       List<EvaluationGrade> subjectGrades = entry.getValue();
 
       // Calculate average for this subject
-      double subjectTotalScore = 0.0;
-      double subjectTotalMaxScore = 0.0;
-
-      for (EvaluationGrade grade : subjectGrades) {
-        subjectTotalScore += grade.getScore();
-        subjectTotalMaxScore += grade.getEvaluation().getMaxScore();
-      }
-
-      if (subjectTotalMaxScore > 0) {
-        // Calculate subject average as percentage (0-100)
-        double subjectAverage = subjectTotalScore / subjectTotalMaxScore * 100.0;
+      double subjectAverage = calculateSubjectAverage(subjectGrades);
+      
+      if (subjectAverage > 0) {
         totalSubjectAverages += subjectAverage;
         subjectCount++;
       }
@@ -175,8 +174,7 @@ public class BulletinCalculationService {
     }
 
     // Group grades by subject to calculate average per subject
-    Map<Long, List<EvaluationGrade>> gradesBySubject = grades.stream()
-        .collect(Collectors.groupingBy(grade -> grade.getEvaluation().getSubject().getIdSubject()));
+    Map<Long, List<EvaluationGrade>> gradesBySubject = groupGradesBySubject(grades);
 
     Map<Long, Double> subjectAverages = new HashMap<>();
 
@@ -185,17 +183,9 @@ public class BulletinCalculationService {
       List<EvaluationGrade> subjectGrades = entry.getValue();
 
       // Calculate average for this subject
-      double subjectTotalScore = 0.0;
-      double subjectTotalMaxScore = 0.0;
+      double subjectAverage = calculateSubjectAverage(subjectGrades);
 
-      for (EvaluationGrade grade : subjectGrades) {
-        subjectTotalScore += grade.getScore();
-        subjectTotalMaxScore += grade.getEvaluation().getMaxScore();
-      }
-
-      if (subjectTotalMaxScore > 0) {
-        // Calculate subject average as percentage (0-100)
-        double subjectAverage = subjectTotalScore / subjectTotalMaxScore * 100.0;
+      if (subjectAverage > 0) {
         subjectAverages.put(subjectId, subjectAverage);
       }
     }
@@ -217,5 +207,26 @@ public class BulletinCalculationService {
           && grade.getIncludeInCalculation()
           && grade.getStatus() == EvaluationGrade.GradeStatus.PRESENT)
         .collect(Collectors.toList());
+  }
+
+  /**
+   * Calculate average for a subject based on a list of grades.
+   *
+   * @param subjectGrades the grades for the subject
+   * @return the calculated average as percentage (0-100)
+   */
+  private double calculateSubjectAverage(List<EvaluationGrade> subjectGrades) {
+    double subjectTotalScore = 0.0;
+    double subjectTotalMaxScore = 0.0;
+
+    for (EvaluationGrade grade : subjectGrades) {
+      subjectTotalScore += grade.getScore();
+      subjectTotalMaxScore += grade.getEvaluation().getMaxScore();
+    }
+
+    if (subjectTotalMaxScore > 0) {
+      return subjectTotalScore / subjectTotalMaxScore * 100.0;
+    }
+    return 0.0;
   }
 }

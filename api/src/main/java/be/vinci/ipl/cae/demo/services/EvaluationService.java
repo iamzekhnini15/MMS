@@ -11,6 +11,7 @@ import be.vinci.ipl.cae.demo.repositories.ClassesRepository;
 import be.vinci.ipl.cae.demo.repositories.EvaluationRepository;
 import be.vinci.ipl.cae.demo.repositories.SubjectRepository;
 import be.vinci.ipl.cae.demo.repositories.TeacherRepository;
+import be.vinci.ipl.cae.demo.utils.EntityUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class EvaluationService {
   private final ClassesRepository classesRepository;
   private final TeacherRepository teacherRepository;
   private final BulletinPeriodRepository bulletinPeriodRepository;
+  private final EntityUtils entityUtils;
 
   /**
    * Get all evaluations for a teacher.
@@ -51,10 +53,8 @@ public class EvaluationService {
    * @return list of evaluations
    */
   public List<Evaluation> getEvaluationsBySubjectAndClass(Long subjectId, Long classId) {
-    Subject subject = subjectRepository.findById(subjectId)
-        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
-    ClassEntity classEntity = classesRepository.findById(classId)
-        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+    Subject subject = entityUtils.validateAndGetSubject(subjectId);
+    ClassEntity classEntity = entityUtils.validateAndGetClass(classId);
     
     return evaluationRepository.findBySubjectAndClassEntity(subject, classEntity);
   }
@@ -72,12 +72,9 @@ public class EvaluationService {
       Long classId,
       Long periodId
   ) {
-    Subject subject = subjectRepository.findById(subjectId)
-        .orElseThrow(() -> new IllegalArgumentException("Subject not found"));
-    ClassEntity classEntity = classesRepository.findById(classId)
-        .orElseThrow(() -> new IllegalArgumentException("Class not found"));
-    BulletinPeriod period = bulletinPeriodRepository.findById(periodId)
-        .orElseThrow(() -> new IllegalArgumentException("Period not found"));
+    Subject subject = entityUtils.validateAndGetSubject(subjectId);
+    ClassEntity classEntity = entityUtils.validateAndGetClass(classId);
+    BulletinPeriod period = entityUtils.validateAndGetPeriod(periodId);
     
     return evaluationRepository.findBySubjectAndClassEntityAndBulletinPeriod(
         subject,

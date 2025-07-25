@@ -4,6 +4,7 @@ package be.vinci.ipl.cae.demo.controllers;
 import be.vinci.ipl.cae.demo.models.dtos.BulletinPeriodDto;
 import be.vinci.ipl.cae.demo.models.entities.BulletinPeriod;
 import be.vinci.ipl.cae.demo.services.BulletinPeriodService;
+import be.vinci.ipl.cae.demo.utils.ControllerUtils;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -114,13 +115,8 @@ public class BulletinPeriodController {
   public ResponseEntity<BulletinPeriod> updatePeriod(
       @PathVariable Long id,
       @RequestBody BulletinPeriodDto dto) {
-    try {
-      Optional<BulletinPeriod> updatedPeriod = bulletinPeriodService.updatePeriod(id, dto);
-      return updatedPeriod.map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest().build();
-    }
+    return ControllerUtils.handleUpdateOperation(() -> 
+        bulletinPeriodService.updatePeriod(id, dto));
   }
 
   /**

@@ -20,6 +20,18 @@ public class BulletinPeriodService {
   private final BulletinPeriodRepository bulletinPeriodRepository;
 
   /**
+   * Helper method to set period properties from DTO.
+   */
+  private void setPeriodProperties(BulletinPeriod period, BulletinPeriodDto dto) {
+    period.setName(dto.getName());
+    period.setStartDate(dto.getStartDate());
+    period.setEndDate(dto.getEndDate());
+    period.setAcademicYear(dto.getAcademicYear());
+    period.setIsActive(dto.getIsActive() == null || dto.getIsActive());
+    period.setDescription(dto.getDescription());
+  }
+
+  /**
    * Get all bulletin periods (active and inactive).
    *
    * @return list of all periods
@@ -64,12 +76,7 @@ public class BulletinPeriodService {
    */
   public BulletinPeriod createPeriod(BulletinPeriodDto dto) {
     BulletinPeriod period = new BulletinPeriod();
-    period.setName(dto.getName());
-    period.setStartDate(dto.getStartDate());
-    period.setEndDate(dto.getEndDate());
-    period.setAcademicYear(dto.getAcademicYear());
-    period.setIsActive(dto.getIsActive() == null || dto.getIsActive());
-    period.setDescription(dto.getDescription());
+    setPeriodProperties(period, dto);
     
     return bulletinPeriodRepository.save(period);
   }
@@ -86,12 +93,7 @@ public class BulletinPeriodService {
     
     if (optionalPeriod.isPresent()) {
       BulletinPeriod period = optionalPeriod.get();
-      period.setName(dto.getName());
-      period.setStartDate(dto.getStartDate());
-      period.setEndDate(dto.getEndDate());
-      period.setAcademicYear(dto.getAcademicYear());
-      period.setIsActive(dto.getIsActive());
-      period.setDescription(dto.getDescription());
+      setPeriodProperties(period, dto);
       
       return Optional.of(bulletinPeriodRepository.save(period));
     }

@@ -4,6 +4,7 @@ import be.vinci.ipl.cae.demo.models.dtos.StudentBulletinDto;
 import be.vinci.ipl.cae.demo.models.entities.StudentBulletin;
 import be.vinci.ipl.cae.demo.models.entities.User;
 import be.vinci.ipl.cae.demo.services.StudentBulletinService;
+import be.vinci.ipl.cae.demo.utils.ControllerUtils;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -113,14 +114,8 @@ public class StudentBulletinController {
       @PathVariable Long bulletinId,
       @RequestParam String comment
   ) {
-    try {
-      StudentBulletin bulletin = studentBulletinService.updateBulletinComment(bulletinId, comment);
-      return ResponseEntity.ok(bulletin);
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.notFound().build();
-    } catch (Exception e) {
-      return ResponseEntity.internalServerError().build();
-    }
+    return ControllerUtils.handleServiceOperation(() -> 
+        studentBulletinService.updateBulletinComment(bulletinId, comment));
   }
 
   /**
@@ -133,14 +128,8 @@ public class StudentBulletinController {
   public ResponseEntity<StudentBulletin> toggleBulletinVisibility(
       @PathVariable Long bulletinId
   ) {
-    try {
-      StudentBulletin bulletin = studentBulletinService.toggleBulletinVisibility(bulletinId);
-      return ResponseEntity.ok(bulletin);
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.notFound().build();
-    } catch (Exception e) {
-      return ResponseEntity.internalServerError().build();
-    }
+    return ControllerUtils.handleServiceOperation(() -> 
+        studentBulletinService.toggleBulletinVisibility(bulletinId));
   }
 
   /**
