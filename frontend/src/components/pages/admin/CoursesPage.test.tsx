@@ -135,7 +135,6 @@ describe('CoursesPage', () => {
     expect(screen.getByText('Actions')).toBeTruthy();
   });
 
-
   it('should show loading state', () => {
     const loadingContext = {
       ...mockCoursesContextValue,
