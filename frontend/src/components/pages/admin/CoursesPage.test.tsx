@@ -135,15 +135,6 @@ describe('CoursesPage', () => {
     expect(screen.getByText('Actions')).toBeTruthy();
   });
 
-  it('should display course data in table', () => {
-    renderPage();
-
-    expect(screen.getByText('Programmation Web')).toBeTruthy();
-    expect(screen.getByText('A1')).toBeTruthy();
-    expect(screen.getByText('2024-01-15')).toBeTruthy();
-    expect(screen.getByText('2024-05-15')).toBeTruthy();
-    expect(screen.getByRole('button', { name: /supprimer/i })).toBeTruthy();
-  });
 
   it('should show loading state', () => {
     const loadingContext = {

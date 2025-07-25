@@ -18,7 +18,6 @@ import ManageTeacher from './components/pages/admin/ManageTeacher';
 import ManageClassroom from './components/pages/admin/ManageClassroom';
 import ClassDetailPage from './components/pages/admin/ClassDetailsPage';
 import CourseDetailPage from './components/pages/admin/CourseDetailsPage';
-import NetworkDebugPage from './components/pages/debug/NetworkDebugPage';
 import {
   TeacherDashboard,
   EvaluationsManagement,
@@ -69,15 +68,6 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <HomePage /> },
-      {
-        path: 'debug',
-        element: (
-          <ProtectedRoute
-            requiredRoles={['ADMIN']}
-            element={<NetworkDebugPage />}
-          />
-        ),
-      },
       {
         path: 'dashboard',
         element: (

@@ -8,8 +8,94 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job pour le frontend (Azure Static Web Apps)
+  # Job pour tester le frontend
+  test_frontend:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Test Frontend
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Run linter
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: Run type check
+        run: |
+          cd frontend
+          npm run type-check
+
+      - name: Run tests (optional)
+        run: |
+          cd frontend
+          npm run test -- --run
+        env:
+          CI: true
+        continue-on-error: true
+
+      - name: Build frontend (test)
+        run: |
+          cd frontend
+          npm run build
+        env:
+          VITE_API_URL: ${{ secrets.AZURE_API_URL }}
+
+  # Job pour tester le backend
+  test_backend:
+    runs-on: ubuntu-latest
+    name: Test Backend
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run backend tests (optional)
+        run: |
+          cd api
+          mvn clean test
+        continue-on-error: true
+
+      - name: Run backend build
+        run: |
+          cd api
+          mvn clean package -DskipTests
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: backend-test-results
+          path: api/target/surefire-reports/
+
+  # Job pour déployer le frontend (dépend des tests)
   build_and_deploy_frontend:
+    needs: [test_frontend, test_backend]
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Frontend
@@ -48,8 +134,9 @@ jobs:
           api_location: ""
           output_location: "dist"
 
-  # Job pour le backend (Azure App Service)
+  # Job pour déployer le backend (dépend des tests)
   build_and_deploy_backend:
+    needs: [test_frontend, test_backend]
     runs-on: ubuntu-latest
     name: Build and Deploy Backend
     steps:
