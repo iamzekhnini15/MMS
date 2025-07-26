@@ -133,7 +133,7 @@ jobs:
 
       - name: Wait and check test results
         run: |
-          CONTAINER_ID=$(docker ps -qf "name=e2e-prod")
+          CONTAINER_ID=$(docker ps -aqf "name=e2e-prod")
           EXIT_CODE=$(docker wait $CONTAINER_ID)
           docker compose logs e2e
           docker cp $CONTAINER_ID:/app/playwright-report ./e2e/playwright-report
