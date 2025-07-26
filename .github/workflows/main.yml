@@ -126,22 +126,18 @@ jobs:
         run: docker --version
 
       - name: Start stack with docker-compose
-        run: docker compose up --build -d
+        run: docker compose up --build --exit-code-from e2e
 
-      - name: Wait for services and run e2e tests inside container
-        run: docker logs -f e2e-prod
+      - name: Show logs if failed
+        if: failure()
+        run: docker compose logs
 
-      - name: Wait and check test results
+      - name: Copy E2E reports
+        if: always()
         run: |
           CONTAINER_ID=$(docker ps -aqf "name=e2e-prod")
-          EXIT_CODE=$(docker wait $CONTAINER_ID)
-          docker compose logs e2e
-          docker cp $CONTAINER_ID:/app/playwright-report ./e2e/playwright-report
-          docker cp $CONTAINER_ID:/app/test-results ./e2e/test-results
-          if [ "$EXIT_CODE" -ne 0 ]; then
-            echo "❌ E2E tests failed"
-            exit 1
-          fi
+          docker cp $CONTAINER_ID:/app/playwright-report ./e2e/playwright-report || true
+          docker cp $CONTAINER_ID:/app/test-results ./e2e/test-results || true
 
       - name: Shutdown stack
         if: always()
