@@ -127,7 +127,7 @@ jobs:
         run: |
           CONTAINER_ID=$(docker ps -qf "name=e2e-prod")
           EXIT_CODE=$(docker wait $CONTAINER_ID)
-          docker-compose logs e2e
+          docker compose logs e2e
           docker cp $CONTAINER_ID:/app/playwright-report ./e2e/playwright-report
           docker cp $CONTAINER_ID:/app/test-results ./e2e/test-results
           if [ "$EXIT_CODE" -ne 0 ]; then
