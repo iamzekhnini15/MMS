@@ -7,8 +7,6 @@ RUN npm ci
 
 COPY . .
 
-# Ajout d'un script d'attente
-COPY wait-for.sh /usr/local/bin/wait-for
-RUN chmod +x /usr/local/bin/wait-for
+RUN chmod +x ./entrypoint.sh ./wait-for.sh
 
 CMD ["./entrypoint.sh"]
