@@ -49,4 +49,3 @@ services:
     depends_on:
       - api
       - frontend
-    entrypoint: ["sh", "-c", "sleep 20 && npx playwright test"]

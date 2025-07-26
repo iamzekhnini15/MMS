@@ -125,8 +125,11 @@ jobs:
       - name: Set up Docker
         run: docker --version
 
-      - name: Start docker compose stack
+      - name: Start stack with docker-compose
         run: docker compose up --build -d
+
+      - name: Wait for services and run e2e tests inside container
+        run: docker logs -f e2e-prod
 
       - name: Wait and check test results
         run: |

@@ -1,6 +1,14 @@
 FROM mcr.microsoft.com/playwright:v1.50.1-jammy
+
 WORKDIR /app
+
 COPY package*.json ./
-COPY . .
 RUN npm ci
-CMD ["npx", "playwright", "test"]
+
+COPY . .
+
+# Ajout d'un script d'attente
+COPY wait-for.sh /usr/local/bin/wait-for
+RUN chmod +x /usr/local/bin/wait-for
+
+CMD ["./entrypoint.sh"]
