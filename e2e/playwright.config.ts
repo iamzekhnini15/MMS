@@ -28,7 +28,7 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL:
       process.env.NODE_ENV === undefined ||
-      process.env.NODE_ENV === "development"
+        process.env.NODE_ENV === "development"
         ? "http://localhost:5173"
         : "http://reverse-proxy:80",
 
@@ -76,8 +76,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-     command: 'npm run start',
-     url: 'http://localhost:5172',
-     reuseExistingServer: !process.env.CI,
+    command: 'npm run dev',
+    cwd: '../frontend',
+    url: 'http://localhost:5173',
+    reuseExistingServer: !process.env.CI,
   },
 });
