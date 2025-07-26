@@ -43,7 +43,7 @@ const StudentBulletinsPage: React.FC = () => {
   const { fetchActivePeriods } = useContext(BulletinPeriodContext);
   const { authenticatedUser } = useContext(UserContext);
   const navigate = useNavigate();
-  
+
   const [bulletins, setBulletins] = useState<StudentBulletinSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,6 +56,7 @@ const StudentBulletinsPage: React.FC = () => {
     if (authenticatedUser?.user) {
       loadStudentBulletins();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticatedUser]);
 
   const loadStudentBulletins = async () => {
@@ -63,16 +64,19 @@ const StudentBulletinsPage: React.FC = () => {
 
     setLoading(true);
     setError(null);
-    
+
     try {
       const userId = authenticatedUser.user.idUser;
-      const response = await fetch(`/api/bulletins/student/user/${userId}/visible`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `${authenticatedUser.token}`,
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `/api/bulletins/student/user/${userId}/visible`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `${authenticatedUser.token}`,
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Erreur lors du chargement des bulletins');
@@ -89,7 +93,9 @@ const StudentBulletinsPage: React.FC = () => {
   };
 
   const handleViewDetailedBulletin = (bulletin: StudentBulletinSummary) => {
-    navigate(`/student/bulletins/detail/${bulletin.student.idStudent}/${bulletin.bulletinPeriod.idPeriod}`);
+    navigate(
+      `/student/bulletins/detail/${bulletin.student.idStudent}/${bulletin.bulletinPeriod.idPeriod}`,
+    );
   };
 
   const getGradeColor = (average: number) => {
@@ -102,7 +108,7 @@ const StudentBulletinsPage: React.FC = () => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       day: '2-digit',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
@@ -111,7 +117,9 @@ const StudentBulletinsPage: React.FC = () => {
       <div className="container mx-auto p-6">
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">Chargement de vos bulletins...</span>
+          <span className="ml-3 text-gray-600">
+            Chargement de vos bulletins...
+          </span>
         </div>
       </div>
     );
@@ -135,7 +143,8 @@ const StudentBulletinsPage: React.FC = () => {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Mes Bulletins</h1>
         <p className="text-gray-600">
-          Consultez vos bulletins scolaires rendus disponibles par vos professeurs
+          Consultez vos bulletins scolaires rendus disponibles par vos
+          professeurs
         </p>
       </div>
 
@@ -148,30 +157,38 @@ const StudentBulletinsPage: React.FC = () => {
               Aucun bulletin disponible
             </h3>
             <p className="text-gray-600 mb-4">
-              Vos professeurs n'ont pas encore rendu de bulletins visibles pour vous.
+              Vos professeurs n'ont pas encore rendu de bulletins visibles pour
+              vous.
             </p>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {bulletins.map((bulletin) => (
-            <Card key={bulletin.idBulletin} className="hover:shadow-lg transition-shadow duration-200">
+            <Card
+              key={bulletin.idBulletin}
+              className="hover:shadow-lg transition-shadow duration-200"
+            >
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <DocumentTextIcon className="w-5 h-5 text-blue-600" />
-                    <CardTitle className="text-lg">{bulletin.bulletinPeriod.name}</CardTitle>
+                    <CardTitle className="text-lg">
+                      {bulletin.bulletinPeriod.name}
+                    </CardTitle>
                   </div>
                   <Badge variant="secondary" className="text-xs">
                     {bulletin.bulletinPeriod.academicYear}
                   </Badge>
                 </div>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 {/* Moyenne générale - mise en valeur */}
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className={`text-3xl font-bold mb-1 ${getGradeColor(bulletin.generalAverage).split(' ')[0]}`}>
+                  <div
+                    className={`text-3xl font-bold mb-1 ${getGradeColor(bulletin.generalAverage).split(' ')[0]}`}
+                  >
                     {bulletin.generalAverage.toFixed(1)}%
                   </div>
                   <div className="text-sm text-gray-600">Moyenne générale</div>
@@ -188,7 +205,7 @@ const StudentBulletinsPage: React.FC = () => {
                       {bulletin.classRank}ème / {bulletin.totalStudents}
                     </div>
                   </div>
-                  
+
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-gray-600 mb-1">
                       <AcademicCapIcon className="w-4 h-4" />
@@ -209,14 +226,18 @@ const StudentBulletinsPage: React.FC = () => {
                 {/* Commentaire s'il existe */}
                 {bulletin.generalComment && (
                   <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-sm text-blue-800 font-medium mb-1">Commentaire :</p>
-                    <p className="text-sm text-blue-700">{bulletin.generalComment}</p>
+                    <p className="text-sm text-blue-800 font-medium mb-1">
+                      Commentaire :
+                    </p>
+                    <p className="text-sm text-blue-700">
+                      {bulletin.generalComment}
+                    </p>
                   </div>
                 )}
 
                 {/* Bouton d'action */}
                 <div className="pt-2">
-                  <Button 
+                  <Button
                     onClick={() => handleViewDetailedBulletin(bulletin)}
                     className="w-full flex items-center gap-2"
                   >
