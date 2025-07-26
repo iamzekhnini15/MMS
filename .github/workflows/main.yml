@@ -120,8 +120,8 @@ jobs:
       - name: Set up Docker
         run: docker --version
 
-      - name: Start docker-compose stack
-        run: docker-compose up --build -d
+      - name: Start docker compose stack
+        run: docker compose up --build -d
 
       - name: Wait and check test results
         run: |
@@ -137,7 +137,7 @@ jobs:
 
       - name: Shutdown stack
         if: always()
-        run: docker-compose down
+        run: docker compose down
 
       - name: Upload E2E Reports
         uses: actions/upload-artifact@v4
