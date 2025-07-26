@@ -1,0 +1,43 @@
+# Maven
+target/
+!target/*.jar
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+*.md
+!README.md
+
+# Test files
+src/test/
+*.http
+
+# Application specific
+uploads/
+publish-profile-secret.txt

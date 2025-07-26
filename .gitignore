@@ -4,9 +4,59 @@
 Thumbs.db
 ### Linux
 lost+found
+
+# Environment files
 .env
 *.env
+!.env.example
+
+# Docker
+docker-compose.override.yml
 
 # Coverage reports
 coverage/
 **/coverage/
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Security
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+
+# IDE
+.vscode/settings.json
+.idea/
+*.iml
+*.swp
+*.swo
+
+# Build artifacts
+target/
+dist/
+build/
+node_modules/
+
+# Uploads
+uploads/
+!uploads/.gitkeep

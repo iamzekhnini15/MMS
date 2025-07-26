@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import Navbar from '../Navbar';
 import { AppSidebar } from '../app-sidebar';
-import { UserContext } from '@/contexts/UserContext';
+import { UserContext } from '../../contexts/UserContext';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import DarkModeToggle from '@/components/ui/dark-mode-toggle';
