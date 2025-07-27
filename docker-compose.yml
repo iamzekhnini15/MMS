@@ -5,11 +5,11 @@ services:
     build:
       context: ./frontend
     ports:
-      - 5172:5172
+      - 5173:5173
     depends_on:
       - api
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5172"]
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -1,0 +1,25 @@
+services:
+  frontend:
+    image: ghcr.io/iamzekhnini15/frontend-prod:latest
+    container_name: frontend-prod
+    ports:
+      - 5172:5172
+    depends_on:
+      - api
+
+  api:
+    image: ghcr.io/iamzekhnini15/api-prod:latest
+    container_name: api-prod
+    ports:
+      - 3000:3000
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    entrypoint: ["java", "-jar", "app.jar", "--spring.profiles.active=staging"]
+
+  reverse-proxy:
+    image: ghcr.io/iamzekhnini15/reverse-proxy-prod:latest
+    container_name: reverse-proxy-prod
+    ports:
+      - 80:80
