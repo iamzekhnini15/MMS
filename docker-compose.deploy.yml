@@ -2,8 +2,8 @@ services:
   frontend:
     image: ghcr.io/iamzekhnini15/mms/frontend-prod:latest
     container_name: frontend-prod
-    ports:
-      - 80:80
+    expose:
+      - 80  # ✅ utiliser expose au lieu de ports (interne au réseau Docker)
     depends_on:
       - api
     healthcheck:
@@ -15,16 +15,24 @@ services:
   api:
     image: ghcr.io/iamzekhnini15/mms/api-prod:latest
     container_name: api-prod
-    ports:
-      - 3000:3000
+    expose:
+      - 3000
     environment:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     entrypoint: ["java", "-jar", "app.jar", "--spring.profiles.active=staging"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   reverse-proxy:
     image: ghcr.io/iamzekhnini15/mms/reverse-proxy-prod:latest
     container_name: reverse-proxy-prod
     ports:
-      - 80:80
+      - 80:80  # ✅ SEUL le reverse proxy expose le port public
+    depends_on:
+      - frontend
+      - api
