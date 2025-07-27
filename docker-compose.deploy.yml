@@ -1,9 +1,11 @@
+version: '3.8'
+
 services:
   frontend:
     image: ghcr.io/iamzekhnini15/mms/frontend-prod:latest
     container_name: frontend-prod
     expose:
-      - 80  # ✅ utiliser expose au lieu de ports (interne au réseau Docker)
+      - "80"  # accessible en interne uniquement (via reverse-proxy)
     depends_on:
       - api
     healthcheck:
@@ -16,11 +18,11 @@ services:
     image: ghcr.io/iamzekhnini15/mms/api-prod:latest
     container_name: api-prod
     expose:
-      - 3000
+      - "3000"
     environment:
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     entrypoint: ["java", "-jar", "app.jar", "--spring.profiles.active=staging"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/actuator/health"]
@@ -32,7 +34,7 @@ services:
     image: ghcr.io/iamzekhnini15/mms/reverse-proxy-prod:latest
     container_name: reverse-proxy-prod
     ports:
-      - 80:80  # ✅ SEUL le reverse proxy expose le port public
+      - "80:80"  # c'est ce conteneur que Azure va exposer publiquement
     depends_on:
       - frontend
       - api
