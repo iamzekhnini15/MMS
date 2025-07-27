@@ -1,14 +1,14 @@
 services:
   frontend:
-    image: ghcr.io/iamzekhnini15/frontend-prod:latest
+    image: ghcr.io/iamzekhnini15/mms/frontend-prod:latest
     container_name: frontend-prod
     ports:
-      - 5172:5172
+      - 5173:5173
     depends_on:
       - api
 
   api:
-    image: ghcr.io/iamzekhnini15/api-prod:latest
+    image: ghcr.io/iamzekhnini15/mms/api-prod:latest
     container_name: api-prod
     ports:
       - 3000:3000
@@ -19,7 +19,7 @@ services:
     entrypoint: ["java", "-jar", "app.jar", "--spring.profiles.active=staging"]
 
   reverse-proxy:
-    image: ghcr.io/iamzekhnini15/reverse-proxy-prod:latest
+    image: ghcr.io/iamzekhnini15/mms/reverse-proxy-prod:latest
     container_name: reverse-proxy-prod
     ports:
       - 80:80
