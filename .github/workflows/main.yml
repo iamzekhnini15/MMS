@@ -193,12 +193,12 @@ jobs:
 
       - name: Build and tag frontend image
         run: |
-          docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/frontend-prod:latest -f frontend/Dockerfile .
+          docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/frontend-prod:latest -f frontend/Dockerfile frontend
           docker tag ghcr.io/${{ secrets.GHCR_USERNAME }}/frontend-prod:latest ghcr.io/${{ secrets.GHCR_USERNAME }}/frontend-prod:${{ github.run_number }}
 
       - name: Build and tag api image
         run: |
-          docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/api-prod:latest -f api/Dockerfile .
+          docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/api-prod:latest -f api/Dockerfile api
           docker tag ghcr.io/${{ secrets.GHCR_USERNAME }}/api-prod:latest ghcr.io/${{ secrets.GHCR_USERNAME }}/api-prod:${{ github.run_number }}
 
       - name: Push frontend images
