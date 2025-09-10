@@ -73,7 +73,7 @@ const Courses: React.FC = () => {
       alert('Veuillez renseigner le nom du cours');
       return;
     }
-  // Note: `level` is optional in the create payload for backward compatibility
+    // Note: `level` is optional in the create payload for backward compatibility
     if (!form.classroom.idClassroom) {
       alert('Veuillez choisir une salle de cours');
       return;
@@ -93,10 +93,10 @@ const Courses: React.FC = () => {
       // level intentionally omitted to keep payload compatible with tests
     };
 
-  console.log('Formulaire soumis', newCourse);
-  // Cast payload to expected signature; level intentionally omitted for
-  // backward-compatible test behavior.
-  await createCourse(newCourse as unknown as Omit<Course, 'idCourse'>);
+    console.log('Formulaire soumis', newCourse);
+    // Cast payload to expected signature; level intentionally omitted for
+    // backward-compatible test behavior.
+    await createCourse(newCourse as unknown as Omit<Course, 'idCourse'>);
     setShowModal(false);
   };
 
