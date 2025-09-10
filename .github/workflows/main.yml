@@ -120,6 +120,7 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-latest
     needs: [api_test, frontend_test]
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -127,23 +128,44 @@ jobs:
       - name: Set up Docker
         run: docker --version
 
+      - name: Build all images
+        run: |
+          echo "Building all Docker images..."
+          docker compose build --no-cache
+
       - name: Start stack with docker-compose
-        run: docker compose up --build --exit-code-from e2e
+        run: |
+          echo "Starting application stack..."
+          docker compose up --abort-on-container-exit --exit-code-from e2e --timeout 300
+
+      - name: Show container status
+        if: always()
+        run: docker compose ps -a
 
       - name: Show logs if failed
         if: failure()
-        run: docker compose logs
+        run: |
+          echo "=== Database logs ==="
+          docker compose logs db
+          echo "=== API logs ==="
+          docker compose logs api
+          echo "=== Frontend logs ==="
+          docker compose logs frontend
+          echo "=== E2E logs ==="
+          docker compose logs e2e
 
       - name: Copy E2E reports
         if: always()
         run: |
           CONTAINER_ID=$(docker ps -aqf "name=e2e-prod")
-          docker cp $CONTAINER_ID:/app/playwright-report ./e2e/playwright-report || true
-          docker cp $CONTAINER_ID:/app/test-results ./e2e/test-results || true
+          if [ ! -z "$CONTAINER_ID" ]; then
+            docker cp $CONTAINER_ID:/app/playwright-report ./e2e/playwright-report || true
+            docker cp $CONTAINER_ID:/app/test-results ./e2e/test-results || true
+          fi
 
       - name: Shutdown stack
         if: always()
-        run: docker compose down
+        run: docker compose down --volumes
 
       - name: Upload E2E Reports
         uses: actions/upload-artifact@v4
