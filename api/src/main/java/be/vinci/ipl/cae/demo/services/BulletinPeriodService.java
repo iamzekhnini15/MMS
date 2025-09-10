@@ -46,7 +46,7 @@ public class BulletinPeriodService {
    * @return list of active periods
    */
   public List<BulletinPeriod> getAllActivePeriods() {
-    return bulletinPeriodRepository.findByIsActiveTrue();
+    return bulletinPeriodRepository.findByIsBulletinActiveTrue();
   }
 
   /**
@@ -56,7 +56,7 @@ public class BulletinPeriodService {
    * @return list of periods for the year
    */
   public List<BulletinPeriod> getPeriodsByAcademicYear(String academicYear) {
-    return bulletinPeriodRepository.findByAcademicYearAndIsActiveTrue(academicYear);
+    return bulletinPeriodRepository.findByBulletinAcademicYearAndIsBulletinActiveTrue(academicYear);
   }
 
   /**

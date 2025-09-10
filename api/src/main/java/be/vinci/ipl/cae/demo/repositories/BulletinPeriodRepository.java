@@ -20,7 +20,7 @@ public interface BulletinPeriodRepository extends JpaRepository<BulletinPeriod, 
    *
    * @return list of active bulletin periods
    */
-  List<BulletinPeriod> findByIsActiveTrue();
+  List<BulletinPeriod> findByIsBulletinActiveTrue();
 
   /**
    * Find bulletin periods by academic year.
@@ -28,7 +28,7 @@ public interface BulletinPeriodRepository extends JpaRepository<BulletinPeriod, 
    * @param academicYear the academic year
    * @return list of bulletin periods for the given academic year
    */
-  List<BulletinPeriod> findByAcademicYearAndIsActiveTrue(String academicYear);
+  List<BulletinPeriod> findByBulletinAcademicYearAndIsBulletinActiveTrue(String academicYear);
 
   /**
    * Find the current active period based on current date.
@@ -36,8 +36,8 @@ public interface BulletinPeriodRepository extends JpaRepository<BulletinPeriod, 
    * @param currentDate the current date
    * @return the current active period if found
    */
-  @Query("SELECT bp FROM BulletinPeriod bp WHERE bp.isActive = true "
-      + "AND bp.startDate <= :currentDate "
-      + "AND bp.endDate >= :currentDate")
+  @Query("SELECT bp FROM BulletinPeriod bp WHERE bp.isBulletinActive = true "
+      + "AND bp.bulletinStartDate <= :currentDate "
+      + "AND bp.bulletinEndDate >= :currentDate")
   Optional<BulletinPeriod> findCurrentPeriod(@Param("currentDate") java.util.Date currentDate);
 }

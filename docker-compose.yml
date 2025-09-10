@@ -29,6 +29,7 @@ services:
       POSTGRES_DB: mms
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: HayounZ2002/
+      AZURE_BLOB_SAS_TOKEN: "dummy_token_for_testing"
     entrypoint: ["/wait-for-postgres.sh", "db-test", "java", "-jar", "app.jar", "--spring.profiles.active=test"]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/actuator/health"]

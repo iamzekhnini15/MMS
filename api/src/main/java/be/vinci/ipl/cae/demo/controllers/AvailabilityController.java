@@ -72,7 +72,7 @@ public class AvailabilityController {
   public ResponseEntity<List<ClassroomAvailability>> getClassroomAvailabilities(
       @PathVariable Long classroomId) {
     List<ClassroomAvailability> availabilities =
-        classroomAvailabilityRepository.findByClassroomIdClassroom(classroomId);
+        classroomAvailabilityRepository.findByAvailableClassroomIdClassroom(classroomId);
     return ResponseEntity.ok(availabilities);
   }
 

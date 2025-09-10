@@ -195,7 +195,7 @@ public class TimetableGeneratorService {
     
     // Check classroom availability
     ClassroomAvailability classroomAvail = classroomAvailabilityRepository
-        .findByClassroomIdClassroomAndTimeSlotIdTimeSlot(
+        .findByAvailableClassroomIdClassroomAndAvailableTimeSlotIdTimeSlot(
             classroom.getIdClassroom(),
             timeSlot.getIdTimeSlot()
         );

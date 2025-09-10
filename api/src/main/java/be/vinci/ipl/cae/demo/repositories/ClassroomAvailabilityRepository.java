@@ -18,7 +18,7 @@ public interface ClassroomAvailabilityRepository
    * @param classroomId the classroom ID
    * @return list of classroom availabilities
    */
-  List<ClassroomAvailability> findByClassroomIdClassroom(Long classroomId);
+  List<ClassroomAvailability> findByAvailableClassroomIdClassroom(Long classroomId);
 
   /**
    * Find availability for a classroom in a specific time slot.
@@ -27,7 +27,7 @@ public interface ClassroomAvailabilityRepository
    * @param timeSlotId the time slot ID
    * @return classroom availability if exists
    */
-  ClassroomAvailability findByClassroomIdClassroomAndTimeSlotIdTimeSlot(
+  ClassroomAvailability findByAvailableClassroomIdClassroomAndAvailableTimeSlotIdTimeSlot(
       Long classroomId, Long timeSlotId);
 
   /**
@@ -36,5 +36,5 @@ public interface ClassroomAvailabilityRepository
    * @param timeSlotId the time slot ID
    * @return list of available classroom availabilities
    */
-  List<ClassroomAvailability> findByTimeSlotIdTimeSlotAndIsAvailableTrue(Long timeSlotId);
+  List<ClassroomAvailability> findByAvailableTimeSlotIdTimeSlotAndIsAvailableTrue(Long timeSlotId);
 }

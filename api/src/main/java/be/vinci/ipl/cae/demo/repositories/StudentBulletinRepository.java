@@ -86,7 +86,7 @@ public interface StudentBulletinRepository extends JpaRepository<StudentBulletin
    * @param isVisible whether the bulletin is visible
    * @return list of visible bulletins ordered by period start date descending
    */
-  List<StudentBulletin> findByStudentAndIsVisibleOrderByBulletinPeriodStartDateDesc(
+  List<StudentBulletin> findByStudentAndIsVisibleOrderByBulletinPeriodBulletinStartDateDesc(
       Student student,
       boolean isVisible
   );
