@@ -29,6 +29,8 @@ import EvaluationContext from '../../../contexts/EvaluationContext';
 import { SubjectContext } from '../../../contexts/SubjectContext';
 import BulletinPeriodContext from '../../../contexts/BulletinPeriodContext';
 import type { EvaluationGrade, Subject, BulletinPeriod } from '../../../types';
+import { getAuthenticatedUser } from '@/utils/session';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const MyGradesPage: React.FC = () => {
   const { evaluationGrades, loading, error, fetchVisibleGradesByStudent } =
@@ -43,9 +45,11 @@ const MyGradesPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
-    // Pour le moment, utilisons un ID étudiant hardcodé pour les tests
-    const studentId = 1; // TODO: Récupérer de authenticatedUser quand disponible
-    fetchVisibleGradesByStudent(studentId);
+    const authenticatedUser = getAuthenticatedUser();
+    const studentId = authenticatedUser?.idStudent;
+    if (typeof studentId === 'number') {
+      fetchVisibleGradesByStudent(studentId);
+    }
     fetchAllSubjects();
     fetchActivePeriods();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,12 +171,68 @@ const MyGradesPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-blue-400 mx-auto mb-4"></div>
-          <p className="text-muted-foreground dark:text-gray-300">
-            Chargement de vos notes...
-          </p>
+      <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
+        {/* Header skeleton */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex-1">
+            <Skeleton className="h-8 w-40 mb-2" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <div className="flex items-center space-x-2 self-center sm:self-auto">
+            <Skeleton className="h-6 w-6 rounded-full" />
+            <Skeleton className="h-5 w-24" />
+          </div>
+        </div>
+
+        {/* Filtres skeleton */}
+        <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg">
+          <div className="p-3 sm:p-4 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <Skeleton className="h-10 w-full sm:w-48 rounded" />
+            <Skeleton className="h-10 w-full sm:w-48 rounded" />
+          </div>
+        </div>
+
+        {/* Moyennes par matière skeleton */}
+        <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg">
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-24 w-full rounded-lg" />
+            ))}
+          </div>
+        </div>
+
+        {/* Table skeleton */}
+        <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg">
+          <div className="hidden md:block overflow-x-auto p-4">
+            <table className="min-w-full">
+              <thead>
+                <tr>
+                  {[...Array(7)].map((_, i) => (
+                    <th key={i} className="px-4 py-2">
+                      <Skeleton className="h-4 w-20" />
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[...Array(5)].map((_, rowIdx) => (
+                  <tr key={rowIdx}>
+                    {[...Array(7)].map((_, colIdx) => (
+                      <td key={colIdx} className="px-4 py-3">
+                        <Skeleton className="h-4 w-20" />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {/* Mobile cards skeleton */}
+          <div className="block md:hidden p-4 space-y-3">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-32 w-full rounded-lg" />
+            ))}
+          </div>
         </div>
       </div>
     );

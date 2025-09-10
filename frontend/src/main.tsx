@@ -18,8 +18,11 @@ import ManageTeacher from './components/pages/admin/ManageTeacher';
 import ManageClassroom from './components/pages/admin/ManageClassroom';
 import ClassDetailPage from './components/pages/admin/ClassDetailsPage';
 import CourseDetailPage from './components/pages/admin/CourseDetailsPage';
+import ManageTimetables from './components/pages/admin/ManageTimetables';
+import AdminScheduleViewer from './components/pages/admin/AdminScheduleViewer';
 import {
   TeacherDashboard,
+  TeacherSchedule,
   EvaluationsManagement,
   GradeEntry,
   BulletinPeriodsManagement,
@@ -39,6 +42,7 @@ import {
 } from './components/pages/student';
 import { LoginForm } from './components/login-form';
 import ProtectedRoute from './components/ProtectedRoutes';
+import SettingsPage from './components/pages/SettingsPage';
 
 import { UserContextProvider } from './contexts/UserContext';
 import { KpiContextProvider } from './contexts/DashboardContext';
@@ -48,6 +52,7 @@ import { ClassroomProvider } from './contexts/ClassroomContext';
 import { ClassesProvider } from './contexts/ClassesContext';
 import { StudentProvider } from './contexts/StudentContext';
 import { SubjectProvider } from './contexts/SubjectContext';
+import { TimetableProvider } from './contexts/TimetableContext';
 import { BulletinPeriodProvider } from './contexts/BulletinPeriodContext';
 import { BulletinProvider } from './contexts/BulletinContext';
 import { BulletinCalculationProvider } from './contexts/BulletinCalculationContext';
@@ -118,6 +123,24 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute
             requiredRoles={['ADMIN']}
+            element={
+              <CoursesProvider>
+                <TeacherProvider>
+                  <SubjectProvider>
+                    <CourseDetailPage />
+                  </SubjectProvider>
+                </TeacherProvider>
+              </CoursesProvider>
+            }
+          />
+        ),
+      },
+      // Student-facing course details (professional URL)
+      {
+        path: 'courses/:id',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['STUDENT', 'ADMIN']}
             element={
               <CoursesProvider>
                 <TeacherProvider>
@@ -212,6 +235,44 @@ const router = createBrowserRouter([
                   </TeacherProvider>
                 </CoursesProvider>
               </KpiContextProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'manage-timetables',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={
+              <TimetableProvider>
+                <ClassesProvider>
+                  <SubjectProvider>
+                    <CoursesProvider>
+                      <TeacherProvider>
+                        <ClassroomProvider>
+                          <ManageTimetables />
+                        </ClassroomProvider>
+                      </TeacherProvider>
+                    </CoursesProvider>
+                  </SubjectProvider>
+                </ClassesProvider>
+              </TimetableProvider>
+            }
+          />
+        ),
+      },
+      {
+        path: 'view-schedules',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['ADMIN']}
+            element={
+              <ClassesProvider>
+                <TeacherProvider>
+                  <AdminScheduleViewer />
+                </TeacherProvider>
+              </ClassesProvider>
             }
           />
         ),
@@ -397,6 +458,15 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: 'teacher/schedule',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['TEACHER']}
+            element={<TeacherSchedule />}
+          />
+        ),
+      },
+      {
         path: 'student',
         element: (
           <ProtectedRoute
@@ -459,6 +529,15 @@ const router = createBrowserRouter([
           <ProtectedRoute
             requiredRoles={['STUDENT', 'ADMIN']}
             element={<StudentResources />}
+          />
+        ),
+      },
+      {
+        path: 'settings',
+        element: (
+          <ProtectedRoute
+            requiredRoles={['ADMIN', 'TEACHER', 'STUDENT']}
+            element={<SettingsPage />}
           />
         ),
       },

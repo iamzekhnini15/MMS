@@ -38,11 +38,11 @@ public class Course {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "idTeacher", nullable = false)
-  private Teacher teacher;
+  private Teacher courseTeacher;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "idClassroom", nullable = false)
-  private Classroom classroom;
+  private Classroom courseClassroom;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false)
@@ -51,4 +51,7 @@ public class Course {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false)
   private Date endDateTime;
+
+  @Column(nullable = false)
+  private String level;
 }

@@ -63,6 +63,7 @@ const mockCourse = {
   teacher: mockTeacher,
   startDateTime: '2024-01-15',
   endDateTime: '2024-05-15',
+  level: '1', // Ajout du champ manquant pour correspondre à l'interface Course
 };
 
 const mockCoursesContextValue = {

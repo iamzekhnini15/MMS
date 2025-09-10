@@ -13,6 +13,7 @@ const defaultContext: SubjectContextType = {
   fetchSubjectsByCourse: async () => {},
   toggleFileVisibility: async () => {},
   createSubject: async () => {},
+  deleteFile: async () => {},
 };
 
 const SubjectContext = createContext<SubjectContextType>(defaultContext);
@@ -22,6 +23,28 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
   const [files, setFiles] = useState<File[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Listen to global file-updated events dispatched from the SSE listener
+  if (typeof window !== 'undefined') {
+    window.addEventListener('file-updated', (evt: Event) => {
+      const custom = evt as CustomEvent;
+      const updatedFile = custom.detail as File;
+      setFiles((prev) => {
+        if (!prev) return prev;
+        const exists = prev.some((f) => f.idFile === updatedFile.idFile);
+        if (exists) {
+          return prev.map((f) =>
+            f.idFile === updatedFile.idFile ? updatedFile : f,
+          );
+        }
+        return [...prev, updatedFile];
+      });
+    });
+    window.addEventListener('file-deleted', (evt: Event) => {
+      const custom = evt as CustomEvent;
+      const id = custom.detail as number;
+      setFiles((prev) => (prev ? prev.filter((f) => f.idFile !== id) : prev));
+    });
+  }
 
   // const authenticatedUserFromStorage = getAuthenticatedUser();
 
@@ -106,6 +129,14 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleFileVisibility = useCallback(
     async (fileId: number, currentVisibility: boolean) => {
+      // Optimistic update: update local state immediately
+      if (!files) return;
+      const prevFiles = files;
+      const updatedFiles = files.map((f) =>
+        f.idFile === fileId ? { ...f, visible: !currentVisibility } : f,
+      );
+      setFiles(updatedFiles);
+
       try {
         const response = await fetch(`/api/file/${fileId}/toggleVisibility`, {
           method: 'PATCH',
@@ -113,18 +144,45 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
           body: JSON.stringify({ visible: !currentVisibility }),
         });
 
-        if (!response.ok)
+        if (!response.ok) {
           throw new Error('Erreur lors de la mise à jour de la visibilité');
+        }
 
-        await fetchAllFile();
+        // Optionally refresh in background to sync server state (non-blocking)
+        fetchAllFile().catch((e) =>
+          console.warn('Background refresh failed', e),
+        );
       } catch (error) {
         console.error(error);
+        // Revert local state
+        setFiles(prevFiles);
         alert(
           'Une erreur est survenue lors de la mise à jour de la visibilité.',
         );
       }
     },
-    [fetchAllFile],
+    [fetchAllFile, files],
+  );
+
+  const deleteFile = useCallback(
+    async (fileId: number) => {
+      if (!files) return;
+      const prevFiles = files;
+      // optimistic remove
+      setFiles(files.filter((f) => f.idFile !== fileId));
+      try {
+        const response = await fetch(`/api/file/${fileId}`, {
+          method: 'DELETE',
+        });
+        if (!response.ok)
+          throw new Error('Erreur lors de la suppression du fichier');
+      } catch (err) {
+        console.error(err);
+        setFiles(prevFiles);
+        alert('Une erreur est survenue lors de la suppression du fichier.');
+      }
+    },
+    [files],
   );
 
   // Alias for fetchSubject to match the interface
@@ -136,6 +194,7 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
     fetchAllSubjects,
     fetchSubjectsByCourse,
     toggleFileVisibility,
+    deleteFile,
     createSubject,
     files,
     subjects,
@@ -151,3 +210,32 @@ const SubjectProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export { SubjectContext, SubjectProvider };
+
+// Subscribe to server-sent events to update files in real-time
+// We attach the subscription globally when this module is imported
+if (typeof window !== 'undefined') {
+  try {
+    const evtSource = new EventSource('/api/file/stream');
+    evtSource.addEventListener('file-updated', (e: MessageEvent) => {
+      try {
+        const updated = JSON.parse(e.data);
+        // Dispatch a custom event so providers/components can react
+        window.dispatchEvent(
+          new CustomEvent('file-updated', { detail: updated }),
+        );
+      } catch (err) {
+        console.warn('Failed to parse SSE file-updated', err);
+      }
+    });
+    evtSource.addEventListener('file-deleted', (e: MessageEvent) => {
+      try {
+        const id = JSON.parse(e.data) as number;
+        window.dispatchEvent(new CustomEvent('file-deleted', { detail: id }));
+      } catch (err) {
+        console.warn('Failed to parse SSE file-deleted', err);
+      }
+    });
+  } catch (err) {
+    console.warn('SSE not available', err);
+  }
+}

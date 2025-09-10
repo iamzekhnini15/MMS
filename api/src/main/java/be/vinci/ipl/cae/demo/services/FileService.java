@@ -5,16 +5,20 @@ import be.vinci.ipl.cae.demo.models.entities.File;
 import be.vinci.ipl.cae.demo.models.entities.Subject;
 import be.vinci.ipl.cae.demo.repositories.FileRepository;
 import be.vinci.ipl.cae.demo.repositories.SubjectRepository;
+import com.azure.storage.blob.BlobClientBuilder;
+import com.azure.storage.blob.models.BlobHttpHeaders;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  * Service managing file-related operations.
@@ -26,8 +30,17 @@ public class FileService {
   private final SubjectRepository subjectRepository;
   private final FileRepository fileRepository;
 
-  @Value("${file.upload.dir:uploads}")
-  private String uploadDir;
+  // SSE emitters to notify clients of file changes
+  private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+
+  @Value("${azure.blob.service-endpoint}")
+  private String blobServiceEndpoint;
+
+  @Value("${azure.blob.sas-token}")
+  private String sasToken;
+
+  @Value("${azure.blob.container-name}")
+  private String containerName;
 
   /**
    * Retrieves all files.
@@ -81,39 +94,23 @@ public class FileService {
       String filename
   ) throws IOException {
 
-    // Validation du fichier
     if (file.isEmpty()) {
       throw new IllegalArgumentException("File is empty");
     }
 
-    // Validation du type de fichier
     String contentType = file.getContentType();
     if (!isValidFileType(contentType)) {
       throw new IllegalArgumentException("File type not allowed: " + contentType);
     }
 
-    // Génération d'un nom de fichier unique
-    String originalFilename = file.getOriginalFilename();
-    String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-    String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
-
-    // Création du dossier de destination
-    Path uploadPath = Paths.get(uploadDir);
-    if (!Files.exists(uploadPath)) {
-      Files.createDirectories(uploadPath);
-    }
-
-    // Sauvegarde du fichier
-    Path filePath = uploadPath.resolve(uniqueFilename);
-    Files.copy(file.getInputStream(), filePath);
+    String blobUrl = uploadFileToBlob(file);
 
     Subject subject = subjectRepository.findById(subjectId)
         .orElseThrow(() -> new IllegalArgumentException("Subject not found with id " + subjectId));
 
-    // Sauvegarde en base de données
     File fileEntity = new File();
-    fileEntity.setName(filename != null ? filename : originalFilename);
-    fileEntity.setUrl("/uploads/" + uniqueFilename); // URL relative pour accès web
+    fileEntity.setName(filename != null ? filename : file.getOriginalFilename());
+    fileEntity.setUrl(blobUrl);
     fileEntity.setSubject(subject);
     fileEntity.setVisible(true);
 
@@ -124,6 +121,43 @@ public class FileService {
     savedFileDto.setUrl(savedFile.getUrl());
 
     return savedFileDto;
+  }
+
+  /**
+   * Register an SseEmitter to receive file events.
+   *
+   * @return The registered SseEmitter.
+   */
+  public SseEmitter registerEmitter() {
+    SseEmitter emitter = new SseEmitter(0L); // no timeout
+    emitters.add(emitter);
+    emitter.onCompletion(() -> emitters.remove(emitter));
+    emitter.onTimeout(() -> emitters.remove(emitter));
+    return emitter;
+  }
+
+  private String uploadFileToBlob(MultipartFile file) {
+    String fileUuid = UUID.randomUUID().toString();
+    Map<String, String> metadata = new HashMap<>();
+    metadata.put("originalFileName", file.getOriginalFilename());
+
+    BlobClientBuilder blobClientBuilder = new BlobClientBuilder()
+        .endpoint(blobServiceEndpoint)
+        .sasToken(sasToken)
+        .containerName(containerName)
+        .blobName(fileUuid);
+
+    var blobClient = blobClientBuilder.buildClient();
+
+    try {
+      blobClient.upload(file.getInputStream(), file.getSize(), true);
+      blobClient.setMetadata(metadata);
+      blobClient.setHttpHeaders(new BlobHttpHeaders().setContentType(file.getContentType()));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to upload to Azure Blob Storage", e);
+    }
+
+    return blobClient.getBlobUrl();
   }
 
   /**
@@ -168,13 +202,89 @@ public class FileService {
    * @return The updated file with toggled visibility.
    * @throws IllegalArgumentException If the file is not found.
    */
-  public File toogleVisibility(Long fileId) {
+  public File toggleVisibility(Long fileId) {
     File file = fileRepository.findById(fileId)
         .orElseThrow(() -> new IllegalArgumentException("File not found with id " + fileId));
 
     file.setVisible(!file.isVisible());
-    return fileRepository.save(file);
+    File saved = fileRepository.save(file);
+    // notify SSE subscribers
+    notifyFileUpdated(saved);
+    return saved;
+  }
+
+  private void notifyFileUpdated(File file) {
+    for (SseEmitter emitter : emitters) {
+      try {
+        SseEmitter.SseEventBuilder event = SseEmitter.event()
+            .name("file-updated")
+            .data(file);
+        emitter.send(event);
+      } catch (IOException e) {
+        emitters.remove(emitter);
+      }
+    }
+  }
+
+  private void notifyFileDeleted(Long fileId) {
+    for (SseEmitter emitter : emitters) {
+      try {
+        SseEmitter.SseEventBuilder event = SseEmitter.event()
+            .name("file-deleted")
+            .data(fileId);
+        emitter.send(event);
+      } catch (IOException e) {
+        emitters.remove(emitter);
+      }
+    }
+  }
+
+  /**
+   * Deletes a file from both Azure Blob Storage and database.
+   *
+   * @param fileId The ID of the file to delete.
+   * @throws IllegalArgumentException If the file is not found.
+   * @throws RuntimeException If blob deletion fails.
+   */
+  public void deleteFile(Long fileId) {
+    File file = fileRepository.findById(fileId)
+        .orElseThrow(() -> new IllegalArgumentException("File not found with id " + fileId));
+    // Attempt to delete blob from Azure first. If this fails, do not delete DB record.
+    String url = file.getUrl();
+    try {
+      URI uri = new URI(url);
+      String path = uri.getPath(); // e.g. /container/blobName
+      String blobName;
+      int idx = path.indexOf(containerName);
+      if (idx >= 0) {
+        blobName = path.substring(idx + containerName.length());
+        if (blobName.startsWith("/")) {
+          blobName = blobName.substring(1);
+        }
+      } else {
+        String[] parts = path.split("/");
+        blobName = parts[parts.length - 1];
+      }
+      if (blobName.contains("?")) {
+        blobName = blobName.split("\\?")[0];
+      }
+
+      BlobClientBuilder blobClientBuilder = new BlobClientBuilder()
+          .endpoint(blobServiceEndpoint)
+          .sasToken(sasToken)
+          .containerName(containerName)
+          .blobName(blobName);
+      var blobClient = blobClientBuilder.buildClient();
+      // delete the blob - if this throws, we stop and do not delete DB record
+      blobClient.delete();
+    } catch (Exception e) {
+      // important: fail fast so we don't leave orphan DB entries if blob remains
+      throw new RuntimeException("Failed to delete blob for file id " + fileId + ": "
+        + e.getMessage(), e);
+    }
+
+    // Blob deleted successfully -> remove DB record and notify subscribers
+    fileRepository.delete(file);
+    notifyFileDeleted(fileId);
   }
 }
-
-

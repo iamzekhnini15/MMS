@@ -181,6 +181,8 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
+      console.log('🔍 Fetching visible grades for student:', studentId);
+      // Utiliser une route spécifique
       const response = await fetch(`/api/grades/student/${studentId}/visible`);
       if (!response.ok) {
         throw new Error('Failed to fetch student grades');

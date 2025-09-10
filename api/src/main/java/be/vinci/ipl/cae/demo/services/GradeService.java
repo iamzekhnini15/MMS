@@ -30,6 +30,7 @@ public class GradeService {
   private final EvaluationRepository evaluationRepository;
   private final StudentRepository studentRepository;
   private final TeacherRepository teacherRepository;
+  private final NotificationService notificationService;
 
   /**
    * Get all grades for an evaluation.
@@ -121,7 +122,12 @@ public class GradeService {
     grade.setComment(comment);
     grade.setGradedAt(new Date());
 
-    return gradeRepository.save(grade);
+    EvaluationGrade savedGrade = gradeRepository.save(grade);
+    
+    // Send notification for the grade publication
+    sendGradeNotification(student, evaluation, null);
+
+    return savedGrade;
   }
 
   /**
@@ -156,7 +162,11 @@ public class GradeService {
       grade.setComment(gradeDto.getComment());
       grade.setGradedAt(new Date());
 
-      savedGrades.add(gradeRepository.save(grade));
+      EvaluationGrade savedGrade = gradeRepository.save(grade);
+      savedGrades.add(savedGrade);
+      
+      // Send notification for each grade published
+      sendGradeNotification(student, evaluation, "for student " + student.getIdStudent());
     }
 
     return savedGrades;
@@ -309,6 +319,33 @@ public class GradeService {
         grade.setGradedBy(teacher);
       }
       return grade;
+    }
+  }
+
+  /**
+   * Helper method to send grade publication notification.
+   *
+   * @param student the student
+   * @param evaluation the evaluation
+   * @param additionalErrorContext additional context for error logging
+   */
+  private void sendGradeNotification(
+      Student student,
+      Evaluation evaluation,
+      String additionalErrorContext
+  ) {
+    try {
+      notificationService.notifyGradePublished(
+          student.getUser().getIdUser(),
+          evaluation.getSubject().getName(),
+          evaluation.getTitle()
+      );
+    } catch (Exception e) {
+      // Log notification error but don't fail the grade save
+      String errorMsg = "Failed to send grade notification" 
+          + (additionalErrorContext != null ? " " + additionalErrorContext : "") 
+          + ": " + e.getMessage();
+      System.err.println(errorMsg);
     }
   }
 }

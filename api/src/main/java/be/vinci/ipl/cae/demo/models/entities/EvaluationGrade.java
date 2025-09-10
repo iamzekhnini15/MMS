@@ -101,7 +101,7 @@ public class EvaluationGrade {
   public String getPeriodName() {
     return evaluation != null && evaluation.getBulletinPeriod() != null
       ?
-      evaluation.getBulletinPeriod().getName() : null;
+      evaluation.getBulletinPeriod().getBulletinPeriodName() : null;
   }
 
   @JsonProperty("studentName")

@@ -1,0 +1,86 @@
+### Test Manual Timetable Creation
+
+# Test with valid IDs (should work)
+POST http://localhost:3000/timetables/manual
+Content-Type: application/json
+
+{
+  "name": "Test Emploi du temps - IDs valides",
+  "description": "Test avec des IDs qui existent",
+  "entries": [
+    {
+      "classId": 1,
+      "courseId": 1,
+      "teacherId": 1,
+      "classroomId": 1,
+      "timeSlotId": 1
+    }
+  ]
+}
+
+###
+
+# Test with invalid course ID (should fail)
+POST http://localhost:3000/timetables/manual
+Content-Type: application/json
+
+{
+  "name": "Test Emploi du temps - Course ID invalide",
+  "description": "Test avec courseId qui n'existe pas",
+  "entries": [
+    {
+      "classId": 1,
+      "courseId": 999,
+      "teacherId": 1,
+      "classroomId": 1,
+      "timeSlotId": 1
+    }
+  ]
+}
+
+###
+
+# Test with invalid teacher ID (should fail)
+POST http://localhost:3000/timetables/manual
+Content-Type: application/json
+
+{
+  "name": "Test Emploi du temps - Teacher ID invalide",
+  "description": "Test avec teacherId qui n'existe pas",
+  "entries": [
+    {
+      "classId": 1,
+      "subjectId": 1,
+      "teacherId": 999,
+      "classroomId": 1,
+      "timeSlotId": 1
+    }
+  ]
+}
+
+###
+
+# Test with original payload (the one that fails) - NOW WITH COURSEID
+POST http://localhost:3000/timetables/manual
+Content-Type: application/json
+
+{
+  "name": "Emploi du temps test classe - 09/09/2025",
+  "description": "Emploi du temps créé manuellement pour la classe test classe",
+  "entries": [
+    {
+      "classId": 1,
+      "courseId": 1,
+      "teacherId": 2,
+      "classroomId": 1,
+      "timeSlotId": 5
+    },
+    {
+      "classId": 1,
+      "courseId": 1,
+      "teacherId": 2,
+      "classroomId": 1,
+      "timeSlotId": 6
+    }
+  ]
+}

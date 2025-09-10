@@ -13,4 +13,6 @@ public class AuthenticatedUser {
 
   private User user;
   private String token;
+  private Long idStudent;
+  private Long idTeacher;
 }

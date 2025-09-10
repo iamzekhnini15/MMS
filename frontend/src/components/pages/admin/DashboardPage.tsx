@@ -387,7 +387,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-background dark:bg-neutral-900 min-h-screen">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 dark:bg-neutral-900 min-h-screen">
       {/* En-tête */}
       <motion.div
         className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0"

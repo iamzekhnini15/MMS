@@ -11,6 +11,8 @@ interface Address {
 interface AuthenticatedUser {
   user: UserReceived;
   token: string;
+  idStudent?: number;
+  idTeacher?: number;
 }
 
 interface Classes {
@@ -53,6 +55,7 @@ interface Course {
   teacher: Teacher;
   startDateTime: string; // ISO 8601 date string
   endDateTime: string; // ISO 8601 date string
+  level: string;
 }
 
 interface CoursesContextType {
@@ -133,6 +136,7 @@ interface SubjectContextType {
     fileId: number,
     currentVisibility: boolean,
   ) => Promise<void>;
+  deleteFile: (fileId: number) => Promise<void>;
   createSubject: (newSubject: Omit<Subject, 'idSubject'>) => Promise<void>;
 }
 

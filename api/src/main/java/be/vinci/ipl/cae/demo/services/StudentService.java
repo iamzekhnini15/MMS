@@ -34,6 +34,17 @@ public class StudentService {
   }
 
   /**
+   * Retrieves a student by ID.
+   *
+   * @param id the ID of the student.
+   * @return the student entity.
+   */
+  public Student getStudentById(Long id) {
+    return studentRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Student not found: " + id));
+  }
+
+  /**
    * Adds a new student to the system.
    * The method saves the student's address, creates a user, associates the user to the student,
    * and saves the student in the database.

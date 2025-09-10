@@ -12,6 +12,7 @@ import {
   DetailedStudentBulletin,
 } from '../../../contexts/StudentBulletinContext';
 import jsPDF from 'jspdf';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const DetailedBulletinPage: React.FC = () => {
   const { studentId, periodId } = useParams<{
@@ -244,12 +245,72 @@ const DetailedBulletinPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">
-            Chargement du bulletin...
-          </p>
+      <div className="container mx-auto px-4 py-4 sm:py-6 max-w-4xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
+        {/* Header skeleton */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+          <Skeleton className="h-9 w-40 mb-2" />
+          <Skeleton className="h-9 w-40" />
+        </div>
+
+        {/* Titre de la page skeleton */}
+        <div className="text-center mb-6 sm:mb-8">
+          <Skeleton className="h-8 w-48 mx-auto mb-2" />
+          <Skeleton className="h-4 w-40 mx-auto mb-1" />
+          <Skeleton className="h-4 w-32 mx-auto" />
+        </div>
+
+        {/* Carte principale skeleton */}
+        <div className="mb-4 sm:mb-6 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg">
+          <div className="text-center px-4 sm:px-6 py-6">
+            <Skeleton className="h-12 w-32 mx-auto mb-2" />
+            <Skeleton className="h-4 w-24 mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 px-4 sm:px-6 pb-6">
+            <div className="text-center">
+              <Skeleton className="h-4 w-24 mx-auto mb-2" />
+              <Skeleton className="h-8 w-16 mx-auto mb-1" />
+              <Skeleton className="h-4 w-16 mx-auto" />
+            </div>
+            <div className="text-center">
+              <Skeleton className="h-4 w-24 mx-auto mb-2" />
+              <Skeleton className="h-8 w-16 mx-auto" />
+            </div>
+          </div>
+        </div>
+
+        {/* Matières skeleton */}
+        <div className="mb-4 sm:mb-6 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg">
+          <div className="px-4 sm:px-6 py-4">
+            <Skeleton className="h-6 w-32 mb-4" />
+            <div className="space-y-3 sm:space-y-4">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 dark:bg-neutral-800 rounded-lg gap-3 sm:gap-0"
+                >
+                  <Skeleton className="h-5 w-32" />
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="h-6 w-16" />
+                    <Skeleton className="h-6 w-16" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 sm:mt-6 pt-4 border-t border-gray-200 dark:border-neutral-700">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-6 w-24" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Commentaire skeleton */}
+        <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg">
+          <div className="px-4 sm:px-6 py-4">
+            <Skeleton className="h-6 w-32 mb-4" />
+            <Skeleton className="h-16 w-full rounded-lg" />
+          </div>
         </div>
       </div>
     );

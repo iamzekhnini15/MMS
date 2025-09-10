@@ -18,4 +18,12 @@ public interface CourseRepository extends CrudRepository<Course, Long> {
    * @return The found Course entity.
    */
   Course findById(long id);
+
+  /**
+   * Finds all courses with the specified level.
+   *
+   * @param level The level of the courses to find.
+   * @return A list of Course entities with the given level.
+   */
+  java.util.List<Course> findByLevel(String level);
 }

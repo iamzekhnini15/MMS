@@ -101,6 +101,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
         formData.append('filename', customFilename);
       }
 
+      console.log(formData.get('file'));
+      console.log(formData.get('filename'));
+
       const response = await fetch(`/api/subject/${subjectId}/uploadFile`, {
         method: 'POST',
         body: formData,

@@ -1,46 +1,137 @@
-import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { CalendarIcon, ClockIcon } from '@heroicons/react/24/outline';
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '@/contexts/UserContext';
+import { TimetableContext } from '@/contexts/TimetableContext';
+import ScheduleViewer from '@/components/schedule/ScheduleViewer';
+
+interface ScheduleEntry {
+  idTimetableEntry: number;
+  timeSlot: {
+    dayOfWeek: string;
+    startTime: string;
+    endTime: string;
+    name: string;
+  };
+  course: {
+    name: string;
+  };
+  teacher: {
+    firstname: string;
+    lastname: string;
+  };
+  classroom: {
+    name: string;
+    location: string;
+  };
+  classEntity: {
+    name: string;
+    level: number;
+  };
+}
 
 const StudentSchedule: React.FC = () => {
-  return (
-    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
-      {/* Header responsive */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
-            Mon Emploi du Temps
-          </h1>
-          <p className="text-muted-foreground dark:text-gray-300 mt-1 sm:mt-2 text-sm sm:text-base">
-            Consultez votre planning de cours
-          </p>
-        </div>
-        <div className="self-center sm:self-auto">
-          <CalendarIcon className="h-8 w-8 sm:h-12 sm:w-12 text-primary dark:text-blue-400" />
+  const { authenticatedUser } = useContext(UserContext);
+  const { fetchTimetableForClass } = useContext(TimetableContext);
+  const [scheduleEntries, setScheduleEntries] = useState<ScheduleEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadStudentSchedule = async () => {
+      if (!authenticatedUser?.idStudent) {
+        setError('Informations étudiant manquantes');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Récupérer les informations de l'étudiant pour avoir sa classe
+        const studentResponse = await fetch(
+          `/api/students/${authenticatedUser.idStudent}`,
+          {
+            headers: {
+              Authorization: `${authenticatedUser.token}`,
+            },
+          },
+        );
+
+        if (!studentResponse.ok) {
+          throw new Error(
+            "Impossible de récupérer les informations de l'étudiant",
+          );
+        }
+
+        const studentData = await studentResponse.json();
+
+        if (!studentData.classEntity?.idClass) {
+          setError('Aucune classe assignée');
+          setLoading(false);
+          return;
+        }
+
+        // Récupérer l'emploi du temps de la classe
+        const entries = await fetchTimetableForClass(
+          studentData.classEntity.idClass,
+        );
+
+        // Convertir les TimetableEntry du backend en ScheduleEntry attendu par le
+        // composant ScheduleViewer.
+        const mapped = (entries || []).map((e) => {
+          const teacherFull = e.teacherName || '';
+          const parts = teacherFull.split(' ');
+          const firstname = parts[0] || '';
+          const lastname = parts.slice(1).join(' ') || '';
+
+          return {
+            idTimetableEntry: e.idEntry,
+            timeSlot: {
+              dayOfWeek: e.dayOfWeek,
+              startTime: e.startTime,
+              endTime: e.endTime,
+              name: '',
+            },
+            course: { name: e.courseName || '' },
+            teacher: { firstname, lastname },
+            classroom: { name: e.classroomName || '', location: '' },
+            classEntity: { name: '', level: 0 },
+          };
+        });
+
+        setScheduleEntries(mapped);
+      } catch (err) {
+        console.error("Erreur lors du chargement de l'emploi du temps:", err);
+        setError(
+          err instanceof Error ? err.message : 'Erreur lors du chargement',
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStudentSchedule();
+  }, [authenticatedUser, fetchTimetableForClass]);
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <h3 className="text-red-800 dark:text-red-200 font-medium">Erreur</h3>
+          <p className="text-red-600 dark:text-red-300 mt-1">{error}</p>
         </div>
       </div>
+    );
+  }
 
-      {/* Card responsive */}
-      <Card className="text-center py-8 sm:py-12 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
-        <CardContent>
-          <ClockIcon className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground dark:text-gray-400 mx-auto mb-4" />
-          <h3 className="text-base sm:text-lg font-medium text-muted-foreground dark:text-gray-300 mb-2">
-            Emploi du temps bientôt disponible
-          </h3>
-          <p className="text-sm text-muted-foreground dark:text-gray-400 mb-4 max-w-md mx-auto">
-            Cette fonctionnalité sera implémentée dans une prochaine phase du
-            projet.
-          </p>
-          <Button
-            disabled
-            className="text-sm sm:text-base h-9 sm:h-10 px-4 sm:px-6"
-          >
-            Voir l'emploi du temps
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+  return (
+    <ScheduleViewer
+      entries={scheduleEntries}
+      title="Mon Emploi du Temps"
+      subtitle="Consultez votre planning de cours"
+      loading={loading}
+      showClass={false}
+    />
   );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '@/contexts/UserContext';
@@ -35,6 +35,14 @@ export function NavUser({
     clearUser();
     navigate('/login');
     // Fermer la sidebar sur mobile après déconnexion
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
+  const handleSettings = () => {
+    navigate('/settings');
+    // Fermer la sidebar sur mobile après navigation
     if (isMobile) {
       setOpenMobile(false);
     }
@@ -83,6 +91,17 @@ export function NavUser({
               )}
             </SidebarMenuButton>
           </div>
+
+          {/* Bouton paramètres */}
+          <SidebarMenuButton
+            size={isCollapsed ? 'lg' : 'sm'}
+            onClick={handleSettings}
+            className="justify-center hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
+            title="Paramètres"
+          >
+            <Settings className={`${isCollapsed ? 'h-5 w-5' : 'h-4 w-4'}`} />
+            {!isCollapsed && <span className="ml-2">Paramètres</span>}
+          </SidebarMenuButton>
 
           {/* Bouton de déconnexion - toujours visible */}
           <SidebarMenuButton

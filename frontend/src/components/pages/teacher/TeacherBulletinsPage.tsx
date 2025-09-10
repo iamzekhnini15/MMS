@@ -357,10 +357,10 @@ const TeacherBulletinsPage: React.FC = () => {
                 ))}
                 {currentPeriod && (
                   <div className="mt-2 pt-2 border-t border-gray-200 dark:border-neutral-700">
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 ">
                       Période courante:
                     </p>
-                    <Badge className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
+                    <Badge className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 cursor-pointer">
                       {currentPeriod.name}
                     </Badge>
                   </div>
@@ -518,7 +518,7 @@ const TeacherBulletinsPage: React.FC = () => {
                   <Button
                     variant="outline"
                     onClick={handleMakeAllVisible}
-                    className="text-green-600 hover:text-green-700 text-sm h-9"
+                    className="text-green-600 hover:text-green-700 text-sm h-9 cursor-pointer"
                     disabled={bulletinLoading}
                   >
                     <CheckCircleIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
@@ -530,7 +530,7 @@ const TeacherBulletinsPage: React.FC = () => {
                   <Button
                     variant="outline"
                     onClick={handleHideAll}
-                    className="text-red-600 hover:text-red-700 text-sm h-9"
+                    className="text-red-600 hover:text-red-700 text-sm h-9 cursor-pointer"
                     disabled={bulletinLoading}
                   >
                     <XCircleIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
@@ -543,13 +543,13 @@ const TeacherBulletinsPage: React.FC = () => {
                 onClick={() => window.location.reload()}
                 variant="outline"
                 disabled={bulletinLoading}
-                className="text-sm h-9 text-white dark:text-white border-white dark:border-neutral-800 hover:bg-white hover:text-gray-900 dark:hover:bg-neutral-700 dark:hover:text-white cursor-pointer"
+                className="text-sm h-9 dark:text-white border-white dark:border-neutral-800 hover:bg-white hover:text-gray-900 dark:hover:bg-neutral-700 dark:hover:text-white cursor-pointer"
               >
                 <ArrowPathIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 <span className="hidden sm:inline">Actualiser</span>
                 <span className="sm:hidden">↻</span>
               </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-sm h-9 text-white dark:text-white">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-sm h-9 text-white dark:text-white cursor-pointer">
                 <DocumentTextIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 <span className="hidden sm:inline">Générer PDF</span>
                 <span className="sm:hidden">PDF</span>

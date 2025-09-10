@@ -23,11 +23,11 @@ public class BulletinPeriodService {
    * Helper method to set period properties from DTO.
    */
   private void setPeriodProperties(BulletinPeriod period, BulletinPeriodDto dto) {
-    period.setName(dto.getName());
-    period.setStartDate(dto.getStartDate());
-    period.setEndDate(dto.getEndDate());
-    period.setAcademicYear(dto.getAcademicYear());
-    period.setIsActive(dto.getIsActive() == null || dto.getIsActive());
+    period.setBulletinPeriodName(dto.getName());
+    period.setBulletinStartDate(dto.getStartDate());
+    period.setBulletinEndDate(dto.getEndDate());
+    period.setBulletinAcademicYear(dto.getAcademicYear());
+    period.setIsBulletinActive(dto.getIsActive() == null || dto.getIsActive());
     period.setDescription(dto.getDescription());
   }
 

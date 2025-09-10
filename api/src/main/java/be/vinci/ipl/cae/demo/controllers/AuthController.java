@@ -3,10 +3,12 @@ package be.vinci.ipl.cae.demo.controllers;
 import be.vinci.ipl.cae.demo.exceptions.InvalidInputException;
 import be.vinci.ipl.cae.demo.exceptions.ResourceNotFoundException;
 import be.vinci.ipl.cae.demo.models.dtos.AuthenticatedUser;
+import be.vinci.ipl.cae.demo.models.dtos.ChangePasswordRequest;
 import be.vinci.ipl.cae.demo.models.dtos.Credentials;
 import be.vinci.ipl.cae.demo.models.dtos.RegisterRequest;
 import be.vinci.ipl.cae.demo.models.entities.User;
 import be.vinci.ipl.cae.demo.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
 
 /**
  * AuthController to handle user authentication.
@@ -124,7 +127,6 @@ public class AuthController {
       throw new ResourceNotFoundException("Email ou mot de passe incorrect");
     }
 
-
     return ResponseEntity.ok(user);
   }
 
@@ -148,6 +150,49 @@ public class AuthController {
     }
 
     return userService.loadUserByEmail(user.getEmail());
+  }
+
+  /**
+   * Change password for the authenticated user.
+   *
+   * @param changePasswordRequest old/new passwords
+   */
+  @PostMapping("/change-password")
+  public ResponseEntity<Object> changePassword(
+      @RequestBody
+      ChangePasswordRequest changePasswordRequest
+  ) {
+    Object userObj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    if ("anonymousUser".equals(userObj)) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Utilisateur non authentifié");
+    }
+
+    if (changePasswordRequest == null
+        || changePasswordRequest.getOldPassword() == null
+        || changePasswordRequest.getNewPassword() == null
+        || changePasswordRequest.getNewPasswordConfirmation() == null
+        || !changePasswordRequest.getNewPassword().equals(
+            changePasswordRequest.getNewPasswordConfirmation()
+    )) {
+      throw new InvalidInputException("Informations de changement de mot de passe invalides");
+    }
+
+    User user = (User) userObj;
+
+    boolean changed = userService.changePassword(
+        user.getEmail(),
+        changePasswordRequest.getOldPassword(),
+        changePasswordRequest.getNewPassword()
+    );
+    if (!changed) {
+      // old password mismatch or user not found
+      throw new ResponseStatusException(
+          HttpStatus.FORBIDDEN,
+          "L'ancien mot de passe est incorrect"
+      );
+    }
+
+    return ResponseEntity.ok().build();
   }
 
 }

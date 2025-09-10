@@ -132,6 +132,7 @@ public class EvaluationController {
   @PostMapping("/create")
   public ResponseEntity<Evaluation> createEvaluation(@RequestBody EvaluationDto dto) {
     try {
+      System.out.println(dto);
       Evaluation createdEvaluation = evaluationService.createEvaluation(dto);
       return ResponseEntity.status(HttpStatus.CREATED).body(createdEvaluation);
     } catch (IllegalArgumentException e) {

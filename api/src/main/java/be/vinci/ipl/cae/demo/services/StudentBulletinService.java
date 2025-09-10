@@ -286,8 +286,8 @@ public class StudentBulletinService {
     dto.setStudentId(student.getIdStudent());
     dto.setStudentName(student.getUser().getFirstname() + " " + student.getUser().getLastname());
     dto.setClassName(student.getClassEntity().getName());
-    dto.setPeriodName(period.getName());
-    dto.setAcademicYear(period.getAcademicYear());
+    dto.setPeriodName(period.getBulletinPeriodName());
+    dto.setAcademicYear(period.getBulletinAcademicYear());
     dto.setGeneralAverage(realGeneralAverage); // Use recalculated average
     dto.setClassRank(bulletin.getClassRank());
     dto.setTotalStudents(bulletin.getTotalStudents());

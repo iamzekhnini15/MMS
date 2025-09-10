@@ -12,6 +12,7 @@ import {
 import BulletinPeriodContext from '../../../contexts/BulletinPeriodContext';
 import { UserContext } from '../../../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface StudentBulletinSummary {
   idBulletin: number;
@@ -101,7 +102,7 @@ const StudentBulletins: React.FC = () => {
   const getGradeColor = (average: number) => {
     if (average >= 80)
       return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/50';
-    if (average >= 60)
+    if (average >= 50)
       return 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800/50';
     return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50';
   };
@@ -117,11 +118,37 @@ const StudentBulletins: React.FC = () => {
   if (loading) {
     return (
       <div className="container mx-auto p-4 sm:p-6 max-w-7xl bg-gray-50 dark:bg-neutral-900 min-h-screen">
-        <div className="flex items-center justify-center h-48 sm:h-64">
-          <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
-          <span className="ml-3 text-gray-600 dark:text-gray-300 text-sm sm:text-base">
-            Chargement de vos bulletins...
-          </span>
+        {/* Header skeleton */}
+        <div className="mb-4 sm:mb-6">
+          <Skeleton className="h-8 w-40 mb-2" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+        {/* Cards skeleton */}
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-lg p-4 flex flex-col gap-4 shadow animate-pulse"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-5 w-5 rounded-full" />
+                  <Skeleton className="h-6 w-24" />
+                </div>
+                <Skeleton className="h-6 w-16 rounded" />
+              </div>
+              <div className="text-center p-3 sm:p-4">
+                <Skeleton className="h-8 w-24 mx-auto rounded" />
+                <Skeleton className="h-4 w-20 mx-auto mt-2 rounded" />
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <Skeleton className="h-6 w-16 mx-auto rounded" />
+                <Skeleton className="h-6 w-16 mx-auto rounded" />
+              </div>
+              <Skeleton className="h-4 w-32 mt-2 rounded" />
+              <Skeleton className="h-8 w-full mt-4 rounded" />
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -173,7 +200,7 @@ const StudentBulletins: React.FC = () => {
           {bulletins.map((bulletin) => (
             <Card
               key={bulletin.idBulletin}
-              className="hover:shadow-lg transition-all duration-200 transform hover:scale-105 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800"
+              className="hover:shadow-lg transition-all duration-200 transform bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800"
             >
               <CardHeader className="pb-3 sm:pb-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -196,7 +223,7 @@ const StudentBulletins: React.FC = () => {
                 {/* Moyenne générale - mise en valeur responsive */}
                 <div className="text-center p-3 sm:p-4 bg-gray-50 dark:bg-neutral-800 rounded-lg">
                   <div
-                    className={`text-2xl sm:text-3xl font-bold mb-1 ${getGradeColor(bulletin.generalAverage).split(' ')[0]} ${getGradeColor(bulletin.generalAverage).split(' ')[2]}`}
+                    className={`text-2xl sm:text-3xl font-bold mb-1 bg-gray-50 dark:bg-neutral-800 ${getGradeColor(bulletin.generalAverage).split(' ')[0]} `}
                   >
                     {bulletin.generalAverage.toFixed(1)}%
                   </div>
@@ -252,7 +279,7 @@ const StudentBulletins: React.FC = () => {
                 <div className="pt-2">
                   <Button
                     onClick={() => handleViewDetailedBulletin(bulletin)}
-                    className="w-full flex items-center justify-center gap-2 text-sm sm:text-base h-9 sm:h-10"
+                    className="w-full flex items-center justify-center gap-2 text-sm sm:text-base h-9 sm:h-10 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                   >
                     <EyeIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                     Voir le détail

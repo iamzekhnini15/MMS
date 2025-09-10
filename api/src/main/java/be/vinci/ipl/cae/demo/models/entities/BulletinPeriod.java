@@ -29,21 +29,21 @@ public class BulletinPeriod {
   private Long idPeriod;
 
   @Column(nullable = false)
-  private String name; // e.g., "1er Trimestre", "2ème Semestre"
+  private String bulletinPeriodName;
 
   @Temporal(TemporalType.DATE)
   @Column(nullable = false)
-  private Date startDate;
+  private Date bulletinStartDate;
 
   @Temporal(TemporalType.DATE)
   @Column(nullable = false)
-  private Date endDate;
+  private Date bulletinEndDate;
 
   @Column(nullable = false)
-  private String academicYear; // e.g., "2024-2025"
+  private String bulletinAcademicYear;
 
   @Column(nullable = false)
-  private Boolean isActive = true;
+  private Boolean isBulletinActive = true;
 
   private String description; // Optional description
 }

@@ -1,0 +1,172 @@
+### Timetable Management API Tests
+### Documentation: Refer to TIMETABLE_GUIDE.md for complete API documentation
+
+### Variables
+@baseUrl = http://localhost:3000
+@timetableId = 1
+@classId = 1
+@teacherId = 1
+@classroomId = 1
+
+###
+# 1. Initialize default time slots (Monday-Friday, 8:00-17:00)
+POST {{baseUrl}}/timetables/time-slots/init
+Content-Type: application/json
+
+###
+# 2. Get all time slots
+GET {{baseUrl}}/timetables/time-slots
+Accept: application/json
+
+###
+# 3. Create teacher availability (Teacher available Monday 8:00-12:00)
+POST {{baseUrl}}/availabilities/teachers
+Content-Type: application/json
+
+{
+  "teacherId": {{teacherId}},
+  "dayOfWeek": "MONDAY",
+  "startTime": "08:00",
+  "endTime": "12:00"
+}
+
+###
+# 4. Create classroom availability (Classroom available Monday 8:00-17:00)
+POST {{baseUrl}}/availabilities/classrooms
+Content-Type: application/json
+
+{
+  "classroomId": {{classroomId}},
+  "dayOfWeek": "MONDAY",
+  "startTime": "08:00",
+  "endTime": "17:00"
+}
+
+###
+# 5. Generate timetable for a class
+POST {{baseUrl}}/timetables/generate
+Content-Type: application/json
+
+{
+  "classId": {{classId}},
+  "startDate": "2025-09-08",
+  "endDate": "2025-12-20",
+  "subjectHours": {
+    "1": 4,
+    "2": 3,
+    "3": 2
+  }
+}
+
+###
+# 6. Get all timetables
+GET {{baseUrl}}/timetables
+Accept: application/json
+
+###
+# 7. Get timetable entries for specific timetable
+GET {{baseUrl}}/timetables/{{timetableId}}/entries
+Accept: application/json
+
+###
+# 8. Get timetable entries filtered by class
+GET {{baseUrl}}/timetables/{{timetableId}}/entries?classId={{classId}}
+Accept: application/json
+
+###
+# 9. Get timetable entries filtered by teacher
+GET {{baseUrl}}/timetables/{{timetableId}}/entries?teacherId={{teacherId}}
+Accept: application/json
+
+###
+# 10. Get timetable entries filtered by classroom
+GET {{baseUrl}}/timetables/{{timetableId}}/entries?classroomId={{classroomId}}
+Accept: application/json
+
+###
+# 11. Get timetable entries for specific day
+GET {{baseUrl}}/timetables/{{timetableId}}/entries?dayOfWeek=MONDAY
+Accept: application/json
+
+###
+# 12. Publish timetable
+PUT {{baseUrl}}/timetables/{{timetableId}}/publish
+Content-Type: application/json
+
+###
+# 13. Get teacher availabilities
+GET {{baseUrl}}/availabilities/teachers/{{teacherId}}
+Accept: application/json
+
+###
+# 14. Get classroom availabilities
+GET {{baseUrl}}/availabilities/classrooms/{{classroomId}}
+Accept: application/json
+
+###
+# 15. Delete teacher availability
+DELETE {{baseUrl}}/availabilities/teachers/{{teacherId}}/MONDAY/08:00
+
+###
+# 16. Delete classroom availability
+DELETE {{baseUrl}}/availabilities/classrooms/{{classroomId}}/MONDAY/08:00
+
+###
+# 17. Delete timetable
+DELETE {{baseUrl}}/timetables/{{timetableId}}
+
+### Error Testing
+
+###
+# Test 1: Generate timetable with invalid class ID
+POST {{baseUrl}}/timetables/generate
+Content-Type: application/json
+
+{
+  "classId": 99999,
+  "startDate": "2025-09-08",
+  "endDate": "2025-12-20",
+  "subjectHours": {
+    "1": 4
+  }
+}
+
+###
+# Test 2: Get non-existent timetable
+GET {{baseUrl}}/timetables/99999/entries
+Accept: application/json
+
+###
+# Test 3: Invalid date format
+POST {{baseUrl}}/timetables/generate
+Content-Type: application/json
+
+{
+  "classId": {{classId}},
+  "startDate": "invalid-date",
+  "endDate": "2025-12-20",
+  "subjectHours": {
+    "1": 4
+  }
+}
+
+###
+# Test 4: Invalid time slot creation
+POST {{baseUrl}}/availabilities/teachers
+Content-Type: application/json
+
+{
+  "teacherId": {{teacherId}},
+  "dayOfWeek": "INVALID_DAY",
+  "startTime": "25:00",
+  "endTime": "26:00"
+}
+
+
+###
+GET {{baseUrl}}/timetables/teacher/1
+Accept: application/json
+
+###
+GET {{baseUrl}}/timetables
+Accept: application/json

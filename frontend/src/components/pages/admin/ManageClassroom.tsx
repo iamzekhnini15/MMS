@@ -16,6 +16,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ClassroomContext } from '@/contexts/ClassroomContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { DocumentTextIcon } from '@heroicons/react/24/outline';
 
 const ManageClassroom: React.FC = () => {
   const { fetchClassrooms, classrooms, createClassroom } =
@@ -76,7 +78,7 @@ const ManageClassroom: React.FC = () => {
     <div className="min-h-screen p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gray-50 dark:bg-neutral-900">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-0 max-w-7xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
           Gestion des salles de cours
         </h1>
         <Button
@@ -108,7 +110,7 @@ const ManageClassroom: React.FC = () => {
                 {classrooms.map((classrooms) => (
                   <TableRow
                     key={classrooms.idClassroom}
-                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-900"
+                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-white"
                   >
                     <TableCell className="text-xs sm:text-sm font-medium">
                       <div>
@@ -144,17 +146,23 @@ const ManageClassroom: React.FC = () => {
             </Table>
           </div>
         ) : (
-          <div className="text-center py-8 sm:py-12">
-            <p className="text-sm sm:text-base text-gray-500">
-              Aucune salle disponible.
-            </p>
-          </div>
+          <Card className="text-center py-8 sm:py-12 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800">
+            <CardContent>
+              <DocumentTextIcon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                Aucune salle disponible
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base mb-4">
+                Veuillez créer une salle pour commencer.
+              </p>
+            </CardContent>
+          </Card>
         )}
       </div>
 
       {/* Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-3xl mx-2 sm:mx-auto max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl mx-2 sm:mx-auto max-h-[90vh] overflow-y-auto dark:text-white">
           <DialogHeader className="pb-4">
             <DialogTitle className="text-lg sm:text-xl">
               Ajouter une salle

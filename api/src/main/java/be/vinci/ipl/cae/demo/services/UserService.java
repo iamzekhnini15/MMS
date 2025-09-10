@@ -6,6 +6,8 @@ import be.vinci.ipl.cae.demo.models.dtos.RegisterRequest;
 import be.vinci.ipl.cae.demo.models.entities.Address;
 import be.vinci.ipl.cae.demo.models.entities.User;
 import be.vinci.ipl.cae.demo.repositories.AddressRepository;
+import be.vinci.ipl.cae.demo.repositories.StudentRepository;
+import be.vinci.ipl.cae.demo.repositories.TeacherRepository;
 import be.vinci.ipl.cae.demo.repositories.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -20,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-
   private static final String JWT_SECRET = "ilovemypizza!";
   private static final long LIFETIME_JWT = 24 * 60 * 60 * 1000; // 24 hours
   private static final Algorithm ALGORITHM = Algorithm.HMAC256(JWT_SECRET);
@@ -28,6 +29,8 @@ public class UserService {
   private final BCryptPasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
   private final AddressRepository addressRepository;
+  private final StudentRepository studentRepository;
+  private final TeacherRepository teacherRepository;
 
   /**
    * Constructor.
@@ -35,11 +38,16 @@ public class UserService {
    * @param passwordEncoder the password encoder
    * @param userRepository  the user repository
    */
-  public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository,
-      AddressRepository addressRepository) {
+  public UserService(BCryptPasswordEncoder passwordEncoder,
+      UserRepository userRepository,
+      AddressRepository addressRepository,
+      StudentRepository studentRepository,
+      TeacherRepository teacherRepository) {
     this.passwordEncoder = passwordEncoder;
     this.userRepository = userRepository;
     this.addressRepository = addressRepository;
+    this.studentRepository = studentRepository;
+    this.teacherRepository = teacherRepository;
   }
 
   /**
@@ -92,7 +100,20 @@ public class UserService {
       return null;
     }
 
-    return createJwtToken(user);
+    AuthenticatedUser authenticatedUser = createJwtToken(user);
+
+    // Ajoute l'idStudent si l'utilisateur est un étudiant
+    if (user.getRole() == User.Role.STUDENT) {
+      studentRepository.findByUserIdUser(user.getIdUser())
+          .ifPresent(student -> authenticatedUser.setIdStudent(student.getIdStudent()));
+    }
+
+    if (user.getRole() == User.Role.TEACHER) {
+      teacherRepository.findByUserIdUser(user.getIdUser())
+          .ifPresent(teacher -> authenticatedUser.setIdTeacher(teacher.getIdTeacher()));
+    }
+
+    return authenticatedUser;
   }
 
   /**
@@ -111,7 +132,6 @@ public class UserService {
       return createJwtToken(user);
     }
   }
-
 
   /**
    * Convert an AdressRequest object to an Adresse entity.
@@ -161,7 +181,6 @@ public class UserService {
     user.setAddress(adresse);
     user.setRegistrationDate(new Date());
 
-
     userRepository.save(user);
 
     return createJwtToken(user);
@@ -180,7 +199,7 @@ public class UserService {
   /**
    * Create a new user.
    *
-   * @param email the username
+   * @param email    the username
    * @param password the password
    */
   public User createOneUserForTeacher(String email, String password) {
@@ -216,6 +235,28 @@ public class UserService {
     return userRepository.save(newUser);
   }
 
+  /**
+   * Change the password for a given user after validating the old password.
+   *
+   * @param email       the email of the user
+   * @param oldPassword the current raw password
+   * @param newPassword the new raw password to set
+   * @return true if password was changed, false otherwise
+   */
+  @Transactional
+  public boolean changePassword(String email, String oldPassword, String newPassword) {
+    User user = userRepository.findByEmail(email);
+    if (user == null) {
+      return false;
+    }
 
+    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+      return false;
+    }
+
+    user.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(user);
+    return true;
+  }
 
 }

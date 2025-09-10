@@ -80,6 +80,10 @@ const getNavigationByRole = (role: string | undefined) => {
                 url: '/manage-classes',
               },
               {
+                title: 'Emplois du temps',
+                url: '/manage-timetables',
+              },
+              {
                 title: 'Salles de cours',
                 url: '/manage-classroom',
               },
@@ -88,6 +92,11 @@ const getNavigationByRole = (role: string | undefined) => {
           {
             title: 'Emploi du temps',
             url: '/schedule',
+            icon: Calendar,
+          },
+          {
+            title: 'Consulter horaires',
+            url: '/view-schedules',
             icon: Calendar,
           },
           {
@@ -155,6 +164,12 @@ const getNavigationByRole = (role: string | undefined) => {
           {
             title: 'Périodes',
             url: '/teacher/periods',
+            icon: Calendar,
+            isActive: true,
+          },
+          {
+            title: 'Mon emploi du temps',
+            url: '/teacher/schedule',
             icon: Calendar,
             isActive: true,
           },

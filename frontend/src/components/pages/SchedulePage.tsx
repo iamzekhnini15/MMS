@@ -121,6 +121,7 @@ const SchedulePage = () => {
         endDateTime: formData.endDateTime,
         classroom: classroom,
         teacher: teacher,
+        level: selectedCourse ? selectedCourse.level : '', // Or set a default value if needed
       };
 
       if (selectedCourse) {

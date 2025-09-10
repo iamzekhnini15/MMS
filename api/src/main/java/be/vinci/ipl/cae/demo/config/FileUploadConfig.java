@@ -1,4 +1,4 @@
-package be.vinci.ipl.cae.demo.config;
+/* package be.vinci.ipl.cae.demo.config;
 
 import java.io.File;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * Configuration pour servir les fichiers statiques uploadés.
  */
+/* 
 @Configuration
 public class FileUploadConfig implements WebMvcConfigurer {
 
@@ -27,4 +28,4 @@ public class FileUploadConfig implements WebMvcConfigurer {
     registry.addResourceHandler("/uploads/**")
         .addResourceLocations("file:" + uploadDirectory.getAbsolutePath() + "/");
   }
-}
+} */
