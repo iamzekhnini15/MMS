@@ -1,7 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'http://api-prod:3000' 
+  : 'http://localhost:3000';
+
 test('API Health Check', async ({ request }) => {
-  const response = await request.get('http://localhost:3000/actuator/health');
+  const response = await request.get(`${API_URL}/actuator/health`);
   const healthData = await response.json();
   
   expect(response.status()).toBe(200);
@@ -10,7 +14,7 @@ test('API Health Check', async ({ request }) => {
 });
 
 test('Database Connection Check', async ({ request }) => {
-  const response = await request.get('http://localhost:3000/actuator/health');
+  const response = await request.get(`${API_URL}/actuator/health`);
   const healthData = await response.json();
   
   expect(healthData.components.db.details.database).toBe('PostgreSQL');
