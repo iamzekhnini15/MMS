@@ -13,7 +13,8 @@ import { Calendar, Clock, Users, AlertTriangle } from 'lucide-react';
 
 import { TimetableContext } from '../../../contexts/TimetableContext';
 import TimetableGenerator from './TimetableGenerator';
-import ManualTimetablePlanner from './ManualTimetablePlanner';
+import EnhancedManualTimetablePlanner from './EnhancedManualTimetablePlanner';
+import OptimizedManualTimetablePlanner from './OptimizedManualTimetablePlanner';
 
 const ManageTimetables: React.FC = () => {
   const {
@@ -253,7 +254,18 @@ const ManageTimetables: React.FC = () => {
 
         {/* Planification manuelle d'emploi du temps */}
         <TabsContent value="manual" className="space-y-4">
-          <ManualTimetablePlanner />
+          <Tabs defaultValue="optimized" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="optimized">Version Optimisée</TabsTrigger>
+              <TabsTrigger value="enhanced">Version Précédente</TabsTrigger>
+            </TabsList>
+            <TabsContent value="optimized">
+              <OptimizedManualTimetablePlanner />
+            </TabsContent>
+            <TabsContent value="enhanced">
+              <EnhancedManualTimetablePlanner />
+            </TabsContent>
+          </Tabs>
         </TabsContent>
 
         {/* Gestion des créneaux horaires */}

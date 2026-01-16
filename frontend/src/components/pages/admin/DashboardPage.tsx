@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
         endOfWeek.setDate(startOfWeek.getDate() + 6);
 
         return (
-          course.teacher.idTeacher === teacher.idTeacher &&
+          course.teacher?.idTeacher === teacher.idTeacher &&
           courseDate >= startOfWeek &&
           courseDate <= endOfWeek
         );
@@ -133,7 +133,7 @@ const Dashboard: React.FC = () => {
         ?.map((teacher) => {
           const teacherCourses =
             courses?.filter(
-              (course) => course.teacher.idTeacher === teacher.idTeacher,
+              (course) => course.teacher?.idTeacher === teacher.idTeacher,
             ).length || 0;
 
           const thisWeekCourses =
@@ -145,7 +145,7 @@ const Dashboard: React.FC = () => {
               endOfWeek.setDate(startOfWeek.getDate() + 6);
 
               return (
-                course.teacher.idTeacher === teacher.idTeacher &&
+                course.teacher?.idTeacher === teacher.idTeacher &&
                 courseDate >= startOfWeek &&
                 courseDate <= endOfWeek
               );
@@ -295,7 +295,7 @@ const Dashboard: React.FC = () => {
       id: `course-${course.idCourse}`,
       type: 'course',
       title: `Cours: ${course.name}`,
-      description: `${course.teacher.user.firstname} ${course.teacher.user.lastname} - ${course.classroom.name}`,
+      description: `${course.teacher?.user?.firstname || 'N/A'} ${course.teacher?.user?.lastname || 'N/A'} - ${course.classroom?.name || 'N/A'}`,
       time: new Date(course.startDateTime).toLocaleDateString('fr-FR'),
       icon: BookOpen,
       color: 'text-blue-600',
@@ -331,8 +331,8 @@ const Dashboard: React.FC = () => {
         time: `${new Date(course.startDateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${new Date(course.endDateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
         type: 'Cours',
         priority: 'medium',
-        teacher: `${course.teacher.user.firstname} ${course.teacher.user.lastname}`,
-        classroom: course.classroom.name,
+        teacher: `${course.teacher?.user?.firstname || 'N/A'} ${course.teacher?.user?.lastname || 'N/A'}`,
+        classroom: course.classroom?.name || 'N/A',
       })) || [];
 
   const quickActions = [

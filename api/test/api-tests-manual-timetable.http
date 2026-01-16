@@ -1,0 +1,173 @@
+# Tests API - Planification Manuelle Améliorée
+
+## 1. Vérification de Conflits - Créneau Libre
+
+```http
+POST http://localhost:8080/api/timetables/check-conflicts
+Content-Type: application/json
+
+{
+  "classId": 1,
+  "courseId": 1,
+  "teacherId": 1,
+  "classroomId": 1,
+  "timeSlotId": 1
+}
+```
+
+**Réponse attendue:**
+```json
+{
+  "hasConflicts": false,
+  "conflicts": [],
+  "teacherUnavailable": false,
+  "classroomUnavailable": false
+}
+```
+
+## 2. Vérification de Conflits - Professeur Occupé
+
+```http
+POST http://localhost:8080/api/timetables/check-conflicts
+Content-Type: application/json
+
+{
+  "classId": 2,
+  "courseId": 2,
+  "teacherId": 1,
+  "classroomId": 2,
+  "timeSlotId": 1
+}
+```
+
+**Réponse attendue (si conflit):**
+```json
+{
+  "hasConflicts": true,
+  "conflicts": ["Le professeur est déjà occupé à ce créneau avec la classe : Math 101"],
+  "teacherUnavailable": false,
+  "classroomUnavailable": false
+}
+```
+
+## 3. Vérification de Conflits - Salle Occupée
+
+```http
+POST http://localhost:8080/api/timetables/check-conflicts
+Content-Type: application/json
+
+{
+  "classId": 3,
+  "courseId": 3,
+  "teacherId": 2,
+  "classroomId": 1,
+  "timeSlotId": 1
+}
+```
+
+## 4. Récupération des Disponibilités Professeurs
+
+```http
+GET http://localhost:8080/api/availabilities/teacher
+```
+
+## 5. Récupération des Disponibilités Salles
+
+```http
+GET http://localhost:8080/api/availabilities/classroom
+```
+
+## 6. Création d'une Disponibilité Professeur
+
+```http
+POST http://localhost:8080/api/availabilities/teacher
+Content-Type: application/json
+
+{
+  "teacher": {
+    "idTeacher": 1
+  },
+  "timeSlot": {
+    "idTimeSlot": 5
+  },
+  "isAvailable": false
+}
+```
+
+## 7. Création d'une Disponibilité Salle
+
+```http
+POST http://localhost:8080/api/availabilities/classroom
+Content-Type: application/json
+
+{
+  "availableClassroom": {
+    "idClassroom": 1
+  },
+  "availableTimeSlot": {
+    "idTimeSlot": 5
+  },
+  "isAvailable": false
+}
+```
+
+## 8. Création d'un Emploi du Temps Manuel
+
+```http
+POST http://localhost:8080/api/timetables/manual
+Content-Type: application/json
+
+{
+  "name": "Emploi du temps Test - 3A",
+  "description": "Emploi du temps créé manuellement pour tests",
+  "entries": [
+    {
+      "classId": 1,
+      "courseId": 1,
+      "teacherId": 1,
+      "classroomId": 1,
+      "timeSlotId": 1
+    },
+    {
+      "classId": 1,
+      "courseId": 2,
+      "teacherId": 2,
+      "classroomId": 2,
+      "timeSlotId": 2
+    }
+  ]
+}
+```
+
+## 9. Récupération de tous les Emplois du Temps
+
+```http
+GET http://localhost:8080/api/timetables
+```
+
+## 10. Test de Cas d'Erreur - Données Manquantes
+
+```http
+POST http://localhost:8080/api/timetables/check-conflicts
+Content-Type: application/json
+
+{
+  "classId": 1,
+  "timeSlotId": 1
+}
+```
+
+**Note:** Ce test devrait retourner une réponse valide même avec des données partielles.
+
+## Variables d'Environnement Suggérées
+
+Pour Postman, créer les variables suivantes :
+
+- `base_url`: `http://localhost:8080/api`
+- `class_id`: `1`
+- `teacher_id`: `1`
+- `classroom_id`: `1`
+- `course_id`: `1`
+- `timeslot_id`: `1`
+
+Puis utiliser `{{base_url}}/timetables/check-conflicts` dans les requêtes.

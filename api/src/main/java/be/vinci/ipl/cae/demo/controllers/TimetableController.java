@@ -1,5 +1,9 @@
 package be.vinci.ipl.cae.demo.controllers;
 
+import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckRequest;
+import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckResponse;
+import be.vinci.ipl.cae.demo.models.dtos.BulkAvailabilityRequest;
+import be.vinci.ipl.cae.demo.models.dtos.BulkAvailabilityResponse;
 import be.vinci.ipl.cae.demo.models.dtos.ManualTimetableRequest;
 import be.vinci.ipl.cae.demo.models.dtos.TimeSlotDto;
 import be.vinci.ipl.cae.demo.models.dtos.TimetableDto;
@@ -7,6 +11,7 @@ import be.vinci.ipl.cae.demo.models.dtos.TimetableGenerationRequest;
 import be.vinci.ipl.cae.demo.models.entities.TimeSlot;
 import be.vinci.ipl.cae.demo.services.TimeSlotService;
 import be.vinci.ipl.cae.demo.services.TimetableService;
+import be.vinci.ipl.cae.demo.services.TimetableValidationService;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Locale;
@@ -35,6 +40,7 @@ public class TimetableController {
 
   private final TimetableService timetableService;
   private final TimeSlotService timeSlotService;
+  private final TimetableValidationService validationService;
 
   /**
    * Generate a new timetable.
@@ -250,6 +256,64 @@ public class TimetableController {
       return ResponseEntity.ok(timeSlot);
     } catch (Exception e) {
       return ResponseEntity.badRequest().build();
+    }
+  }
+
+  /**
+   * Check for conflicts before scheduling a timetable entry.
+   *
+   * @param request the conflict check request
+   * @return conflict check response
+   */
+  @PostMapping("/check-conflicts")
+  public ResponseEntity<ConflictCheckResponse> checkConflicts(
+      @RequestBody ConflictCheckRequest request) {
+    try {
+      if (log.isDebugEnabled()) {
+        log.debug("Checking conflicts for: {}", request);
+      }
+      
+      ConflictCheckResponse response = validationService.checkConflicts(request);
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      if (log.isErrorEnabled()) {
+        log.error("Error checking conflicts: {}", e.getMessage(), e);
+      }
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(new ConflictCheckResponse(
+              true, 
+              List.of("Erreur lors de la vérification des conflits"), 
+              false, 
+              false, 
+              null, 
+              null
+          ));
+    }
+  }
+
+  /**
+   * Check availability for multiple time slots in a single request.
+   * This is much more efficient than checking each slot individually.
+   *
+   * @param request the bulk availability request
+   * @return bulk availability response
+   */
+  @PostMapping("/check-bulk-availability")
+  public ResponseEntity<BulkAvailabilityResponse> checkBulkAvailability(
+      @RequestBody BulkAvailabilityRequest request) {
+    try {
+      if (log.isDebugEnabled()) {
+        log.debug("Checking bulk availability for {} time slots", request.getTimeSlotIds().size());
+      }
+      
+      BulkAvailabilityResponse response = validationService.checkBulkAvailability(request);
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      if (log.isErrorEnabled()) {
+        log.error("Error checking bulk availability: {}", e.getMessage(), e);
+      }
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(new BulkAvailabilityResponse(Map.of()));
     }
   }
 }

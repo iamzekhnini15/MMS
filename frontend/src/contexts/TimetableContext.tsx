@@ -42,6 +42,45 @@ interface GenerationRequest {
   courseIds: number[];
 }
 
+// Types pour la vérification de conflits
+interface ConflictCheckRequest {
+  classId: number;
+  courseId?: number;
+  teacherId?: number;
+  classroomId?: number;
+  timeSlotId: number;
+  excludeTimetableEntryId?: number;
+}
+
+interface ConflictCheckResponse {
+  hasConflicts: boolean;
+  conflicts: string[];
+  teacherUnavailable: boolean;
+  classroomUnavailable: boolean;
+  teacherAvailabilityReason?: string;
+  classroomAvailabilityReason?: string;
+}
+
+// Types pour la vérification groupée (optimisée)
+interface BulkAvailabilityRequest {
+  classId: number;
+  courseId?: number;
+  teacherId?: number;
+  classroomId?: number;
+  timeSlotIds: number[];
+  excludeTimetableEntryId?: number;
+}
+
+interface TimeSlotAvailability {
+  available: boolean;
+  reason: string;
+  conflictType: 'NONE' | 'TEACHER_BUSY' | 'CLASSROOM_BUSY' | 'CLASS_BUSY' | 'TEACHER_UNAVAILABLE' | 'CLASSROOM_UNAVAILABLE';
+}
+
+interface BulkAvailabilityResponse {
+  availabilities: { [timeSlotId: number]: TimeSlotAvailability };
+}
+
 interface BackendGenerationRequest {
   name: string;
   startDate: string;
@@ -135,6 +174,10 @@ interface TimetableContextType {
   ) => Promise<void>;
   deleteTeacherAvailability: (id: number) => Promise<void>;
   deleteClassroomAvailability: (id: number) => Promise<void>;
+
+  // Actions Conflicts
+  checkConflicts: (request: ConflictCheckRequest) => Promise<ConflictCheckResponse>;
+  checkBulkAvailability: (request: BulkAvailabilityRequest) => Promise<BulkAvailabilityResponse>;
 }
 
 const defaultContext: TimetableContextType = {
@@ -163,6 +206,19 @@ const defaultContext: TimetableContextType = {
   createClassroomAvailability: async () => {},
   deleteTeacherAvailability: async () => {},
   deleteClassroomAvailability: async () => {},
+  checkConflicts: async () => {
+    return {
+      hasConflicts: false,
+      conflicts: [],
+      teacherUnavailable: false,
+      classroomUnavailable: false,
+    };
+  },
+  checkBulkAvailability: async () => {
+    return {
+      availabilities: {},
+    };
+  },
 };
 
 const TimetableContext = createContext<TimetableContextType>(defaultContext);
@@ -562,6 +618,62 @@ const TimetableProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const checkConflicts = async (request: ConflictCheckRequest): Promise<ConflictCheckResponse> => {
+    try {
+      const response = await fetch('/api/timetables/check-conflicts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Erreur API ${response.statusText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Erreur lors de la vérification des conflits:', error);
+      // En cas d'erreur, on retourne un état d'erreur
+      return {
+        hasConflicts: true,
+        conflicts: ['Erreur lors de la vérification des conflits'],
+        teacherUnavailable: false,
+        classroomUnavailable: false,
+      };
+    }
+  };
+
+  const checkBulkAvailability = async (request: BulkAvailabilityRequest): Promise<BulkAvailabilityResponse> => {
+    try {
+      const response = await fetch('/api/timetables/check-bulk-availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Erreur API ${response.statusText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Erreur lors de la vérification groupée des conflits:', error);
+      // En cas d'erreur, on retourne un état d'erreur pour tous les créneaux
+      const errorAvailabilities: { [timeSlotId: number]: TimeSlotAvailability } = {};
+      request.timeSlotIds.forEach(timeSlotId => {
+        errorAvailabilities[timeSlotId] = {
+          available: false,
+          reason: 'Erreur lors de la vérification des conflits',
+          conflictType: 'NONE',
+        };
+      });
+      
+      return {
+        availabilities: errorAvailabilities,
+      };
+    }
+  };
+
   // Charger les données initiales
   useEffect(() => {
     fetchTimetables();
@@ -597,6 +709,8 @@ const TimetableProvider = ({ children }: { children: ReactNode }) => {
         createClassroomAvailability,
         deleteTeacherAvailability,
         deleteClassroomAvailability,
+        checkConflicts,
+        checkBulkAvailability,
       }}
     >
       {children}
@@ -615,4 +729,9 @@ export type {
   TeacherAvailability,
   ClassroomAvailability,
   TimetableContextType,
+  ConflictCheckRequest,
+  ConflictCheckResponse,
+  BulkAvailabilityRequest,
+  BulkAvailabilityResponse,
+  TimeSlotAvailability,
 };

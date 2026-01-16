@@ -85,6 +85,15 @@ public class TimetableService {
     timetable.setStartDate(cal.getTime());
     cal.add(java.util.Calendar.MONTH, 6); // 6 months validity
     timetable.setEndDate(cal.getTime());
+    
+    // Set academic year based on current date
+    int currentYear = cal.get(java.util.Calendar.YEAR);
+    int currentMonth = cal.get(java.util.Calendar.MONTH);
+    if (currentMonth >= java.util.Calendar.SEPTEMBER) {
+      timetable.setAcademicYear(currentYear + "-" + (currentYear + 1));
+    } else {
+      timetable.setAcademicYear((currentYear - 1) + "-" + currentYear);
+    }
 
     timetable = timetableRepository.save(timetable);
     if (log.isInfoEnabled()) {
