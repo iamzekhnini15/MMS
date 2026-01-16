@@ -40,6 +40,14 @@ public class SecurityConfiguration {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http
         .csrf(AbstractHttpConfigurer::disable)
+        .cors(cors -> cors.configurationSource(request -> {
+          var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+          corsConfig.setAllowedOriginPatterns(java.util.List.of("*"));
+          corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+          corsConfig.setAllowedHeaders(java.util.List.of("*"));
+          corsConfig.setAllowCredentials(true);
+          return corsConfig;
+        }))
         .sessionManagement(sessionManagement ->
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
