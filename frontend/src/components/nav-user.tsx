@@ -85,7 +85,11 @@ export function NavUser({
                     </span>
                   </div>
                   <div className="flex-shrink-0">
-                    <DarkModeToggle asIcon size="sm" className="h-8 w-8 p-1.5" />
+                    <DarkModeToggle
+                      asIcon
+                      size="sm"
+                      className="h-8 w-8 p-1.5"
+                    />
                   </div>
                 </>
               )}

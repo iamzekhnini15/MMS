@@ -1,4 +1,10 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import {
   Card,
   CardContent,
@@ -79,8 +85,12 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
   const { courses } = useContext(CoursesContext);
   const { teachers } = useContext(TeacherContext);
   const { classrooms } = useContext(ClassroomContext);
-  const { timeSlots, fetchTimeSlots, createManualTimetable, checkBulkAvailability } =
-    useContext(TimetableContext);
+  const {
+    timeSlots,
+    fetchTimeSlots,
+    createManualTimetable,
+    checkBulkAvailability,
+  } = useContext(TimetableContext);
 
   const [formData, setFormData] = useState<ManualPlannerFormData>({
     classId: null,
@@ -100,9 +110,11 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showValidationErrors, setShowValidationErrors] = useState(false);
-  
+
   // États pour la nouvelle approche optimisée
-  const [availabilityData, setAvailabilityData] = useState<{ [timeSlotId: number]: TimeSlotAvailability }>({});
+  const [availabilityData, setAvailabilityData] = useState<{
+    [timeSlotId: number]: TimeSlotAvailability;
+  }>({});
   const [loadingAvailability, setLoadingAvailability] = useState(false);
 
   // Charger les timeSlots au démarrage
@@ -121,7 +133,7 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
           (course) => course.level === selectedClass.level.toString(),
         );
         setAvailableCourses(compatibleCourses);
-        
+
         // Reset assignements si on change de classe
         setFormData((prev) => ({
           ...prev,
@@ -145,47 +157,59 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
   }, [availableCourses, teachers]);
 
   // Fonction optimisée pour charger toutes les disponibilités en une fois
-  const loadAvailabilityForCourse = async (courseAssignment: CourseAssignment) => {
-    if (!formData.classId || !timeSlots || !courseAssignment.teacherId || !courseAssignment.classroomId) {
-      return;
-    }
+  const loadAvailabilityForCourse = useCallback(
+    async (courseAssignment: CourseAssignment) => {
+      if (
+        !formData.classId ||
+        !timeSlots ||
+        !courseAssignment.teacherId ||
+        !courseAssignment.classroomId
+      ) {
+        return;
+      }
 
-    setLoadingAvailability(true);
+      setLoadingAvailability(true);
 
-    try {
-      const request: BulkAvailabilityRequest = {
-        classId: formData.classId,
-        courseId: courseAssignment.courseId,
-        teacherId: courseAssignment.teacherId,
-        classroomId: courseAssignment.classroomId,
-        timeSlotIds: timeSlots.map(slot => slot.idTimeSlot),
-      };
-
-      const response = await checkBulkAvailability(request);
-      setAvailabilityData(response.availabilities);
-    } catch (error) {
-      console.error('Erreur lors du chargement des disponibilités:', error);
-      // En cas d'erreur, marquer tous les créneaux comme indisponibles
-      const errorData: { [timeSlotId: number]: TimeSlotAvailability } = {};
-      timeSlots.forEach(slot => {
-        errorData[slot.idTimeSlot] = {
-          available: false,
-          reason: 'Erreur lors de la vérification',
-          conflictType: 'NONE',
+      try {
+        const request: BulkAvailabilityRequest = {
+          classId: formData.classId,
+          courseId: courseAssignment.courseId,
+          teacherId: courseAssignment.teacherId,
+          classroomId: courseAssignment.classroomId,
+          timeSlotIds: timeSlots.map((slot) => slot.idTimeSlot),
         };
-      });
-      setAvailabilityData(errorData);
-    } finally {
-      setLoadingAvailability(false);
-    }
-  };
+
+        const response = await checkBulkAvailability(request);
+        setAvailabilityData(response.availabilities);
+      } catch (error) {
+        console.error('Erreur lors du chargement des disponibilités:', error);
+        // En cas d'erreur, marquer tous les créneaux comme indisponibles
+        const errorData: { [timeSlotId: number]: TimeSlotAvailability } = {};
+        timeSlots.forEach((slot) => {
+          errorData[slot.idTimeSlot] = {
+            available: false,
+            reason: 'Erreur lors de la vérification',
+            conflictType: 'NONE',
+          };
+        });
+        setAvailabilityData(errorData);
+      } finally {
+        setLoadingAvailability(false);
+      }
+    },
+    [formData.classId, timeSlots, checkBulkAvailability],
+  );
 
   // Recharger les disponibilités quand le cours sélectionné change
   useEffect(() => {
     if (selectedCourseForScheduling) {
       loadAvailabilityForCourse(selectedCourseForScheduling);
     }
-  }, [selectedCourseForScheduling, formData.scheduledEntries]);
+  }, [
+    selectedCourseForScheduling,
+    formData.scheduledEntries,
+    loadAvailabilityForCourse,
+  ]);
 
   const isFormValid = () => {
     return (
@@ -306,9 +330,9 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
 
     // Vérifier s'il y a déjà une entrée pour cette classe à ce créneau
     const existingEntry = formData.scheduledEntries.find(
-      entry => entry.timeSlotId === timeSlotId
+      (entry) => entry.timeSlotId === timeSlotId,
     );
-    
+
     if (existingEntry) {
       alert('Un cours est déjà programmé à ce créneau pour cette classe');
       return;
@@ -345,7 +369,7 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
     }));
   };
 
-  const groupTimeSlotsByDay = () => {
+  const groupTimeSlotsByDay = useCallback(() => {
     if (!timeSlots) return {};
 
     const grouped: { [day: string]: TimeSlot[] } = {};
@@ -374,7 +398,7 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
     });
 
     return grouped;
-  };
+  }, [timeSlots]);
 
   const getDayDisplayName = (dayOfWeek: string): string => {
     const dayNames: { [key: string]: string } = {
@@ -416,7 +440,7 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
 
       await createManualTimetable(request);
       alert('Emploi du temps créé avec succès !');
-      
+
       // Reset du formulaire
       setFormData({
         classId: null,
@@ -427,38 +451,45 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
         scheduledEntries: [],
       });
       setAvailabilityData({});
-      
     } catch (error: unknown) {
       console.error('Erreur lors de la sauvegarde:', error);
       if (error instanceof Error && error.message.includes('400')) {
         try {
-          const errorData = JSON.parse(error.message.replace('Erreur API ', ''));
+          const errorData = JSON.parse(
+            error.message.replace('Erreur API ', ''),
+          );
           if (errorData.error && Array.isArray(errorData.error)) {
             setValidationErrors(errorData.error);
             setShowValidationErrors(true);
           } else {
-            alert('Erreur lors de la création de l\'emploi du temps');
+            alert("Erreur lors de la création de l'emploi du temps");
           }
         } catch {
-          alert('Erreur lors de la création de l\'emploi du temps');
+          alert("Erreur lors de la création de l'emploi du temps");
         }
       } else {
-        alert('Erreur lors de la création de l\'emploi du temps');
+        alert("Erreur lors de la création de l'emploi du temps");
       }
     } finally {
       setIsCreating(false);
     }
   };
 
-  const groupedTimeSlots = useMemo(() => groupTimeSlotsByDay(), [timeSlots]);
+  const groupedTimeSlots = useMemo(
+    () => groupTimeSlotsByDay(),
+    [groupTimeSlotsByDay],
+  );
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Planificateur Manuel d'Emploi du Temps (Optimisé)</CardTitle>
+          <CardTitle>
+            Planificateur Manuel d'Emploi du Temps (Optimisé)
+          </CardTitle>
           <CardDescription>
-            Version optimisée avec vérification groupée des conflits pour une meilleure performance.
+            Version optimisée avec vérification groupée des conflits pour une
+            meilleure performance.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -528,7 +559,8 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
                                 (course) =>
                                   !formData.courseAssignments.some(
                                     (a, i) =>
-                                      a.courseId === course.idCourse && i !== index,
+                                      a.courseId === course.idCourse &&
+                                      i !== index,
                                   ),
                               )
                               .map((course) => (
@@ -542,9 +574,10 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
                       <div className="flex gap-2">
-                        {selectedCourseForScheduling?.courseId === assignment.courseId ? (
+                        {selectedCourseForScheduling?.courseId ===
+                        assignment.courseId ? (
                           <Button
                             variant="outline"
                             size="sm"
@@ -557,8 +590,12 @@ const OptimizedManualTimetablePlanner: React.FC = () => {
                           <Button
                             variant="default"
                             size="sm"
-                            disabled={!assignment.teacherId || !assignment.classroomId}
-                            onClick={() => setSelectedCourseForScheduling(assignment)}
+                            disabled={
+                              !assignment.teacherId || !assignment.classroomId
+                            }
+                            onClick={() =>
+                              setSelectedCourseForScheduling(assignment)
+                            }
                           >
                             <Calendar className="h-4 w-4 mr-1" />
                             Programmer
@@ -774,47 +811,52 @@ const OptimizedTimeSlotScheduler: React.FC<OptimizedTimeSlotSchedulerProps> = ({
   getDayDisplayName,
   scheduledEntries,
 }) => {
-
   const getSlotButtonClass = (timeSlotId: number) => {
     // Vérifier si le créneau est déjà occupé par cette classe
-    const isOccupied = scheduledEntries.some(entry => entry.timeSlotId === timeSlotId);
-    
+    const isOccupied = scheduledEntries.some(
+      (entry) => entry.timeSlotId === timeSlotId,
+    );
+
     if (isOccupied) {
-      return "w-full text-xs p-2 h-auto bg-gray-300 text-gray-500 cursor-not-allowed";
+      return 'w-full text-xs p-2 h-auto bg-gray-300 text-gray-500 cursor-not-allowed';
     }
-    
+
     const availability = availabilityData[timeSlotId];
-    
+
     if (!availability) {
-      return "w-full text-xs p-2 h-auto bg-gray-100 border border-gray-300";
+      return 'w-full text-xs p-2 h-auto bg-gray-100 border border-gray-300';
     }
-    
+
     if (availability.available) {
-      return "w-full text-xs p-2 h-auto bg-green-100 hover:bg-green-200 border-green-300 text-green-800";
+      return 'w-full text-xs p-2 h-auto bg-green-100 hover:bg-green-200 border-green-300 text-green-800';
     } else {
-      return "w-full text-xs p-2 h-auto bg-red-100 border-red-300 text-red-700 cursor-not-allowed";
+      return 'w-full text-xs p-2 h-auto bg-red-100 border-red-300 text-red-700 cursor-not-allowed';
     }
   };
 
   const isSlotClickable = (timeSlotId: number) => {
-    const isOccupied = scheduledEntries.some(entry => entry.timeSlotId === timeSlotId);
+    const isOccupied = scheduledEntries.some(
+      (entry) => entry.timeSlotId === timeSlotId,
+    );
     const availability = availabilityData[timeSlotId];
     return !isOccupied && availability?.available && !loadingAvailability;
   };
 
   const getSlotTooltip = (timeSlotId: number) => {
-    const isOccupied = scheduledEntries.some(entry => entry.timeSlotId === timeSlotId);
-    
+    const isOccupied = scheduledEntries.some(
+      (entry) => entry.timeSlotId === timeSlotId,
+    );
+
     if (isOccupied) {
-      return "Créneau déjà occupé par cette classe";
+      return 'Créneau déjà occupé par cette classe';
     }
-    
+
     const availability = availabilityData[timeSlotId];
-    
+
     if (!availability) {
-      return "Chargement des disponibilités...";
+      return 'Chargement des disponibilités...';
     }
-    
+
     return availability.reason;
   };
 
@@ -875,9 +917,7 @@ const OptimizedTimeSlotScheduler: React.FC<OptimizedTimeSlotSchedulerProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {Object.entries(timeSlots).map(([day, slots]) => (
           <div key={day}>
-            <h4 className="font-medium mb-2">
-              {getDayDisplayName(day)}
-            </h4>
+            <h4 className="font-medium mb-2">{getDayDisplayName(day)}</h4>
             <div className="space-y-2">
               {slots.map((slot) => (
                 <div key={slot.idTimeSlot} className="relative">
@@ -886,7 +926,10 @@ const OptimizedTimeSlotScheduler: React.FC<OptimizedTimeSlotSchedulerProps> = ({
                     size="sm"
                     className={getSlotButtonClass(slot.idTimeSlot)}
                     disabled={!isSlotClickable(slot.idTimeSlot)}
-                    onClick={() => isSlotClickable(slot.idTimeSlot) && onSchedule(courseAssignment, slot.idTimeSlot)}
+                    onClick={() =>
+                      isSlotClickable(slot.idTimeSlot) &&
+                      onSchedule(courseAssignment, slot.idTimeSlot)
+                    }
                     title={getSlotTooltip(slot.idTimeSlot)}
                   >
                     <div className="text-center">

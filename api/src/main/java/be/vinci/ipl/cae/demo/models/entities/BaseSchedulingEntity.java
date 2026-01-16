@@ -13,15 +13,14 @@ import lombok.Setter;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class BaseSchedulingEntity {
+public class BaseSchedulingEntity extends BaseTeacherClassroomEntity {
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idTeacher", nullable = false)
-  private Teacher teacher;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idClassroom", nullable = false)
-  private Classroom classroom;
+  /**
+   * Protected constructor to prevent direct instantiation.
+   */
+  protected BaseSchedulingEntity() {
+    // Protected constructor to prevent direct instantiation
+  }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "idTimeSlot", nullable = false)

@@ -14,7 +14,14 @@ import lombok.Setter;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class BasePeriodicEntity {
+public class BasePeriodicEntity {
+
+  /**
+   * Protected constructor to prevent direct instantiation.
+   */
+  protected BasePeriodicEntity() {
+    // Protected constructor to prevent direct instantiation
+  }
 
   @Column(nullable = false)
   private String name;

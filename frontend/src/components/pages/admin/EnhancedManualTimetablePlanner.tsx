@@ -1,4 +1,10 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import {
   Card,
   CardContent,
@@ -105,7 +111,7 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showValidationErrors, setShowValidationErrors] = useState(false);
-  
+
   // Cache des conflits pour chaque créneau et cours
   const [conflictsCache, setConflictsCache] = useState<ConflictInfo>({});
 
@@ -125,7 +131,7 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
           (course) => course.level === selectedClass.level.toString(),
         );
         setAvailableCourses(compatibleCourses);
-        
+
         // Reset assignements si on change de classe
         setFormData((prev) => ({
           ...prev,
@@ -170,9 +176,9 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
       };
 
       const response = await checkConflicts(request);
-      
+
       // Mettre en cache le résultat
-      setConflictsCache(prev => ({
+      setConflictsCache((prev) => ({
         ...prev,
         [timeSlotId]: {
           ...prev[timeSlotId],
@@ -312,7 +318,7 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
     timeSlotId: number,
   ) => {
     if (!courseAssignment.teacherId || !courseAssignment.classroomId) {
-      alert('Veuillez d\'abord assigner un professeur et une salle à ce cours');
+      alert("Veuillez d'abord assigner un professeur et une salle à ce cours");
       return;
     }
 
@@ -321,9 +327,9 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
 
     // Vérifier s'il y a déjà une entrée pour cette classe à ce créneau
     const existingEntry = formData.scheduledEntries.find(
-      entry => entry.timeSlotId === timeSlotId
+      (entry) => entry.timeSlotId === timeSlotId,
     );
-    
+
     if (existingEntry) {
       alert('Un cours est déjà programmé à ce créneau pour cette classe');
       return;
@@ -359,7 +365,7 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
     }));
   };
 
-  const groupTimeSlotsByDay = () => {
+  const groupTimeSlotsByDay = useCallback(() => {
     if (!timeSlots) return {};
 
     const grouped: { [day: string]: TimeSlot[] } = {};
@@ -388,7 +394,7 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
     });
 
     return grouped;
-  };
+  }, [timeSlots]);
 
   const getDayDisplayName = (dayOfWeek: string): string => {
     const dayNames: { [key: string]: string } = {
@@ -417,14 +423,17 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
 
     // Vérifier s'il y a déjà une entrée pour cette classe à ce créneau
     const existingEntry = formData.scheduledEntries.find(
-      entry => entry.timeSlotId === timeSlotId
+      (entry) => entry.timeSlotId === timeSlotId,
     );
-    
+
     if (existingEntry) {
       return { available: false, conflicts: null };
     }
 
-    const conflicts = await checkConflictsRealTime(courseAssignment, timeSlotId);
+    const conflicts = await checkConflictsRealTime(
+      courseAssignment,
+      timeSlotId,
+    );
     return {
       available: !conflicts.hasConflicts,
       conflicts,
@@ -459,7 +468,7 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
 
       await createManualTimetable(request);
       alert('Emploi du temps créé avec succès !');
-      
+
       // Reset du formulaire
       setFormData({
         classId: null,
@@ -470,30 +479,34 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
         scheduledEntries: [],
       });
       setConflictsCache({});
-      
     } catch (error: unknown) {
       console.error('Erreur lors de la sauvegarde:', error);
       if (error instanceof Error && error.message.includes('400')) {
         try {
-          const errorData = JSON.parse(error.message.replace('Erreur API ', ''));
+          const errorData = JSON.parse(
+            error.message.replace('Erreur API ', ''),
+          );
           if (errorData.error && Array.isArray(errorData.error)) {
             setValidationErrors(errorData.error);
             setShowValidationErrors(true);
           } else {
-            alert('Erreur lors de la création de l\'emploi du temps');
+            alert("Erreur lors de la création de l'emploi du temps");
           }
         } catch {
-          alert('Erreur lors de la création de l\'emploi du temps');
+          alert("Erreur lors de la création de l'emploi du temps");
         }
       } else {
-        alert('Erreur lors de la création de l\'emploi du temps');
+        alert("Erreur lors de la création de l'emploi du temps");
       }
     } finally {
       setIsCreating(false);
     }
   };
 
-  const groupedTimeSlots = useMemo(() => groupTimeSlotsByDay(), [timeSlots]);
+  const groupedTimeSlots = useMemo(
+    () => groupTimeSlotsByDay(),
+    [groupTimeSlotsByDay],
+  );
 
   return (
     <div className="space-y-6">
@@ -501,8 +514,8 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
         <CardHeader>
           <CardTitle>Planificateur Manuel d'Emploi du Temps</CardTitle>
           <CardDescription>
-            Créez manuellement un emploi du temps en assignant les cours aux créneaux horaires.
-            Les conflits sont détectés en temps réel.
+            Créez manuellement un emploi du temps en assignant les cours aux
+            créneaux horaires. Les conflits sont détectés en temps réel.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -572,7 +585,8 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
                                 (course) =>
                                   !formData.courseAssignments.some(
                                     (a, i) =>
-                                      a.courseId === course.idCourse && i !== index,
+                                      a.courseId === course.idCourse &&
+                                      i !== index,
                                   ),
                               )
                               .map((course) => (
@@ -586,9 +600,10 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
                       <div className="flex gap-2">
-                        {selectedCourseForScheduling?.courseId === assignment.courseId ? (
+                        {selectedCourseForScheduling?.courseId ===
+                        assignment.courseId ? (
                           <Button
                             variant="outline"
                             size="sm"
@@ -601,8 +616,12 @@ const EnhancedManualTimetablePlanner: React.FC = () => {
                           <Button
                             variant="default"
                             size="sm"
-                            disabled={!assignment.teacherId || !assignment.classroomId}
-                            onClick={() => setSelectedCourseForScheduling(assignment)}
+                            disabled={
+                              !assignment.teacherId || !assignment.classroomId
+                            }
+                            onClick={() =>
+                              setSelectedCourseForScheduling(assignment)
+                            }
                           >
                             <Calendar className="h-4 w-4 mr-1" />
                             Programmer
@@ -819,7 +838,10 @@ const EnhancedTimeSlotScheduler: React.FC<EnhancedTimeSlotSchedulerProps> = ({
   scheduledEntries,
 }) => {
   const [slotAvailability, setSlotAvailability] = useState<{
-    [timeSlotId: number]: { available: boolean; conflicts: ConflictCheckResponse | null };
+    [timeSlotId: number]: {
+      available: boolean;
+      conflicts: ConflictCheckResponse | null;
+    };
   }>({});
   const [loadingSlots, setLoadingSlots] = useState<Set<number>>(new Set());
 
@@ -828,25 +850,32 @@ const EnhancedTimeSlotScheduler: React.FC<EnhancedTimeSlotSchedulerProps> = ({
     const checkAllSlots = async () => {
       const allSlots = Object.values(timeSlots).flat();
       const availability: typeof slotAvailability = {};
-      
+
       for (const slot of allSlots) {
-        setLoadingSlots(prev => new Set([...prev, slot.idTimeSlot]));
-        
+        setLoadingSlots((prev) => new Set([...prev, slot.idTimeSlot]));
+
         try {
-          const result = await isTimeSlotAvailable(courseAssignment, slot.idTimeSlot);
+          const result = await isTimeSlotAvailable(
+            courseAssignment,
+            slot.idTimeSlot,
+          );
           availability[slot.idTimeSlot] = result;
         } catch (error) {
-          console.error('Erreur lors de la vérification du créneau:', slot.idTimeSlot, error);
+          console.error(
+            'Erreur lors de la vérification du créneau:',
+            slot.idTimeSlot,
+            error,
+          );
           availability[slot.idTimeSlot] = { available: false, conflicts: null };
         } finally {
-          setLoadingSlots(prev => {
+          setLoadingSlots((prev) => {
             const newSet = new Set(prev);
             newSet.delete(slot.idTimeSlot);
             return newSet;
           });
         }
       }
-      
+
       setSlotAvailability(availability);
     };
 
@@ -856,51 +885,59 @@ const EnhancedTimeSlotScheduler: React.FC<EnhancedTimeSlotSchedulerProps> = ({
   const getSlotButtonClass = (timeSlotId: number) => {
     const isLoading = loadingSlots.has(timeSlotId);
     const availability = slotAvailability[timeSlotId];
-    
+
     // Vérifier si le créneau est déjà occupé par cette classe
-    const isOccupied = scheduledEntries.some(entry => entry.timeSlotId === timeSlotId);
-    
+    const isOccupied = scheduledEntries.some(
+      (entry) => entry.timeSlotId === timeSlotId,
+    );
+
     if (isLoading) {
-      return "w-full text-xs p-2 h-auto opacity-50 cursor-wait";
+      return 'w-full text-xs p-2 h-auto opacity-50 cursor-wait';
     }
-    
+
     if (isOccupied) {
-      return "w-full text-xs p-2 h-auto bg-gray-300 text-gray-500 cursor-not-allowed";
+      return 'w-full text-xs p-2 h-auto bg-gray-300 text-gray-500 cursor-not-allowed';
     }
-    
+
     if (!availability) {
-      return "w-full text-xs p-2 h-auto";
+      return 'w-full text-xs p-2 h-auto';
     }
-    
+
     if (availability.available) {
-      return "w-full text-xs p-2 h-auto bg-green-100 hover:bg-green-200 border-green-300 text-green-800";
+      return 'w-full text-xs p-2 h-auto bg-green-100 hover:bg-green-200 border-green-300 text-green-800';
     } else {
-      return "w-full text-xs p-2 h-auto bg-red-100 border-red-300 text-red-700 cursor-not-allowed";
+      return 'w-full text-xs p-2 h-auto bg-red-100 border-red-300 text-red-700 cursor-not-allowed';
     }
   };
 
   const isSlotClickable = (timeSlotId: number) => {
     const availability = slotAvailability[timeSlotId];
-    const isOccupied = scheduledEntries.some(entry => entry.timeSlotId === timeSlotId);
-    return availability?.available && !isOccupied && !loadingSlots.has(timeSlotId);
+    const isOccupied = scheduledEntries.some(
+      (entry) => entry.timeSlotId === timeSlotId,
+    );
+    return (
+      availability?.available && !isOccupied && !loadingSlots.has(timeSlotId)
+    );
   };
 
   const getSlotTooltip = (timeSlotId: number) => {
     const availability = slotAvailability[timeSlotId];
-    const isOccupied = scheduledEntries.some(entry => entry.timeSlotId === timeSlotId);
-    
+    const isOccupied = scheduledEntries.some(
+      (entry) => entry.timeSlotId === timeSlotId,
+    );
+
     if (isOccupied) {
-      return "Créneau déjà occupé par cette classe";
+      return 'Créneau déjà occupé par cette classe';
     }
-    
+
     if (!availability) {
-      return "Vérification en cours...";
+      return 'Vérification en cours...';
     }
-    
+
     if (availability.available) {
-      return "Créneau disponible";
+      return 'Créneau disponible';
     }
-    
+
     const conflicts = availability.conflicts;
     if (conflicts) {
       const messages = [];
@@ -910,13 +947,16 @@ const EnhancedTimeSlotScheduler: React.FC<EnhancedTimeSlotSchedulerProps> = ({
       if (conflicts.teacherUnavailable && conflicts.teacherAvailabilityReason) {
         messages.push(conflicts.teacherAvailabilityReason);
       }
-      if (conflicts.classroomUnavailable && conflicts.classroomAvailabilityReason) {
+      if (
+        conflicts.classroomUnavailable &&
+        conflicts.classroomAvailabilityReason
+      ) {
         messages.push(conflicts.classroomAvailabilityReason);
       }
       return messages.join(', ');
     }
-    
-    return "Créneau non disponible";
+
+    return 'Créneau non disponible';
   };
 
   return (
@@ -965,9 +1005,7 @@ const EnhancedTimeSlotScheduler: React.FC<EnhancedTimeSlotSchedulerProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {Object.entries(timeSlots).map(([day, slots]) => (
           <div key={day}>
-            <h4 className="font-medium mb-2">
-              {getDayDisplayName(day)}
-            </h4>
+            <h4 className="font-medium mb-2">{getDayDisplayName(day)}</h4>
             <div className="space-y-2">
               {slots.map((slot) => (
                 <div key={slot.idTimeSlot} className="relative">
@@ -976,7 +1014,10 @@ const EnhancedTimeSlotScheduler: React.FC<EnhancedTimeSlotSchedulerProps> = ({
                     size="sm"
                     className={getSlotButtonClass(slot.idTimeSlot)}
                     disabled={!isSlotClickable(slot.idTimeSlot)}
-                    onClick={() => isSlotClickable(slot.idTimeSlot) && onSchedule(courseAssignment, slot.idTimeSlot)}
+                    onClick={() =>
+                      isSlotClickable(slot.idTimeSlot) &&
+                      onSchedule(courseAssignment, slot.idTimeSlot)
+                    }
                     title={getSlotTooltip(slot.idTimeSlot)}
                   >
                     <div className="text-center">

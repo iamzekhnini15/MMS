@@ -1,9 +1,9 @@
 package be.vinci.ipl.cae.demo.models.dtos;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Map;
 
 /**
  * DTO for bulk availability checking response.
@@ -15,12 +15,12 @@ import java.util.Map;
 public class BulkAvailabilityResponse {
   
   /**
-   * Map où la clé est l'ID du créneau et la valeur est l'état de disponibilité
+   * Map où la clé est l'ID du créneau et la valeur est l'état de disponibilité.
    */
   private Map<Long, TimeSlotAvailability> availabilities;
   
   /**
-   * Représente l'état de disponibilité d'un créneau spécifique
+   * Représente l'état de disponibilité d'un créneau spécifique.
    */
   @Data
   @NoArgsConstructor
@@ -30,6 +30,9 @@ public class BulkAvailabilityResponse {
     private String reason; // Raison si non disponible
     private ConflictType conflictType;
     
+    /**
+     * Enum representing different types of scheduling conflicts.
+     */
     public enum ConflictType {
       NONE,
       TEACHER_BUSY,

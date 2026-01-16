@@ -1,4 +1,4 @@
-  package be.vinci.ipl.cae.demo.models.entities;
+package be.vinci.ipl.cae.demo.models.entities;
 
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -13,7 +13,14 @@ import lombok.Setter;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class BaseClassroomTimeSlotEntity {
+public class BaseClassroomTimeSlotEntity {
+
+  /**
+   * Protected constructor to prevent direct instantiation.
+   */
+  protected BaseClassroomTimeSlotEntity() {
+    // Protected constructor to prevent direct instantiation
+  }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "idClassroom", nullable = false)

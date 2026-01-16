@@ -74,7 +74,13 @@ interface BulkAvailabilityRequest {
 interface TimeSlotAvailability {
   available: boolean;
   reason: string;
-  conflictType: 'NONE' | 'TEACHER_BUSY' | 'CLASSROOM_BUSY' | 'CLASS_BUSY' | 'TEACHER_UNAVAILABLE' | 'CLASSROOM_UNAVAILABLE';
+  conflictType:
+    | 'NONE'
+    | 'TEACHER_BUSY'
+    | 'CLASSROOM_BUSY'
+    | 'CLASS_BUSY'
+    | 'TEACHER_UNAVAILABLE'
+    | 'CLASSROOM_UNAVAILABLE';
 }
 
 interface BulkAvailabilityResponse {
@@ -176,8 +182,12 @@ interface TimetableContextType {
   deleteClassroomAvailability: (id: number) => Promise<void>;
 
   // Actions Conflicts
-  checkConflicts: (request: ConflictCheckRequest) => Promise<ConflictCheckResponse>;
-  checkBulkAvailability: (request: BulkAvailabilityRequest) => Promise<BulkAvailabilityResponse>;
+  checkConflicts: (
+    request: ConflictCheckRequest,
+  ) => Promise<ConflictCheckResponse>;
+  checkBulkAvailability: (
+    request: BulkAvailabilityRequest,
+  ) => Promise<BulkAvailabilityResponse>;
 }
 
 const defaultContext: TimetableContextType = {
@@ -618,18 +628,20 @@ const TimetableProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const checkConflicts = async (request: ConflictCheckRequest): Promise<ConflictCheckResponse> => {
+  const checkConflicts = async (
+    request: ConflictCheckRequest,
+  ): Promise<ConflictCheckResponse> => {
     try {
       const response = await fetch('/api/timetables/check-conflicts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(request),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Erreur API ${response.statusText}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Erreur lors de la vérification des conflits:', error);
@@ -643,31 +655,38 @@ const TimetableProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const checkBulkAvailability = async (request: BulkAvailabilityRequest): Promise<BulkAvailabilityResponse> => {
+  const checkBulkAvailability = async (
+    request: BulkAvailabilityRequest,
+  ): Promise<BulkAvailabilityResponse> => {
     try {
       const response = await fetch('/api/timetables/check-bulk-availability', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(request),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Erreur API ${response.statusText}`);
       }
-      
+
       return await response.json();
     } catch (error) {
-      console.error('Erreur lors de la vérification groupée des conflits:', error);
+      console.error(
+        'Erreur lors de la vérification groupée des conflits:',
+        error,
+      );
       // En cas d'erreur, on retourne un état d'erreur pour tous les créneaux
-      const errorAvailabilities: { [timeSlotId: number]: TimeSlotAvailability } = {};
-      request.timeSlotIds.forEach(timeSlotId => {
+      const errorAvailabilities: {
+        [timeSlotId: number]: TimeSlotAvailability;
+      } = {};
+      request.timeSlotIds.forEach((timeSlotId) => {
         errorAvailabilities[timeSlotId] = {
           available: false,
           reason: 'Erreur lors de la vérification des conflits',
           conflictType: 'NONE',
         };
       });
-      
+
       return {
         availabilities: errorAvailabilities,
       };

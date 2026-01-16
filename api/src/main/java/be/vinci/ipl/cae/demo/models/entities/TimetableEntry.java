@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class TimetableEntry {
+public class TimetableEntry extends BaseSchedulingEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idTimetableEntry;
@@ -39,16 +39,4 @@ public class TimetableEntry {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "idCourse", nullable = false)
   private Course course;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idTeacher", nullable = false)
-  private Teacher teacher;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idClassroom", nullable = false)
-  private Classroom classroom;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "idTimeSlot", nullable = false)
-  private TimeSlot timeSlot;
 }

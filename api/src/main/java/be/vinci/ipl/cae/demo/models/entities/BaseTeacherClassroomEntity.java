@@ -13,7 +13,14 @@ import lombok.Setter;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class BaseTeacherClassroomEntity {
+public class BaseTeacherClassroomEntity {
+
+  /**
+   * Protected constructor to prevent direct instantiation.
+   */
+  protected BaseTeacherClassroomEntity() {
+    // Protected constructor to prevent direct instantiation
+  }
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "idTeacher", nullable = false)

@@ -1,21 +1,20 @@
 package be.vinci.ipl.cae.demo.services;
 
-import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckRequest;
-import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckResponse;
 import be.vinci.ipl.cae.demo.models.dtos.BulkAvailabilityRequest;
 import be.vinci.ipl.cae.demo.models.dtos.BulkAvailabilityResponse;
-import be.vinci.ipl.cae.demo.models.entities.TeacherAvailability;
+import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckRequest;
+import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckResponse;
 import be.vinci.ipl.cae.demo.models.entities.ClassroomAvailability;
+import be.vinci.ipl.cae.demo.models.entities.TeacherAvailability;
 import be.vinci.ipl.cae.demo.models.entities.TimetableEntry;
-import be.vinci.ipl.cae.demo.models.entities.TimeSlot;
-import be.vinci.ipl.cae.demo.repositories.TimetableEntryRepository;
-import be.vinci.ipl.cae.demo.repositories.TeacherAvailabilityRepository;
 import be.vinci.ipl.cae.demo.repositories.ClassroomAvailabilityRepository;
+import be.vinci.ipl.cae.demo.repositories.TeacherAvailabilityRepository;
 import be.vinci.ipl.cae.demo.repositories.TimeSlotRepository;
+import be.vinci.ipl.cae.demo.repositories.TimetableEntryRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -110,28 +109,19 @@ public class TimetableValidationService {
    */
   public ConflictCheckResponse checkConflicts(ConflictCheckRequest request) {
     List<String> conflicts = new ArrayList<>();
-    boolean teacherUnavailable = false;
-    boolean classroomUnavailable = false;
-    String teacherAvailabilityReason = null;
-    String classroomAvailabilityReason = null;
 
     if (log.isDebugEnabled()) {
       log.debug("Checking conflicts for request: {}", request);
     }
 
     // 1. Vérifier si la classe a déjà un cours à ce créneau
-    List<TimetableEntry> classConflicts =
+    List<TimetableEntry> classConflicts = filterExcludedEntry(
         timetableEntryRepository.findConflictsByClassAndTimeSlot(
             request.getClassId(), 
             request.getTimeSlotId()
-        );
-    
-    // Exclure l'entrée actuelle si on modifie
-    if (request.getExcludeTimetableEntryId() != null) {
-      classConflicts = classConflicts.stream()
-          .filter(entry -> !entry.getIdTimetableEntry().equals(request.getExcludeTimetableEntryId()))
-          .toList();
-    }
+        ),
+        request.getExcludeTimetableEntryId()
+    );
     
     if (!classConflicts.isEmpty()) {
       TimetableEntry conflict = classConflicts.get(0);
@@ -141,23 +131,20 @@ public class TimetableValidationService {
 
     // 2. Vérifier si le professeur est déjà occupé à ce créneau
     if (request.getTeacherId() != null) {
-      List<TimetableEntry> teacherConflicts =
+      List<TimetableEntry> teacherConflicts = filterExcludedEntry(
           timetableEntryRepository.findConflictsByTeacherAndTimeSlot(
               request.getTeacherId(), 
               request.getTimeSlotId()
-          );
-      
-      // Exclure l'entrée actuelle si on modifie
-      if (request.getExcludeTimetableEntryId() != null) {
-        teacherConflicts = teacherConflicts.stream()
-            .filter(entry -> !entry.getIdTimetableEntry().equals(request.getExcludeTimetableEntryId()))
-            .toList();
-      }
+          ),
+          request.getExcludeTimetableEntryId()
+      );
       
       if (!teacherConflicts.isEmpty()) {
         TimetableEntry conflict = teacherConflicts.get(0);
-        conflicts.add(String.format("Le professeur est déjà occupé à ce créneau avec la classe : %s", 
-                                   conflict.getClassEntity().getName()));
+        conflicts.add(String.format(
+            "Le professeur est déjà occupé à ce créneau " 
+                + "avec la classe : %s", 
+            conflict.getClassEntity().getName()));
       }
 
       // 3. Vérifier la disponibilité du professeur
@@ -168,25 +155,20 @@ public class TimetableValidationService {
           );
       
       if (teacherAvail != null && !teacherAvail.getIsAvailable()) {
-        teacherUnavailable = true;
-        teacherAvailabilityReason = "Le professeur n'est pas disponible à ce créneau";
+        conflicts.add(
+            "Le professeur n'est pas disponible à ce créneau");
       }
     }
 
     // 4. Vérifier si la salle de classe est déjà occupée à ce créneau
     if (request.getClassroomId() != null) {
-      List<TimetableEntry> classroomConflicts =
+      List<TimetableEntry> classroomConflicts = filterExcludedEntry(
           timetableEntryRepository.findConflictsByClassroomAndTimeSlot(
               request.getClassroomId(), 
               request.getTimeSlotId()
-          );
-      
-      // Exclure l'entrée actuelle si on modifie
-      if (request.getExcludeTimetableEntryId() != null) {
-        classroomConflicts = classroomConflicts.stream()
-            .filter(entry -> !entry.getIdTimetableEntry().equals(request.getExcludeTimetableEntryId()))
-            .toList();
-      }
+          ),
+          request.getExcludeTimetableEntryId()
+      );
       
       if (!classroomConflicts.isEmpty()) {
         TimetableEntry conflict = classroomConflicts.get(0);
@@ -205,31 +187,50 @@ public class TimetableValidationService {
           );
       
       if (classroomAvail != null && !classroomAvail.getIsAvailable()) {
-        classroomUnavailable = true;
-        classroomAvailabilityReason = "La salle n'est pas disponible à ce créneau";
+        conflicts.add(
+            "La salle n'est pas disponible à ce créneau");
       }
     }
 
-    boolean hasConflicts = !conflicts.isEmpty() || teacherUnavailable || classroomUnavailable;
+    boolean hasConflicts = !conflicts.isEmpty();
 
     if (log.isDebugEnabled()) {
-      log.debug("Conflict check completed: hasConflicts={}, conflicts={}, teacherUnavailable={}, classroomUnavailable={}", 
-               hasConflicts, conflicts.size(), teacherUnavailable, classroomUnavailable);
+      log.debug(
+          "Conflict check completed: hasConflicts={}, conflicts={}",
+          hasConflicts, conflicts.size());
     }
 
     return new ConflictCheckResponse(
         hasConflicts,
         conflicts,
-        teacherUnavailable,
-        classroomUnavailable,
-        teacherAvailabilityReason,
-        classroomAvailabilityReason
+        false,
+        false,
+        null,
+        null
     );
   }
 
   /**
+   * Filter out excluded timetable entry from conflicts list.
+   *
+   * @param conflicts the list of conflicting entries
+   * @param excludeId the ID to exclude (can be null)
+   * @return filtered list
+   */
+  private List<TimetableEntry> filterExcludedEntry(
+      List<TimetableEntry> conflicts, Long excludeId) {
+    if (excludeId == null) {
+      return conflicts;
+    }
+    return conflicts.stream()
+        .filter(entry -> !entry.getIdTimetableEntry().equals(excludeId))
+        .toList();
+  }
+
+
+  /**
    * Check if a time slot is available for a specific teacher.
-   * 
+   *
    * @param teacherId the teacher ID
    * @param timeSlotId the time slot ID
    * @return true if available, false otherwise
@@ -253,7 +254,7 @@ public class TimetableValidationService {
 
   /**
    * Check if a time slot is available for a specific classroom.
-   * 
+   *
    * @param classroomId the classroom ID
    * @param timeSlotId the time slot ID
    * @return true if available, false otherwise
@@ -282,11 +283,11 @@ public class TimetableValidationService {
    * @param request la requête de vérification groupée
    * @return map avec l'état de disponibilité de chaque créneau
    */
-  public BulkAvailabilityResponse checkBulkAvailability(BulkAvailabilityRequest request) {
-    Map<Long, BulkAvailabilityResponse.TimeSlotAvailability> availabilities = new HashMap<>();
-    
+  public BulkAvailabilityResponse checkBulkAvailability(
+      BulkAvailabilityRequest request) {
     if (log.isDebugEnabled()) {
-      log.debug("Checking bulk availability for {} time slots", request.getTimeSlotIds().size());
+      log.debug("Checking bulk availability for {} time slots",
+          request.getTimeSlotIds().size());
     }
 
     // Récupérer tous les conflits existants pour optimiser les requêtes
@@ -294,31 +295,23 @@ public class TimetableValidationService {
     
     // Conflits de classe pour tous les créneaux
     for (Long timeSlotId : request.getTimeSlotIds()) {
-      List<TimetableEntry> classConflicts = timetableEntryRepository
-          .findConflictsByClassAndTimeSlot(request.getClassId(), timeSlotId);
-      
-      // Exclure l'entrée actuelle si on modifie
-      if (request.getExcludeTimetableEntryId() != null) {
-        classConflicts = classConflicts.stream()
-            .filter(entry -> !entry.getIdTimetableEntry().equals(request.getExcludeTimetableEntryId()))
-            .toList();
-      }
-      
+      List<TimetableEntry> classConflicts = filterExcludedEntry(
+          timetableEntryRepository.findConflictsByClassAndTimeSlot(
+              request.getClassId(), timeSlotId),
+          request.getExcludeTimetableEntryId()
+      );
       existingEntries.addAll(classConflicts);
     }
 
     // Conflits de professeur si spécifié
     if (request.getTeacherId() != null) {
       for (Long timeSlotId : request.getTimeSlotIds()) {
-        List<TimetableEntry> teacherConflicts = timetableEntryRepository
-            .findConflictsByTeacherAndTimeSlot(request.getTeacherId(), timeSlotId);
-        
-        if (request.getExcludeTimetableEntryId() != null) {
-          teacherConflicts = teacherConflicts.stream()
-              .filter(entry -> !entry.getIdTimetableEntry().equals(request.getExcludeTimetableEntryId()))
-              .toList();
-        }
-        
+        List<TimetableEntry> teacherConflicts = filterExcludedEntry(
+            timetableEntryRepository
+                .findConflictsByTeacherAndTimeSlot(
+                    request.getTeacherId(), timeSlotId),
+            request.getExcludeTimetableEntryId()
+        );
         existingEntries.addAll(teacherConflicts);
       }
     }
@@ -326,15 +319,12 @@ public class TimetableValidationService {
     // Conflits de salle si spécifiée
     if (request.getClassroomId() != null) {
       for (Long timeSlotId : request.getTimeSlotIds()) {
-        List<TimetableEntry> classroomConflicts = timetableEntryRepository
-            .findConflictsByClassroomAndTimeSlot(request.getClassroomId(), timeSlotId);
-        
-        if (request.getExcludeTimetableEntryId() != null) {
-          classroomConflicts = classroomConflicts.stream()
-              .filter(entry -> !entry.getIdTimetableEntry().equals(request.getExcludeTimetableEntryId()))
-              .toList();
-        }
-        
+        List<TimetableEntry> classroomConflicts = filterExcludedEntry(
+            timetableEntryRepository
+                .findConflictsByClassroomAndTimeSlot(
+                    request.getClassroomId(), timeSlotId),
+            request.getExcludeTimetableEntryId()
+        );
         existingEntries.addAll(classroomConflicts);
       }
     }
@@ -360,10 +350,13 @@ public class TimetableValidationService {
     }
 
     // Analyser chaque créneau
+    Map<Long, BulkAvailabilityResponse.TimeSlotAvailability> 
+        availabilities = new HashMap<>();
     for (Long timeSlotId : request.getTimeSlotIds()) {
       BulkAvailabilityResponse.TimeSlotAvailability availability = 
-          analyzeTimeSlotAvailability(timeSlotId, existingEntries, teacherAvailabilities, 
-                                    classroomAvailabilities, request);
+          analyzeTimeSlotAvailability(
+              timeSlotId, existingEntries, teacherAvailabilities, 
+              classroomAvailabilities, request);
       availabilities.put(timeSlotId, availability);
     }
 
@@ -371,7 +364,8 @@ public class TimetableValidationService {
       long availableSlots = availabilities.values().stream()
           .mapToLong(avail -> avail.isAvailable() ? 1 : 0)
           .sum();
-      log.debug("Bulk availability check completed: {}/{} slots available", 
+      log.debug(
+          "Bulk availability check completed: {}/{} slots available", 
                availableSlots, request.getTimeSlotIds().size());
     }
 
@@ -390,8 +384,8 @@ public class TimetableValidationService {
     
     // Vérifier les conflits de classe
     for (TimetableEntry entry : existingEntries) {
-      if (entry.getTimeSlot().getIdTimeSlot().equals(timeSlotId) && 
-          entry.getClassEntity().getIdClass().equals(request.getClassId())) {
+      if (entry.getTimeSlot().getIdTimeSlot().equals(timeSlotId)
+          && entry.getClassEntity().getIdClass().equals(request.getClassId())) {
         return new BulkAvailabilityResponse.TimeSlotAvailability(
             false,
             "La classe a déjà un cours programmé à ce créneau : " + entry.getCourse().getName(),
@@ -403,11 +397,14 @@ public class TimetableValidationService {
     // Vérifier les conflits de professeur
     if (request.getTeacherId() != null) {
       for (TimetableEntry entry : existingEntries) {
-        if (entry.getTimeSlot().getIdTimeSlot().equals(timeSlotId) && 
-            entry.getTeacher().getIdTeacher().equals(request.getTeacherId())) {
+        if (entry.getTimeSlot().getIdTimeSlot().equals(timeSlotId)
+            && entry.getTeacher().getIdTeacher()
+                .equals(request.getTeacherId())) {
           return new BulkAvailabilityResponse.TimeSlotAvailability(
               false,
-              "Le professeur est déjà occupé à ce créneau avec la classe : " + entry.getClassEntity().getName(),
+              "Le professeur est déjà occupé à ce créneau " 
+                  + "avec la classe : " 
+                  + entry.getClassEntity().getName(),
               BulkAvailabilityResponse.TimeSlotAvailability.ConflictType.TEACHER_BUSY
           );
         }
@@ -427,12 +424,12 @@ public class TimetableValidationService {
     // Vérifier les conflits de salle
     if (request.getClassroomId() != null) {
       for (TimetableEntry entry : existingEntries) {
-        if (entry.getTimeSlot().getIdTimeSlot().equals(timeSlotId) && 
-            entry.getClassroom().getIdClassroom().equals(request.getClassroomId())) {
+        if (entry.getTimeSlot().getIdTimeSlot().equals(timeSlotId)
+            && entry.getClassroom().getIdClassroom().equals(request.getClassroomId())) {
           return new BulkAvailabilityResponse.TimeSlotAvailability(
               false,
-              "La salle est déjà occupée à ce créneau par : " + entry.getCourse().getName() + 
-              " (classe " + entry.getClassEntity().getName() + ")",
+              "La salle est déjà occupée à ce créneau par : " + entry.getCourse().getName()
+                + " (classe " + entry.getClassEntity().getName() + ")",
               BulkAvailabilityResponse.TimeSlotAvailability.ConflictType.CLASSROOM_BUSY
           );
         }

@@ -393,7 +393,8 @@ public class StudentBulletinService {
     Student student = studentOpt.get();
 
     // Get all bulletins for this student that are visible
-    return studentBulletinRepository.findByStudentAndIsVisibleOrderByBulletinPeriodBulletinStartDateDesc(
+    return studentBulletinRepository
+      .findByStudentAndIsVisibleOrderByBulletinPeriodBulletinStartDateDesc(
       student, true);
   }
 }

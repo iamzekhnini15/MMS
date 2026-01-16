@@ -1,9 +1,9 @@
 package be.vinci.ipl.cae.demo.controllers;
 
-import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckRequest;
-import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckResponse;
 import be.vinci.ipl.cae.demo.models.dtos.BulkAvailabilityRequest;
 import be.vinci.ipl.cae.demo.models.dtos.BulkAvailabilityResponse;
+import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckRequest;
+import be.vinci.ipl.cae.demo.models.dtos.ConflictCheckResponse;
 import be.vinci.ipl.cae.demo.models.dtos.ManualTimetableRequest;
 import be.vinci.ipl.cae.demo.models.dtos.TimeSlotDto;
 import be.vinci.ipl.cae.demo.models.dtos.TimetableDto;

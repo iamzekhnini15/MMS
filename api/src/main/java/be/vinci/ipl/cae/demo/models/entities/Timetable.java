@@ -24,21 +24,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Timetable {
+public class Timetable extends BasePeriodicEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idTimetable;
-
-  @Column(nullable = false)
-  private String name; // Example: "Emploi du temps - Semestre 1 2025"
-
-  @Temporal(TemporalType.DATE)
-  @Column(nullable = false)
-  private Date startDate; // Start of validity period
-
-  @Temporal(TemporalType.DATE)
-  @Column(nullable = false)
-  private Date endDate; // End of validity period
 
   @Column(nullable = false)
   private String academicYear; // e.g., "2024-2025"
