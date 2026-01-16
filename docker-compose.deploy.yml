@@ -6,13 +6,6 @@ services:
     container_name: frontend-prod
     expose:
       - "80"  # accessible en interne uniquement (via reverse-proxy)
-    depends_on:
-      - api
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   api:
     image: ghcr.io/iamzekhnini15/api-prod:latest
@@ -25,11 +18,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       AZURE_BLOB_SAS_TOKEN: ${AZURE_BLOB_SAS_TOKEN}
     entrypoint: ["java", "-jar", "app.jar", "--spring.profiles.active=staging"]
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   reverse-proxy:
     image: ghcr.io/iamzekhnini15/reverse-proxy-prod:latest
@@ -37,5 +25,4 @@ services:
     ports:
       - "80:80"  # c'est ce conteneur que Azure va exposer publiquement
     depends_on:
-      - frontend
       - api
