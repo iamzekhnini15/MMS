@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  api:
+    image: ghcr.io/iamzekhnini15/api-prod:test
+    container_name: api-test
+    ports:
+      - "3000:3000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db-test:5432/mms
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: HayounZ2002/
+      AZURE_BLOB_SAS_TOKEN: dummy-token
+    entrypoint: ["java", "-jar", "app.jar", "--spring.profiles.active=staging"]
+    depends_on:
+      - db-test
+
+  db-test:
+    image: postgres:15-alpine
+    container_name: db-test
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: HayounZ2002/
+      POSTGRES_DB: mms
+    ports:
+      - "5433:5432"
+
+  frontend:
+    image: ghcr.io/iamzekhnini15/frontend-prod:test
+    container_name: frontend-test
+    ports:
+      - "8080:80"
+
+  reverse-proxy:
+    build:
+      context: ./reverse-proxy
+      dockerfile: Dockerfile.test
+    container_name: reverse-proxy-test
+    ports:
+      - "8888:80"
+    depends_on:
+      - frontend
+      - api

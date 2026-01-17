@@ -1,0 +1,1 @@
+bash: az: command not found
